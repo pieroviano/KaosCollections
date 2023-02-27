@@ -336,7 +336,7 @@ namespace Kaos.Collections
         private protected object GetSyncRoot()
         {
             if (syncRoot == null)
-                Interlocked.CompareExchange (ref syncRoot, new object(), null);
+                System.Threading.Interlocked.CompareExchange (ref syncRoot, new object(), null);
             return syncRoot;
         }
 
