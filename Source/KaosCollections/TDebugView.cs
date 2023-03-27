@@ -12,7 +12,6 @@ using System.Diagnostics;
 
 namespace Kaos.Collections
 {
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class ICollectionDebugView<T>
     {
         private readonly ICollection<T> target;
@@ -32,7 +31,6 @@ namespace Kaos.Collections
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class IEnumerableDebugView<T>
     {
         [DebuggerBrowsable (DebuggerBrowsableState.Never)]

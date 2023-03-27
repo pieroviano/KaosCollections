@@ -12,7 +12,6 @@ using System.Diagnostics;
 
 namespace Kaos.Collections
 {
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class ICollectionDebugView<K,V>
     {
         private readonly ICollection<KeyValuePair<K,V>> target;
@@ -32,7 +31,6 @@ namespace Kaos.Collections
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class ICollectionKeysDebugView<K,V>
     {
         private readonly ICollection<K> target;
@@ -52,7 +50,6 @@ namespace Kaos.Collections
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class ICollectionValuesDebugView<K,V>
     {
         private readonly ICollection<V> target;
@@ -72,7 +69,6 @@ namespace Kaos.Collections
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class IEnumerableDebugView<K,V>
     {
         [DebuggerBrowsable (DebuggerBrowsableState.Never)] 
@@ -93,7 +89,6 @@ namespace Kaos.Collections
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class IEnumerableKeysDebugView<K,V>
     {
         [DebuggerBrowsable (DebuggerBrowsableState.Never)] 
@@ -114,7 +109,6 @@ namespace Kaos.Collections
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal class IEnumerableValuesDebugView<K,V>
     {
         [DebuggerBrowsable (DebuggerBrowsableState.Never)] 
