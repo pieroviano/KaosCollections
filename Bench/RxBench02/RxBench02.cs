@@ -1,4 +1,4 @@
-﻿// Program: RxBench02.cs
+// Program: RxBench02.cs
 // Purpose:
 // • Demonstrate BCL curiosities.
 // • Reference the library assembly with a target of the lowest supported .NET Framework (4.6.1).

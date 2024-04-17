@@ -1,4 +1,4 @@
-﻿//
+//
 // File: TestRdLinq.cs
 //
 // Exercise some of the LINQ API derived from Enumerable. This is a partial sample and only
@@ -6,13 +6,13 @@
 //
 
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Kaos.Test.Collections
 {
     public partial class TestRd
     {
-        [TestMethod]
+        [Test]
         public void UnitRd_LinqAny()
         {
             Setup();
@@ -30,7 +30,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_LongCount()
         {
             Setup();

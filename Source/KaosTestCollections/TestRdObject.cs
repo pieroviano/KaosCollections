@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Kaos.Test.Collections
 {
@@ -9,7 +9,7 @@ namespace Kaos.Test.Collections
     {
         #region Test object properties
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odIsFixedSize()
         {
             Setup();
@@ -18,7 +18,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odIsReadonly()
         {
             Setup();
@@ -27,7 +27,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odIsSynchronized()
         {
             Setup();
@@ -35,7 +35,7 @@ namespace Kaos.Test.Collections
             Assert.IsFalse (od.IsSynchronized);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odItemGet_ArgumentNull()
         {
@@ -46,7 +46,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odItemGetBadKey()
         {
             Setup();
@@ -57,7 +57,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odItemSetKey_ArgumentNull()
         {
@@ -68,7 +68,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odItemSetValue_ArgumentNull()
         {
@@ -79,7 +79,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odItemSetBadKey_Argument()
         {
@@ -90,7 +90,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odItemSetBadValue_Argument()
         {
@@ -101,7 +101,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odItem()
         {
             Setup();
@@ -131,7 +131,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odSyncRoot()
         {
             Setup();
@@ -143,7 +143,7 @@ namespace Kaos.Test.Collections
 
         #region Test object methods
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odAddNullKey_Argument()
         {
@@ -153,7 +153,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odAddBadKey_Argument()
         {
@@ -163,7 +163,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odAddBadValue_Argument()
         {
@@ -173,7 +173,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odAddDupl_Argument()
         {
@@ -184,7 +184,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odContainsKey()
         {
             Setup();
@@ -199,7 +199,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odContainsKey_ArgumentNull()
         {
@@ -209,7 +209,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odCopyTo_ArgumentNull()
         {
@@ -220,7 +220,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRd_odCopyTo_ArgumentOutOfRange()
         {
@@ -231,7 +231,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odCopyTo1_Argument()
         {
@@ -242,7 +242,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odCopyTo2_Argument()
         {
@@ -257,7 +257,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odCopyToBadType_Argument()
         {
@@ -270,7 +270,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odCopyTo()
         {
             Setup();
@@ -287,7 +287,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odCopyToDowncast()
         {
             Setup();
@@ -304,7 +304,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odRemove_ArgumentNull()
         {
@@ -314,7 +314,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odRemove()
         {
             Setup();
@@ -335,7 +335,7 @@ namespace Kaos.Test.Collections
 
         #region Test object enumeration
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_odEtorKey_InvalidOperation()
         {
@@ -347,7 +347,7 @@ namespace Kaos.Test.Collections
             var key = oEtor.Key;
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_odEtorValue_InvalidOperation()
         {
@@ -359,7 +359,7 @@ namespace Kaos.Test.Collections
             var val = etor.Value;
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_odEtorEntry_InvalidOperation()
         {
@@ -371,7 +371,7 @@ namespace Kaos.Test.Collections
             DictionaryEntry entry = oEtor.Entry;
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_odEtorCurrent_InvalidOperation()
         {
@@ -383,7 +383,7 @@ namespace Kaos.Test.Collections
             var val = oEtor.Current;
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odEtor()
         {
             Setup();
@@ -402,7 +402,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (33, de.Value);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRd_odEtorEntry()
         {
             Setup();
@@ -425,7 +425,7 @@ namespace Kaos.Test.Collections
 
         #region Test object Keys
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_ocCount()
         {
             Setup();
@@ -441,7 +441,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_ocIsSynchronized()
         {
             Setup();
@@ -450,7 +450,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdk_ocCopyTo_ArgumentNull()
         {
@@ -460,7 +460,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRdk_ocCopyToMultiDimensional_Argument()
         {
@@ -473,7 +473,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdk_ocCopyTo_ArgumentOutOfRange()
         {
@@ -486,7 +486,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRdk_ocCopyToNotLongEnough_Argument()
         {
@@ -502,7 +502,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_ocCopyTo()
         {
             Setup();
@@ -521,7 +521,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_odEtor()
         {
             Setup();
@@ -543,7 +543,7 @@ namespace Kaos.Test.Collections
 
         #region Test object Values
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_ocValuesCount()
         {
             Setup();
@@ -559,7 +559,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_ocIsSynchronized()
         {
             Setup();
@@ -568,7 +568,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdv_ocCopyTo_ArgumentNull()
         {
@@ -578,7 +578,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRdv_ocCopyToMultiDimensional_Argument()
         {
@@ -592,7 +592,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdv_ocCopyTo_ArgumentOutOfRange()
         {
@@ -606,7 +606,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRdv_ocCopyToNotLongEnough_Argument()
         {
@@ -621,7 +621,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_ocCopyTo()
         {
             Setup();
@@ -639,7 +639,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_ocGetEnumerator()
         {
             Setup();

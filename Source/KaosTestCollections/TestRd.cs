@@ -1,23 +1,23 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    TestRd.cs
 //
 
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 #if ! TEST_BCL
 using Kaos.Collections;
 #endif
 
 namespace Kaos.Test.Collections
 {
-    [TestClass]
+    [TestFixture]
     public partial class TestRd : TestBtree
     {
         #region Test constructors
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Inheritance()
         {
             Setup();
@@ -58,7 +58,7 @@ namespace Kaos.Test.Collections
         public class DerivedD : RankedDictionary<int,int> { }
 #endif
 
-        [TestMethod]
+        [Test]
         public void UnitRd_CtorSubclass()
         {
             var sub = new DerivedD();
@@ -67,7 +67,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Ctor0Empty()
         {
             Setup();
@@ -75,7 +75,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
 #if TEST_BCL
         [ExpectedException (typeof (ArgumentException))]
 #else
@@ -93,7 +93,7 @@ namespace Kaos.Test.Collections
             d1.Add (new Person ("Macron"), 2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Ctor1A1()
         {
 #if TEST_BCL
@@ -118,7 +118,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Ctor1A2()
         {
 #if TEST_BCL
@@ -142,7 +142,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_Ctor1B_ArgumentNull()
         {
@@ -155,7 +155,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Ctor1B()
         {
             Setup();
@@ -174,7 +174,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (2, dary["Pacer"]);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Ctor2()
         {
             IDictionary<Person,int> empDary = new SortedDictionary<Person,int> (new PersonComparer());
@@ -194,7 +194,7 @@ namespace Kaos.Test.Collections
 
         #region Test properties
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Comparer()
         {
             Setup();
@@ -205,7 +205,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Count()
         {
             Setup();
@@ -225,7 +225,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_Item_ArgumentNullA()
         {
@@ -234,7 +234,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_Item_ArgumentNullB()
         {
@@ -243,7 +243,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (KeyNotFoundException))]
         public void CrashRd_Item_KeyNotFoundA()
         {
@@ -254,7 +254,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (KeyNotFoundException))]
         public void CrashRd_Item_KeyNotFoundB()
         {
@@ -265,7 +265,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Item()
         {
             Setup();
@@ -284,7 +284,7 @@ namespace Kaos.Test.Collections
 
         #region Test methods
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_Add_ArgumentNull()
         {
@@ -293,7 +293,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_Add_Argument()
         {
@@ -303,7 +303,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_AddCount()
         {
             Setup();
@@ -315,7 +315,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Clear()
         {
             Setup();
@@ -334,7 +334,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_ContainsKey_ArgumentNull()
         {
@@ -347,7 +347,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_ContainsKey()
         {
             Setup();
@@ -361,7 +361,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_ContainsValue()
         {
             Setup (5);
@@ -378,7 +378,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_ContainsValueNullA()
         {
             Setup (4);
@@ -394,7 +394,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_ContainsValueNullB()
         {
             Setup();
@@ -411,7 +411,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_CopyTo_ArgumentNull()
         {
@@ -420,7 +420,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRd_CopyTo_ArgumentOutOfRange()
         {
@@ -431,7 +431,7 @@ namespace Kaos.Test.Collections
 
 
         // MS docs incorrectly state ArgumentOutOfRangeException for this case.
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_CopyTo_ArgumentA()
         {
@@ -444,7 +444,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_CopyTo_ArgumentB()
         {
@@ -457,7 +457,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_CopyTo()
         {
             Setup();
@@ -485,7 +485,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_Remove_ArgumentNull()
         {
@@ -496,7 +496,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Remove()
         {
             Setup();
@@ -514,7 +514,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_TryGetValue_ArgumentNull()
         {
@@ -525,7 +525,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_TryGetValueOrUnfoundKeyInt()
         {
             Setup (5);
@@ -545,7 +545,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_TryGetValueForUnfoundKeyString()
         {
 #if TEST_BCL
@@ -570,7 +570,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_TryGetValue()
         {
             Setup();
@@ -591,7 +591,7 @@ namespace Kaos.Test.Collections
 
         #region Test enumeration
 
-        [TestMethod]
+        [Test]
         public void UnitRd_GetEnumeratorOnEmpty()
         {
             int actual = 0;
@@ -608,7 +608,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_GetEnumeratorPastEnd()
         {
             bool isMoved;
@@ -636,7 +636,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_Etor()
         {
             Setup();
@@ -656,7 +656,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_oeCurrent_InvalidOperationA()
         {
@@ -668,7 +668,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_oeCurrent_InvalidOperationB()
         {
@@ -681,7 +681,7 @@ namespace Kaos.Test.Collections
             object zz = ((System.Collections.IEnumerator) kvEtor).Current;
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRd_EtorPair()
         {
             Setup();
@@ -704,7 +704,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_EtorHotUpdate()
         {
@@ -722,7 +722,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_ocCurrent_HotUpdate()
         {
             Setup();
@@ -739,7 +739,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (kv, etor.Current);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRd_EtorCurrentHotUpdate()
         {
             Setup();
@@ -765,7 +765,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_oGetEnumerator()
         {
             Setup();
@@ -777,7 +777,7 @@ namespace Kaos.Test.Collections
 
         #region Test explicit implementation
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_pcAdd_Argument()
         {
@@ -801,7 +801,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_pcAdd()
         {
             Setup();
@@ -815,7 +815,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_pcContains()
         {
             Setup (4);
@@ -839,7 +839,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_pcComparePairNullRef()
         {
             Setup();
@@ -860,7 +860,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_pcEtor()
         {
             Setup();
@@ -880,7 +880,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_peEtor()
         {
             Setup();
@@ -900,7 +900,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_oeGetEtor()
         {
             Setup();
@@ -921,7 +921,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_pcIsReadonly()
         {
             Setup();
@@ -931,7 +931,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_gdKeys()
         {
             Setup();
@@ -943,7 +943,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_pcRemovePair()
         {
             Setup();
@@ -976,7 +976,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_pcRemovePairNull()
         {
             Setup();
@@ -996,7 +996,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_gdValues()
         {
             Setup();
@@ -1008,7 +1008,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRd_oReset()
         {
             Setup (4);
@@ -1041,7 +1041,7 @@ namespace Kaos.Test.Collections
         #region Test bonus methods
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_MinMax()
         {
             var rd = new RankedDictionary<int,int> { Capacity=4 };
@@ -1063,7 +1063,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_Capacity_ArgumentOutOfRange()
         {
@@ -1071,7 +1071,7 @@ namespace Kaos.Test.Collections
             rd.Capacity = -1;
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_Capacity()
         {
             var rd = new RankedDictionary<int,int>();
@@ -1098,7 +1098,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_ElementsBetweenA()
         {
             var rd = new RankedDictionary<string,int>();
@@ -1116,7 +1116,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (3, actual);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_ElementsBetweenB()
         {
             var rd = new RankedDictionary<int,int> { Capacity=4 };
@@ -1136,7 +1136,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (-290, sumVals);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_ElementsBetweenPassedEnd()
         {
             var rd = new RankedDictionary<int,int>();
@@ -1157,7 +1157,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_ElementsFromA()
         {
             var rd = new RankedDictionary<string,int>() { { "A",-1 }, { "B",-2 } };
@@ -1177,7 +1177,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (3, actual2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_ElementsFromB()
         {
             var rd = new RankedDictionary<int,int>();
@@ -1198,7 +1198,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (500, iterations);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_ElementsFromMissingVal()
         {
             var rd = new RankedDictionary<int,int>() { Capacity=8 };
@@ -1220,7 +1220,7 @@ namespace Kaos.Test.Collections
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_ElementsFromPassedEnd()
         {
             var rd = new RankedDictionary<int,int>();
@@ -1236,7 +1236,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_ElementsBetweenIndexes_ArgumentOutOfRangeA()
         {
@@ -1245,7 +1245,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_ElementsBetweenIndexes_ArgumentOutOfRangeB()
         {
@@ -1254,7 +1254,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_ElementsBetweenIndexes_ArgumentOutOfRangeC()
         {
@@ -1263,7 +1263,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_ElementsBetweenIndexes_ArgumentOutOfRangeD()
         {
@@ -1272,7 +1272,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRdx_ElementsBetweenIndexes_Argument()
         {
@@ -1281,7 +1281,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_ElementsBetweenIndexes()
         {
             int n = 30;
@@ -1302,7 +1302,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdx_IndexOfKey_ArgumentNull()
         {
@@ -1310,7 +1310,7 @@ namespace Kaos.Test.Collections
             int ix = rd.IndexOfKey (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_IndexOfKey()
         {
             var rd = new RankedDictionary<int,int> { Capacity=5 };
@@ -1331,7 +1331,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_IndexOfValue()
         {
             var rd = new RankedDictionary<int,int>();
@@ -1346,7 +1346,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_RemoveAll_ArgumentNull()
         {
@@ -1354,7 +1354,7 @@ namespace Kaos.Test.Collections
             dary1.RemoveAll (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRd_RemoveAll()
         {
             Setup (4);
@@ -1378,7 +1378,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_RemoveAtA_ArgumentOutOfRange()
         {
@@ -1387,7 +1387,7 @@ namespace Kaos.Test.Collections
             rd.RemoveAt (-1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_RemoveAtB_ArgumentOutOfRange()
         {
@@ -1395,7 +1395,7 @@ namespace Kaos.Test.Collections
             rd.RemoveAt (0);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_RemoveAt()
         {
             var rd = new RankedDictionary<int,int>();
@@ -1413,7 +1413,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_RemoveRange_ArgumentOutOfRangeA()
         {
@@ -1421,7 +1421,7 @@ namespace Kaos.Test.Collections
             rd.RemoveRange (-1, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_RemoveRange_ArgumentOutOfRangeB()
         {
@@ -1429,7 +1429,7 @@ namespace Kaos.Test.Collections
             rd.RemoveRange (0, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRdx_RemoveRange_Argument()
         {
@@ -1438,7 +1438,7 @@ namespace Kaos.Test.Collections
             rd.RemoveRange (1, 2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_RemoveRange()
         {
             var rd = new RankedDictionary<int,int> { Capacity=7 };
@@ -1455,7 +1455,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_TryGetGEGT()
         {
             var rd = new RankedDictionary<string,int?> { {"BB",1}, {"CC",2} };
@@ -1487,7 +1487,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_TryGetLELT()
         {
             var rd = new RankedDictionary<string,int?> { {"BB",1}, {"CC",2} };
@@ -1519,7 +1519,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_TryGetValueIndex()
         {
             var rd = new RankedDictionary<int,int>();
@@ -1541,7 +1541,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_RemoveWhere_ArgumentNull()
         {
@@ -1549,7 +1549,7 @@ namespace Kaos.Test.Collections
             rd.RemoveWhere (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_RemoveWhereA()
         {
             var rd = new RankedDictionary<int,int>();
@@ -1566,7 +1566,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_RemoveWhereB()
         {
             int n = 2000;
@@ -1582,7 +1582,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdx_RemoveWhereElement_ArgumentNull()
         {
@@ -1590,7 +1590,7 @@ namespace Kaos.Test.Collections
             rd.RemoveWhereElement (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_RemoveWhereElement()
         {
             var rd = new RankedDictionary<int,int>();
@@ -1607,7 +1607,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_ReverseEmpty()
         {
             int total = 0;
@@ -1619,7 +1619,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, total);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_Reverse()
         {
             var rd = new RankedDictionary<int,int> { Capacity=5 };

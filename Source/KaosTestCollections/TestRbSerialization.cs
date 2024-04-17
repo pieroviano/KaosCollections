@@ -1,9 +1,9 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    TestRbSerializaton.cs
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.IO;
 using System.Runtime.Serialization;
@@ -72,7 +72,7 @@ namespace Kaos.Test.Collections
 
     public partial class TestRb : TestBtree
     {
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRbz_ArgumentNull()
         {
@@ -80,7 +80,7 @@ namespace Kaos.Test.Collections
             ((ISerializable) bag).GetObjectData (null, new StreamingContext());
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRbz_NullCB()
         {
@@ -88,7 +88,7 @@ namespace Kaos.Test.Collections
             ((IDeserializationCallback) bag).OnDeserialization (null);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRbz_BadCount()
         {
@@ -98,7 +98,7 @@ namespace Kaos.Test.Collections
             { var bag = (ExamBag) formatter.Deserialize (fs); }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRbz_MissingItems()
         {
@@ -109,7 +109,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRbz_Serialization()
         {
             string fileName = "BagOfExams.bin";
@@ -128,7 +128,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRbz_BadSerialization()
         {
             string fileName = "BagOfBadExams.bin";

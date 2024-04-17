@@ -1,4 +1,4 @@
-﻿//
+//
 // Program: RdBench04.cs
 // Purpose: Benchmark performance on GUID add operations.
 //

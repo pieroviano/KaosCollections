@@ -1,9 +1,9 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    TestRdSerializaton.cs
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.Runtime.Serialization;
 using System.IO;
@@ -93,7 +93,7 @@ namespace Kaos.Test.Collections
     public partial class TestRd
     {
 #if ! TEST_BCL
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdz_ArgumentNull()
         {
@@ -101,7 +101,7 @@ namespace Kaos.Test.Collections
             ((ISerializable) dary).GetObjectData (null, new StreamingContext());
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRdz_NullCB()
         {
@@ -109,7 +109,7 @@ namespace Kaos.Test.Collections
             ((IDeserializationCallback) dary).OnDeserialization (null);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRdz_BadCount()
         {
@@ -119,7 +119,7 @@ namespace Kaos.Test.Collections
               { var dary = (PlayerDary) formatter.Deserialize (fs); }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRdz_MismatchKV()
         {
@@ -129,7 +129,7 @@ namespace Kaos.Test.Collections
               { var dary = (PlayerDary) formatter.Deserialize (fs); }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRdz_MissingKeys()
         {
@@ -139,7 +139,7 @@ namespace Kaos.Test.Collections
               { var dary = (PlayerDary) formatter.Deserialize (fs); }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRdz_MissingValues()
         {
@@ -150,7 +150,7 @@ namespace Kaos.Test.Collections
         }
 #endif
 
-        [TestMethod]
+        [Test]
         public void UnitRdz_Serialization()
         {
             string fileName = "DaryScores.bin";
@@ -174,7 +174,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdz_BadSerialization()
         {
             string fileName = "BadDaryScores.bin";

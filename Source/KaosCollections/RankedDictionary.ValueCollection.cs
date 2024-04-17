@@ -1,4 +1,4 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    RankedDictionary.ValueCollection.cs
 // Purpose: Define ValueCollection nested class.

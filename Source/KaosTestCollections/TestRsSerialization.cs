@@ -1,9 +1,9 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    TestRsSerializaton.cs
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.IO;
 using System.Runtime.Serialization;
@@ -77,7 +77,7 @@ namespace Kaos.Test.Collections
 
     public partial class TestRs
     {
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRsz_ArgumentNull()
         {
@@ -85,7 +85,7 @@ namespace Kaos.Test.Collections
             ((ISerializable) set).GetObjectData (null, new StreamingContext());
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRsz_NullCB()
         {
@@ -94,7 +94,7 @@ namespace Kaos.Test.Collections
         }
 
 #if ! TEST_BCL
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRsz_BadCount()
         {
@@ -104,7 +104,7 @@ namespace Kaos.Test.Collections
               { var set = (StudentSet) formatter.Deserialize (fs); }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRsz_MissingItems()
         {
@@ -115,7 +115,7 @@ namespace Kaos.Test.Collections
         }
 #endif
 
-        [TestMethod]
+        [Test]
         public void UnitRsz_Serialization()
         {
             string fileName = "SetOfStudents.bin";
@@ -135,7 +135,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsz_BadSerialization()
         {
             string fileName = "SetOfBadStudents.bin";

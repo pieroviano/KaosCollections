@@ -1,4 +1,4 @@
-﻿//
+//
 // Program: RsBench06.cs
 // Purpose: Benchmark RankedSet versus SortedSet adds and indexing.
 //

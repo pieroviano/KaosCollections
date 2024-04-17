@@ -1,4 +1,4 @@
-﻿//
+//
 // Library: KaosCollections
 // File: TestInit.cs
 //
@@ -9,7 +9,7 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 #if ! TEST_BCL
 using Kaos.Collections;
 #endif
@@ -47,7 +47,7 @@ namespace Kaos.Test.Collections
         { return x==null? (y==null? 0 : -1) : (y==null? 1 : String.Compare (x.Name, y.Name)); }
     }
 
-    [TestClass]
+    [TestFixture]
     public partial class TestBtree
     {
         public static bool IsAlways (int arg) => true;

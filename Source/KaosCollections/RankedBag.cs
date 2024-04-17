@@ -1,4 +1,4 @@
-﻿// File: RankedBag.cs
+// File: RankedBag.cs
 //
 // Copyright © 2009-2020 Kasey Osborn (github.com/kaosborn)
 // MIT License - Use and redistribute freely

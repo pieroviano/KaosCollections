@@ -1,4 +1,4 @@
-﻿//
+//
 // Program: RdExample03.cs
 // Purpose: Demonstrate LINQ usage and range query.
 //

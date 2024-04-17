@@ -1,4 +1,4 @@
-﻿// Program: RsBench01.cs
+// Program: RsBench01.cs
 // Purpose: Benchmark SortedSet.RemoveWhere versus RankedSet.RemoveWhere (v4).
 //
 // Usage notes:

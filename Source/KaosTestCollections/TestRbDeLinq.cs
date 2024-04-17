@@ -1,10 +1,10 @@
-﻿//
+//
 // File: TestRbDeLinq.cs
 // Purpose: Test LINQ emulation.
 //
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using SLE=System.Linq.Enumerable;
 #if TEST_BCL
 using System.Linq;
@@ -17,7 +17,7 @@ namespace Kaos.Test.Collections
     {
         #region Test methods (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRbq_ElementAtA_ArgumentOutOfRange()
         {
@@ -29,7 +29,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRbq_ElementAtB_ArgumentOutOfRange()
         {
@@ -42,7 +42,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_ElementAt()
         {
             var rb = new RankedBag<int> { Capacity=5 };
@@ -62,7 +62,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_ElementAtOrDefault()
         {
             var rb = new RankedBag<int>();
@@ -89,7 +89,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRbq_First_InvalidOperation()
         {
@@ -102,7 +102,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRbq_Last_InvalidOperation()
         {
@@ -114,7 +114,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_FirstLast()
         {
             var rb = new RankedBag<int> { Capacity=4 };
@@ -130,7 +130,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_Skip()
         {
             var rb = new RankedBag<int> { Capacity=5 };
@@ -160,7 +160,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, SLE.Count (rb.Reverse().Skip (3)));
         }
 
-        [TestMethod]
+        [Test]
         public void StressRbq_SkipF()
         {
             var rb = new RankedBag<int> { Capacity=5 };
@@ -182,7 +182,7 @@ namespace Kaos.Test.Collections
                 }
         }
 
-        [TestMethod]
+        [Test]
         public void StressRbq_SkipR()
         {
             var rb = new RankedBag<int> { Capacity=5 };
@@ -204,7 +204,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_SkipWhile2Ctor()
         {
             var rb = new RankedBag<int> { Capacity=4 };
@@ -223,7 +223,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -2,-1 }, rb.SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_SkipWhile2F()
         {
             var rb = new RankedBag<int> { Capacity=4 };
@@ -242,7 +242,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -2,-1 }, rb.Skip(0).SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_SkipWhile2R()
         {
             var rb = new RankedBag<int> { Capacity=4 };
@@ -261,7 +261,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -2,-3 }, rb.Reverse().SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_SkipWhile3Ctor()
         {
             var rb = new RankedBag<int> { Capacity=5 };
@@ -281,7 +281,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 4 }, rb.SkipWhile ((x,i) => x%2!=0 || i<3)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_SkipWhile3F()
         {
             var rb = new RankedBag<int> { Capacity=5 };
@@ -306,7 +306,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 48,49 }, rb.Skip(30).SkipWhile ((x,i) => x%3!=0 || i<15)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_SkipWhile3R()
         {
             var rb = new RankedBag<int> { Capacity=5 };
@@ -332,7 +332,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void StressRbq_SkipWhile()
         {
             var rb = new RankedBag<int> { Capacity=4 };
@@ -353,7 +353,7 @@ namespace Kaos.Test.Collections
 
         #region Test enumeration (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRbq_DistinctHotUpdate()
         {
@@ -369,7 +369,7 @@ namespace Kaos.Test.Collections
                     rb.Remove (3);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_Distinct()
         {
             var rb0 = new RankedBag<int>();
@@ -391,7 +391,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
 #if ! TEST_BCL
         [ExpectedException (typeof (InvalidOperationException))]
 #endif
@@ -410,7 +410,7 @@ namespace Kaos.Test.Collections
                     rb.Clear();
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_Reverse()
         {
             var rb0 = new RankedBag<int>();
@@ -437,7 +437,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRbq_Reset()
         {
             var rb = new RankedBag<int>(new int[] { 1,2,5,8,9 }) { Capacity=4 };
@@ -456,7 +456,7 @@ namespace Kaos.Test.Collections
         #region Test bonus (LINQ emulation)
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRbqx_oEtorGetEnumerator()
         {
             var ia = new int[] { 2,2,3,3,5,6,8 };

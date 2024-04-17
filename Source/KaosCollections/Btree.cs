@@ -1,4 +1,4 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    Btree.cs
 // Purpose: Define base functionality for Ranked classes.

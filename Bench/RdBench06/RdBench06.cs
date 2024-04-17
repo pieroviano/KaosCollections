@@ -1,4 +1,4 @@
-﻿//
+//
 // Program: RdBench06.cs
 // Purpose: Benchmark SortedList v. RankedDictionary indexing.
 //

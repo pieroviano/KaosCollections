@@ -1,4 +1,4 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    RankedMap.KeyCollection.cs
 // Purpose: Define KeyCollection nested class.

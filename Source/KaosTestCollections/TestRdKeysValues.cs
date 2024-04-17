@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using NUnit.Framework;
 #if TEST_BCL
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace Kaos.Test.Collections
     {
         #region Test Keys constructor
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdk_Ctor_ArgumentNull()
         {
@@ -25,7 +25,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_Ctor()
         {
             Setup();
@@ -42,7 +42,7 @@ namespace Kaos.Test.Collections
 
         #region Test Keys properties
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_Count()
         {
             Setup();
@@ -53,7 +53,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_gcIsReadonly()
         {
             Setup();
@@ -62,7 +62,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_ocSyncRoot()
         {
             Setup();
@@ -74,7 +74,7 @@ namespace Kaos.Test.Collections
 
         #region Test Keys methods
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdk_gcAdd_NotSupported()
         {
@@ -84,7 +84,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdk_gcClear_NotSupported()
         {
@@ -94,7 +94,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdk_gcContains_ArgumentNull()
         {
@@ -106,7 +106,7 @@ namespace Kaos.Test.Collections
             var zz = gc.Contains (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_gcContains()
         {
             Setup();
@@ -120,7 +120,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdk_CopyTo_ArgumentNull()
         {
@@ -129,7 +129,7 @@ namespace Kaos.Test.Collections
             dary1.Keys.CopyTo (null, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdk_CopyTo_ArgumentOutOfRange()
         {
@@ -138,7 +138,7 @@ namespace Kaos.Test.Collections
             dary1.Keys.CopyTo (target, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRdk_CopyTo_Argument()
         {
@@ -150,7 +150,7 @@ namespace Kaos.Test.Collections
             dary1.Keys.CopyTo (target, 2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_CopyTo()
         {
             Setup();
@@ -167,7 +167,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_gcCopyTo()
         {
             Setup();
@@ -187,7 +187,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdk_gcRemove_NotSupported()
         {
@@ -201,7 +201,7 @@ namespace Kaos.Test.Collections
         #region Test Keys bonus methods
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRdkx_Indexer()
         {
             var rd = new RankedDictionary<string,int> { {"0zero",0}, {"1one",-1}, {"2two",-2} };
@@ -212,7 +212,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdkx_ElementAt_ArgumentOutOfRange1()
         {
@@ -220,7 +220,7 @@ namespace Kaos.Test.Collections
             var zz = rd.Keys.ElementAt (-1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdkx_ElementAt_ArgumentOutOfRange2()
         {
@@ -228,7 +228,7 @@ namespace Kaos.Test.Collections
             var zz = rd.Keys.ElementAt (0);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkx_ElementAt()
         {
             var rd = new RankedDictionary<string,int> { {"one",1 }, {"two",2} };
@@ -238,7 +238,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdkx_ElementAtOrDefault()
         {
             var rd = new RankedDictionary<string,int> { {"one",1}, {"two", 2} };
@@ -253,7 +253,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdkx_IndexOf()
         {
             var rd = new RankedDictionary<string,int> { {"one",1}, {"two",2} };
@@ -266,7 +266,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdx_TryGet()
         {
             var rd = new RankedDictionary<string,int> (StringComparer.InvariantCultureIgnoreCase);
@@ -287,7 +287,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdkx_TryGetGEGT()
         {
             var rd = new RankedDictionary<string,int> { {"BB",1}, {"CC",2} };
@@ -314,7 +314,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdkx_TryGetLELT()
         {
             var rd = new RankedDictionary<string,int> { {"BB",1}, {"CC",2} };
@@ -345,7 +345,7 @@ namespace Kaos.Test.Collections
 
         #region Test Keys enumeration
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdk_ocCurrent_InvalidOperation()
         {
@@ -358,7 +358,7 @@ namespace Kaos.Test.Collections
             object zz = etor.Current;
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_GetEnumerator()
         {
             Setup (4);
@@ -377,7 +377,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (n, actualCount);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_gcGetEnumerator()
         {
             Setup();
@@ -402,7 +402,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_Reverse()
         {
             Setup (4);
@@ -421,7 +421,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdk_EtorHotUpdate()
         {
@@ -438,7 +438,7 @@ namespace Kaos.Test.Collections
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_ocCurrent_HotUpdate()
         {
             Setup();
@@ -454,7 +454,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual ("AA", etor.Current);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_EtorCurrentHotUpdate()
         {
             Setup();
@@ -476,7 +476,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdk_oReset()
         {
             Setup (5);
@@ -515,7 +515,7 @@ namespace Kaos.Test.Collections
 
         #region Test Values constructor
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdv_Ctor_ArgumentNull()
         {
@@ -527,7 +527,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_Ctor()
         {
             Setup();
@@ -544,7 +544,7 @@ namespace Kaos.Test.Collections
 
         #region Test Values properties
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_Count()
         {
             Setup();
@@ -555,7 +555,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_gcIsReadonly()
         {
             Setup();
@@ -564,7 +564,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_ocSyncRoot()
         {
             Setup();
@@ -576,7 +576,7 @@ namespace Kaos.Test.Collections
 
         #region Test Values methods
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdv_gcAdd_NotSupported()
         {
@@ -586,7 +586,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdv_gcClear_NotSupported()
         {
@@ -596,7 +596,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_gcContains()
         {
             Setup();
@@ -610,7 +610,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdv_CopyTo_ArgumentNull()
         {
@@ -619,7 +619,7 @@ namespace Kaos.Test.Collections
             dary1.Values.CopyTo (null, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdv_CopyTo_ArgumentOutOfRange()
         {
@@ -628,7 +628,7 @@ namespace Kaos.Test.Collections
             dary1.Values.CopyTo (target, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRdv_CopyTo_Argument()
         {
@@ -641,7 +641,7 @@ namespace Kaos.Test.Collections
             dary1.Values.CopyTo (target, 2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_CopyTo()
         {
             Setup();
@@ -658,7 +658,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_gcCopyTo()
         {
             Setup();
@@ -678,7 +678,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdv_gcRemove_NotSupported()
         {
@@ -692,7 +692,7 @@ namespace Kaos.Test.Collections
         #region Test Values bonus methods
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRdvx_Indexer()
         {
             var rd = new RankedDictionary<string,int> { Capacity=4 };
@@ -702,7 +702,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdvx_IndexOf()
         {
             var rd = new RankedDictionary<int,int> { Capacity=5 };
@@ -721,7 +721,7 @@ namespace Kaos.Test.Collections
 
         #region Test Values enumeration
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdv_ocCurrent_InvalidOperation()
         {
@@ -734,7 +734,7 @@ namespace Kaos.Test.Collections
             object zz = etor.Current;
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_GetEtor()
         {
             Setup();
@@ -753,7 +753,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (n, actualCount);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_gcGetEnumerator()
         {
             Setup();
@@ -778,7 +778,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_ocCurrent_HotUpdate()
         {
             Setup();
@@ -794,7 +794,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (11, etor.Current);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_EtorCurrentHotUpdate()
         {
             Setup();
@@ -816,7 +816,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdv_EtorHotUpdate()
         {
@@ -834,7 +834,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdv_oReset()
         {
             Setup (5);

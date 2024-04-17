@@ -1,4 +1,4 @@
-﻿//
+//
 // File: TestRdDeLinq.cs
 // Purpose: Test LINQ emulation.
 //
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using SLE = System.Linq.Enumerable;
 using SCG = System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 #if TEST_BCL
 using System.Linq;
 #endif
@@ -18,7 +18,7 @@ namespace Kaos.Test.Collections
     {
         #region Test methods (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdq_ElementAtA_ArgumentOutOfRange()
         {
@@ -30,7 +30,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdq_ElementAtB_ArgumentOutOfRange()
         {
@@ -42,7 +42,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdq_ElementAt()
         {
             Setup();
@@ -64,7 +64,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdq_ElementAtOrDefault()
         {
             Setup();
@@ -99,7 +99,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdq_First_InvalidOperation()
         {
@@ -112,7 +112,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdq_Last_InvalidOperation()
         {
@@ -124,7 +124,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdq_Last()
         {
             Setup();
@@ -143,7 +143,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdq_Skip()
         {
             Setup (4);
@@ -180,7 +180,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdq_SkipWhile2Ctor()
         {
             Setup (5);
@@ -199,7 +199,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdq_SkipWhile2F()
         {
             Setup (5);
@@ -221,7 +221,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new SCG.KeyValuePair<int,int>[] { p2,p3 }, dary1.Skip(0).SkipWhile (kv => kv.Key%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdq_SkipWhile2R()
         {
             Setup (5);
@@ -244,7 +244,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdq_SkipWhile3Ctor()
         {
             Setup (4);
@@ -262,7 +262,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, SLE.Count (dary1.SkipWhile ((p,i) => true)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdq_SkipWhile3F()
         {
             Setup (4);
@@ -285,7 +285,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, SLE.Count (dary1.Skip (0).SkipWhile ((p,i) => true)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdq_SkipWhile3R()
         {
             Setup (4);
@@ -313,7 +313,7 @@ namespace Kaos.Test.Collections
         #region Test bonus (LINQ emulation)
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRdqx_oEtorGetEnumerator()
         {
             Setup (4);
@@ -342,7 +342,7 @@ namespace Kaos.Test.Collections
 
         #region Test Keys methods (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdkq_Contains_ArgumentNull()
         {
@@ -352,7 +352,7 @@ namespace Kaos.Test.Collections
             var zz = dary2.Keys.Contains (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_Contains()
         {
             Setup (4);
@@ -365,7 +365,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdkq_ElementAt_ArgumentOutOfRange1()
         {
@@ -377,7 +377,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdkq_ElementAt_ArgumentOutOfRange2()
         {
@@ -389,7 +389,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_ElementAt()
         {
             Setup();
@@ -410,7 +410,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_ElementAtOrDefault()
         {
             Setup();
@@ -435,7 +435,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdkq_First_InvalidOperation()
         {
@@ -447,7 +447,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_First()
         {
             Setup (4);
@@ -461,7 +461,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdkq_Last_InvalidOperation()
         {
@@ -473,7 +473,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_Last()
         {
             Setup (4);
@@ -487,7 +487,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_Skip()
         {
             Setup();
@@ -517,7 +517,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, SLE.Count (dary1.Keys.Reverse().Skip (3)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_SkipWhile2Ctor()
         {
             Setup();
@@ -536,7 +536,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 2,3 }, dary1.Keys.SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_SkipWhile2F()
         {
             Setup();
@@ -555,7 +555,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 2,3 }, dary1.Keys.Skip(0).SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_SkipWhile2R()
         {
             Setup();
@@ -575,7 +575,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_SkipWhile3Ctor()
         {
             Setup (4);
@@ -596,7 +596,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 4,5 }, dary1.Keys.SkipWhile ((k,i) => i<2 || k%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_SkipWhile3F()
         {
             Setup (4);
@@ -616,7 +616,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 3,4 }, dary1.Keys.Skip(0).SkipWhile ((k,i) => i<1 || k%2==0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_SkipWhile3R()
         {
             Setup (4);
@@ -640,7 +640,7 @@ namespace Kaos.Test.Collections
 
         #region Test Keys enumeration (LINQ emulation)
 
-        [TestMethod]
+        [Test]
 #if ! TEST_BCL
         [ExpectedException (typeof (InvalidOperationException))]
 #endif
@@ -658,7 +658,7 @@ namespace Kaos.Test.Collections
                     dary1.Clear();
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdkq_Reverse()
         {
             Setup (5);
@@ -684,7 +684,7 @@ namespace Kaos.Test.Collections
         #region Test Keys bonus (LINQ emulation)
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRdkqx_oEtorGetEnumerator()
         {
             Setup (4);
@@ -713,7 +713,7 @@ namespace Kaos.Test.Collections
 
         #region Test Values methods (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdvq_ElementAt_ArgumentOutOfRange1()
         {
@@ -725,7 +725,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdvq_ElementAt_ArgumentOutOfRange2()
         {
@@ -737,7 +737,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_ElementAt()
         {
             Setup (4);
@@ -750,7 +750,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_ElementAtOrDefault()
         {
             Setup (4);
@@ -767,7 +767,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdvq_First()
         {
@@ -779,7 +779,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_First()
         {
             Setup();
@@ -791,7 +791,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdvq_Last()
         {
@@ -803,7 +803,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_Last()
         {
             Setup (4);
@@ -816,7 +816,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_Skip()
         {
             Setup (4);
@@ -852,7 +852,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_SkipWhile2Ctor()
         {
             Setup (4);
@@ -871,7 +871,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -2,-3 }, dary1.Values.SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_SkipWhile2F()
         {
             Setup (4);
@@ -890,7 +890,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -2,-3 }, dary1.Values.Skip(0).SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_SkipWhile2R()
         {
             Setup (4);
@@ -910,7 +910,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_SkipWhile3Ctor()
         {
             Setup (4);
@@ -931,7 +931,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -4,-5 }, dary1.Values.SkipWhile ((v,i) => v>-3 || i%2==0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_SkipWhile3F()
         {
             Setup (4);
@@ -951,7 +951,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -3,-4 }, dary1.Values.Skip(0).SkipWhile ((v,i) => v>-2 || i%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_SkipWhile3R()
         {
             Setup (4);
@@ -975,7 +975,7 @@ namespace Kaos.Test.Collections
 
         #region Test Values enumeration (LINQ emulation)
 
-        [TestMethod]
+        [Test]
 #if ! TEST_BCL
         [ExpectedException (typeof (InvalidOperationException))]
 #endif
@@ -992,7 +992,7 @@ namespace Kaos.Test.Collections
                     dary1.Clear();
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRdvq_Reverse()
         {
             Setup (5);
@@ -1023,7 +1023,7 @@ namespace Kaos.Test.Collections
         #region Test Values bonus (LINQ emulation)
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRdvqx_oEtorGetEnumerator()
         {
             Setup (4);

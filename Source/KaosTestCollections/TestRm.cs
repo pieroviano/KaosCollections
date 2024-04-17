@@ -1,4 +1,4 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    TestRm.cs
 //
@@ -8,17 +8,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Kaos.Collections;
 
 namespace Kaos.Test.Collections
 {
-    [TestClass]
+    [TestFixture]
     public partial class TestRm : TestBtree
     {
         #region Test constructors
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Inheritance()
         {
             var rm = new RankedMap<string,int>();
@@ -44,14 +44,14 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Ctor0Empty()
         {
             var rm = new RankedMap<string,int>();
             Assert.AreEqual (0, rm.Count);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRm_Ctor1NoComparer_InvalidOperation()
         {
@@ -62,7 +62,7 @@ namespace Kaos.Test.Collections
             rm.Add (new Person ("Macron"), 2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Ctor1A1()
         {
             var rm = new RankedMap<string,int> (StringComparer.OrdinalIgnoreCase);
@@ -82,7 +82,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (4, actualPosition);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Ctor1A2()
         {
             var rm = new RankedMap<string,int> (StringComparer.Ordinal);
@@ -102,7 +102,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRm_Ctor1B_ArgumentNull()
         {
@@ -111,7 +111,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Ctor1B()
         {
             var gsl = new SortedList<string,int> { {"Gremlin",1}, {"Pacer",2} };
@@ -130,7 +130,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (2, actual);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Ctor2()
         {
             ICollection<KeyValuePair<Person,int>> cpl = new SortedList<Person,int>(new PersonComparer());
@@ -147,7 +147,7 @@ namespace Kaos.Test.Collections
 
         #region Test properties
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Comparer()
         {
             var rm = new RankedMap<string,int>();
@@ -156,7 +156,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_gcIsReadonly()
         {
             var rm = new RankedMap<string,int>();
@@ -165,7 +165,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ocIsSynchronized()
         {
             var rm = new RankedMap<string,int>();
@@ -174,7 +174,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_MinMax()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -196,7 +196,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ocSyncRoot()
         {
             var rm = new RankedMap<int,int>();
@@ -208,7 +208,7 @@ namespace Kaos.Test.Collections
 
         #region Test methods
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRm_Add_ArgumentNull()
         {
@@ -216,14 +216,14 @@ namespace Kaos.Test.Collections
             rm.Add (null, 0);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Add()
         {
             var rm = new RankedMap<string,int> { {"foo",1}, {"foo",2}, {"zax",3} };
             Assert.AreEqual (3, rm.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_pcAddPair()
         {
             var rm = new RankedMap<string,int>();
@@ -247,7 +247,7 @@ namespace Kaos.Test.Collections
 
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Clear()
         {
             var rm = new RankedMap<string,int> { Capacity=4 };
@@ -272,7 +272,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_pcContainsA()
         {
             var rm = new RankedMap<string,int> { Capacity=4 };
@@ -297,7 +297,7 @@ namespace Kaos.Test.Collections
             Assert.IsFalse (pc.Contains (new KeyValuePair<string,int> ("alpha", 99)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_pcContainsB()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -318,7 +318,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRm_ContainsKey_ArgumentNull()
         {
@@ -326,7 +326,7 @@ namespace Kaos.Test.Collections
             var zz = rm.ContainsKey (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ContainsKey()
         {
             var rm = new RankedMap<int,int>();
@@ -340,7 +340,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ContainsValue()
         {
             var rm = new RankedMap<int,int>();
@@ -356,7 +356,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRm_CopyTo_ArgumentNull()
         {
@@ -364,7 +364,7 @@ namespace Kaos.Test.Collections
             rm.CopyTo (null, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRm_CopyTo1_ArgumentOutOfRange()
         {
@@ -373,7 +373,7 @@ namespace Kaos.Test.Collections
             rm.CopyTo (target, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRm_CopyTo1_Argument()
         {
@@ -386,7 +386,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRm_CopyTo2_Argument()
         {
@@ -399,7 +399,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_CopyTo2()
         {
             var rm = new RankedMap<int,int>();
@@ -427,7 +427,7 @@ namespace Kaos.Test.Collections
 
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRm_ocCopyTo_ArgumentNull()
         {
@@ -437,7 +437,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRm_ocCopyTo_ArgumentOutOfRange()
         {
@@ -448,7 +448,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRm_ocCopyTo1_Argument()
         {
@@ -459,7 +459,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRm_ocCopyTo2_Argument()
         {
@@ -473,7 +473,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRm_ocCopyToBadType_Argument()
         {
@@ -485,7 +485,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_oCopyTo()
         {
             var rm = new RankedMap<int,int>();
@@ -502,7 +502,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRm_IndexOfKey_ArgumentNull()
         {
@@ -510,7 +510,7 @@ namespace Kaos.Test.Collections
             var zz = rm.IndexOfKey (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_IndexOfKey1()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };
@@ -530,7 +530,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (~250, iy);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_IndexOfKey2()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -545,7 +545,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_IndexOfValue()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -560,7 +560,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRm_Remove_ArgumentNull()
         {
@@ -569,7 +569,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Remove1()
         {
             var rm = new RankedMap<int,int>();
@@ -586,7 +586,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (c0 - 1, rm.Count);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRm_Remove2_Argument()
         {
@@ -594,7 +594,7 @@ namespace Kaos.Test.Collections
             rm.Remove (1, -1);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_Remove2()
         {
             var rm0 = new RankedMap<int,int>();
@@ -640,7 +640,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_pcRemovePairNullValue()
         {
             var rm = new RankedMap<int,string>();
@@ -660,7 +660,7 @@ namespace Kaos.Test.Collections
             Assert.IsFalse (isOK);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_pcRemovePair()
         {
             var rm = new RankedMap<string,int>();
@@ -692,7 +692,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (1, rm.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void StressRm_pcRemovePair()
         {
             for (int cap = 4; cap < 40; ++cap)
@@ -732,7 +732,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRm_RemoveAll_ArgumentNull()
         {
@@ -740,7 +740,7 @@ namespace Kaos.Test.Collections
             rm.RemoveAll (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_RemoveAll()
         {
             var rm0 = new RankedMap<int,int>();
@@ -761,7 +761,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRm_RemoveAtA_ArgumentOutOfRange()
         {
@@ -769,7 +769,7 @@ namespace Kaos.Test.Collections
             rm.RemoveAt (-1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRm_RemoveAtB_ArgumentOutOfRange()
         {
@@ -777,7 +777,7 @@ namespace Kaos.Test.Collections
             rm.RemoveAt (0);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_RemoveAt()
         {
             var rm = new RankedMap<int,int>() { Capacity=4 };
@@ -806,7 +806,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRm_RemoveRangeA_ArgumentOutOfRange()
         {
@@ -814,7 +814,7 @@ namespace Kaos.Test.Collections
             rm.RemoveRange (-1, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRm_RemoveRangeB_ArgumentOutOfRange()
         {
@@ -822,7 +822,7 @@ namespace Kaos.Test.Collections
             rm.RemoveRange (0, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRm_RemoveRange_Argument()
         {
@@ -830,7 +830,7 @@ namespace Kaos.Test.Collections
             rm.RemoveRange (1, 2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_RemoveRange()
         {
             var rm = new RankedMap<int,int>() { Capacity=7 };
@@ -847,7 +847,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRm_RemoveWhere_ArgumentNull()
         {
@@ -855,7 +855,7 @@ namespace Kaos.Test.Collections
             rm.RemoveWhere (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_RemoveWhereA()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };
@@ -872,7 +872,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_RemoveWhereB()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -888,7 +888,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRm_RemoveWherePair_ArgumentNull()
         {
@@ -896,7 +896,7 @@ namespace Kaos.Test.Collections
             rm.RemoveWhereElement (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_RemoveWherePair()
         {
             var rm = new RankedMap<int,int> { Capacity=6 };
@@ -924,7 +924,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_TryGetGEGT()
         {
             var rm = new RankedMap<string,int?> (StringComparer.OrdinalIgnoreCase) { Capacity=4 };
@@ -961,7 +961,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_TryGetLELT()
         {
             var rm = new RankedMap<string,int> (StringComparer.OrdinalIgnoreCase) { Capacity=4 };
@@ -996,7 +996,7 @@ namespace Kaos.Test.Collections
 
         #region Test generic enumeration
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ElementsBetweenA()
         {
             var rm = new RankedMap<string,int>();
@@ -1020,7 +1020,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (3, actual2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ElementsBetweenB()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -1040,7 +1040,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (-290, sumVals);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ElementsBetweenMissingVal()
         {
             var rm = new RankedMap<int,int> { Capacity=8 };
@@ -1060,7 +1060,7 @@ namespace Kaos.Test.Collections
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ElementsBetweenPassedEnd()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };
@@ -1081,7 +1081,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ElementsFrom()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -1107,7 +1107,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (1000, actual2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ElementsFromMissingVal()
         {
             var rm = new RankedMap<int,int>() { Capacity=6 };
@@ -1129,7 +1129,7 @@ namespace Kaos.Test.Collections
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ElementsFromPassedEnd()
         {
             var rm = new RankedMap<int,int>();
@@ -1145,7 +1145,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRm_ElementsBetweenIndexes_ArgumentOutOfRangeA()
         {
@@ -1154,7 +1154,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRm_ElementsBetweenIndexes_ArgumentOutOfRangeB()
         {
@@ -1163,7 +1163,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRm_ElementsBetweenIndexes_ArgumentOutOfRangeC()
         {
@@ -1172,7 +1172,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRm_ElementsBetweenIndexes_ArgumentOutOfRangeD()
         {
@@ -1181,7 +1181,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRm_ElementsBetweenIndexes_Argument()
         {
@@ -1190,7 +1190,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ElementsBetweenIndexes()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -1212,7 +1212,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_gcEnumeration()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -1232,7 +1232,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_peEtor()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -1252,7 +1252,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_GetEnumeratorOnEmpty()
         {
             var rm = new RankedMap<string,int>();
@@ -1269,7 +1269,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_GetEnumeratorPastEnd()
         {
             var rm2 = new RankedMap<string,int>();
@@ -1298,7 +1298,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRm_oeEtorRewound_InvalidOperation()
         {
@@ -1309,7 +1309,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRm_peEtorPastUnwound_InvalidOperation()
         {
@@ -1323,7 +1323,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_pcEtorPairPastEnd()
         {
             var rm = new RankedMap<string,int> { {"nine",9} };
@@ -1350,7 +1350,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRm_EtorHotUpdate()
         {
@@ -1362,7 +1362,7 @@ namespace Kaos.Test.Collections
                     rm.Add ("kaboom", 4);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_EtorCurrentHotUpdate()
         {
             var rm1 = new RankedMap<int,int>();
@@ -1392,7 +1392,7 @@ namespace Kaos.Test.Collections
 
         #region Test object enumeration
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ocGetEnumerator()
         {
             var rm = new RankedMap<int,int>();
@@ -1400,7 +1400,7 @@ namespace Kaos.Test.Collections
             var zz = oc.GetEnumerator();
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ocEtor()
         {
             var rm = new RankedMap<int,string> { {3,"cc"} };
@@ -1418,7 +1418,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_oEtorEntry()
         {
             var rm = new RankedMap<int,int>();
@@ -1439,7 +1439,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_ocCurrent_HotUpdate()
         {
             var rm = new RankedMap<int,int>();
@@ -1457,7 +1457,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRm_oReset()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };

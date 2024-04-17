@@ -1,10 +1,10 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    TestRs.cs
 //
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 #if TEST_BCL
 using System.Collections.Generic;
 #else
@@ -13,12 +13,12 @@ using Kaos.Collections;
 
 namespace Kaos.Test.Collections
 {
-    [TestClass]
+    [TestFixture]
     public partial class TestRs : TestBtree
     {
         #region Test constructors
 
-        [TestMethod]
+        [Test]
         public void UnitRs_Inheritance()
         {
             Setup();
@@ -57,7 +57,7 @@ namespace Kaos.Test.Collections
         public class DerivedS : RankedSet<int> { }
 #endif
 
-        [TestMethod]
+        [Test]
         public void UnitRs_CtorSubclass()
         {
             var sub = new DerivedS();
@@ -66,7 +66,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRs_Ctor0Empty()
         {
             Setup();
@@ -74,7 +74,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
 #if TEST_BCL
         [ExpectedException (typeof (ArgumentException))]
 #else
@@ -93,7 +93,7 @@ namespace Kaos.Test.Collections
         }
 
         // MS docs incorrectly state this will throw.
-        [TestMethod]
+        [Test]
         public void UnitRs_Ctor1ANullOk()
         {
             var comp0 = (System.Collections.Generic.Comparer<int>) null;
@@ -106,7 +106,7 @@ namespace Kaos.Test.Collections
             nullComparer.Add (2);
         }
 
-        [TestMethod]
+        [Test]
 #if TEST_BCL
         [ExpectedException (typeof (ArgumentException))]
 #else
@@ -123,7 +123,7 @@ namespace Kaos.Test.Collections
                 sansComparer.Add (new Person (name));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_Ctor1A1()
         {
             Setup();
@@ -135,7 +135,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (Person.names.Length+2, personSet.Count);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_Ctor1B_ArgumentNull()
         {
@@ -147,7 +147,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_Ctor1B()
         {
 #if TEST_BCL
@@ -162,7 +162,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRs_Ctor2A()
         {
             var pa = new System.Collections.Generic.List<Person>();
@@ -180,7 +180,7 @@ namespace Kaos.Test.Collections
 
         #region Test class comparison
 
-        [TestMethod]
+        [Test]
         public void UnitRs_CreateSetComparer0()
         {
             Setup();
@@ -204,7 +204,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (b2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_CreateSetComparer1()
         {
             Setup();
@@ -226,7 +226,7 @@ namespace Kaos.Test.Collections
 
         #region Test properties
 
-        [TestMethod]
+        [Test]
         public void UnitRs_ocIsSynchronized()
         {
             Setup();
@@ -236,7 +236,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRs_Max()
         {
             Setup (5);
@@ -252,7 +252,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRs_Min()
         {
             Setup (4);
@@ -268,7 +268,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRs_ocSyncRoot()
         {
             Setup();
@@ -281,7 +281,7 @@ namespace Kaos.Test.Collections
 
         #region Test methods
 
-        [TestMethod]
+        [Test]
         public void UnitRs_Add()
         {
             Setup();
@@ -299,7 +299,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRs_ocAdd()
         {
             Setup();
@@ -313,7 +313,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRs_Clear()
         {
             Setup (4);
@@ -336,7 +336,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_CopyTo1_ArgumentNull()
         {
@@ -344,7 +344,7 @@ namespace Kaos.Test.Collections
             setI.CopyTo (null);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRs_CopyTo1_Argument()
         {
@@ -355,7 +355,7 @@ namespace Kaos.Test.Collections
             setI.CopyTo (d1);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_CopyTo1()
         {
             Setup();
@@ -373,7 +373,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (System.Linq.Enumerable.SequenceEqual (e4, d4));
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_CopyTo2_ArgumentNull()
         {
@@ -381,7 +381,7 @@ namespace Kaos.Test.Collections
             setI.CopyTo (null, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRs_CopyTo2_ArgumentOutOfRange()
         {
@@ -391,7 +391,7 @@ namespace Kaos.Test.Collections
             setI.CopyTo (d2, -1);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_CopyTo2A()
         {
             Setup();
@@ -409,7 +409,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (System.Linq.Enumerable.SequenceEqual (e4, d4));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_CopyTo2B()
         {
             Setup();
@@ -421,7 +421,7 @@ namespace Kaos.Test.Collections
             setTS1.CopyTo (i3, 1, 2);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_CopyTo3_ArgumentNull()
         {
@@ -429,7 +429,7 @@ namespace Kaos.Test.Collections
             setI.CopyTo (null, 0, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRs_CopyTo3A_ArgumentOutOfRange()
         {
@@ -440,7 +440,7 @@ namespace Kaos.Test.Collections
             setI.CopyTo (d2, -1, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRs_CopyTo3B_ArgumentOutOfRange()
         {
@@ -451,7 +451,7 @@ namespace Kaos.Test.Collections
             setI.CopyTo (d2, 0, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRs_CopyTo3A_Argument()
         {
@@ -464,7 +464,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRs_CopyTo3B_Argument()
         {
@@ -476,7 +476,7 @@ namespace Kaos.Test.Collections
             setI.CopyTo (d3, 1, 3);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_CopyTo3()
         {
             Setup();
@@ -505,7 +505,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_ocCopyTo2_ArgumentNull()
         {
@@ -515,7 +515,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (null, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRs_ocCopyTo2_ArgumentOutOfRange()
         {
@@ -526,7 +526,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (d1, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRs_ocCopyTo2A_Argument()
         {
@@ -539,7 +539,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (d2, 1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRs_ocCopyTo2B_Argument()
         {
@@ -549,7 +549,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (s2, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRs_ocCopyTo2C_Argument()
         {
@@ -560,7 +560,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (a11, 1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRs_ocCopyTo2D_Argument()
         {
@@ -573,7 +573,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (oa, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRs_ocCopyTo2E_Argument()
         {
@@ -586,7 +586,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (wrongType, 0);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_ocCopyTo2()
         {
             Setup (4);
@@ -610,7 +610,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (System.Linq.Enumerable.SequenceEqual (e6, d6));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_Remove()
         {
             Setup (4);
@@ -646,7 +646,7 @@ namespace Kaos.Test.Collections
         static RankedSet<int> staticSetI = new RankedSet<int>();
 #endif
 
-        [TestMethod]
+        [Test]
 #if ! TEST_BCL
         [ExpectedException (typeof (InvalidOperationException))]
 #endif
@@ -659,7 +659,7 @@ namespace Kaos.Test.Collections
             staticSetI.RemoveWhere (IsHotAlways);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRs_RemoveWhereHotEtor_InvalidOperation()
         {
@@ -670,7 +670,7 @@ namespace Kaos.Test.Collections
                 setI.RemoveWhere (IsEven);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_RemoveWhereHotNonUpdate()
         {
             Setup();
@@ -680,7 +680,7 @@ namespace Kaos.Test.Collections
                 setI.RemoveWhere (IsEven);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_RemoveWhere_ArgumentNull()
         {
@@ -688,7 +688,7 @@ namespace Kaos.Test.Collections
             setI.RemoveWhere (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_RemoveWhere()
         {
             Setup (5);
@@ -716,7 +716,7 @@ namespace Kaos.Test.Collections
 
         #region Test ISet methods
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_ExceptWith_ArgumentNull()
         {
@@ -724,7 +724,7 @@ namespace Kaos.Test.Collections
             setI.ExceptWith (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_ExceptWith()
         {
             Setup();
@@ -749,7 +749,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, setI.Count);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_ExceptWithSelf()
         {
             Setup();
@@ -760,7 +760,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_IntersectWith_ArgumentNull()
         {
@@ -768,7 +768,7 @@ namespace Kaos.Test.Collections
             setI.IntersectWith (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_IntersectWith()
         {
             Setup(4);
@@ -798,7 +798,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_SymmetricExceptWith_ArgumentNull()
         {
@@ -806,7 +806,7 @@ namespace Kaos.Test.Collections
             setI.SymmetricExceptWith (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_SymmetricExceptWith()
         {
             Setup (4);
@@ -828,7 +828,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_UnionWith_ArgumentNull()
         {
@@ -836,7 +836,7 @@ namespace Kaos.Test.Collections
             setI.UnionWith (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_UnionWith()
         {
             Setup();
@@ -855,7 +855,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_IsSubsetOf_ArgumentNull()
         {
@@ -863,7 +863,7 @@ namespace Kaos.Test.Collections
             bool result = setI.IsSubsetOf (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_IsSubsetOf()
         {
             Setup();
@@ -885,7 +885,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_IsProperSubsetOf_ArgumentNull()
         {
@@ -893,7 +893,7 @@ namespace Kaos.Test.Collections
             bool result = setI.IsProperSubsetOf (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_IsProperSubsetOf()
         {
             Setup();
@@ -914,7 +914,7 @@ namespace Kaos.Test.Collections
             Assert.IsFalse (setI.IsProperSubsetOf (empty));
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_IsSupersetOf_ArgumentNull()
         {
@@ -922,7 +922,7 @@ namespace Kaos.Test.Collections
             bool result = setI.IsSupersetOf (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_IsSupersetOf()
         {
             Setup();
@@ -945,7 +945,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_IsProperSupersetOf_ArgumentNull()
         {
@@ -953,7 +953,7 @@ namespace Kaos.Test.Collections
             bool result = setI.IsProperSupersetOf (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_IsProperSupersetOf()
         {
             Setup();
@@ -977,7 +977,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_Overlaps_ArgumentNull()
         {
@@ -985,7 +985,7 @@ namespace Kaos.Test.Collections
             bool result = setI.Overlaps (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_OverlapsSet()
         {
             Setup();
@@ -1006,7 +1006,7 @@ namespace Kaos.Test.Collections
             Assert.IsFalse (setI.Overlaps (set3));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_OverlapsArray()
         {
             Setup();
@@ -1030,7 +1030,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRs_SetEquals_ArgumentNull()
         {
@@ -1038,7 +1038,7 @@ namespace Kaos.Test.Collections
             bool result = setI.SetEquals (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_SetEquals()
         {
             Setup();
@@ -1064,7 +1064,7 @@ namespace Kaos.Test.Collections
             Assert.IsFalse (setI.SetEquals (empty));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_SetEquals2()
         {
             Setup();
@@ -1085,7 +1085,7 @@ namespace Kaos.Test.Collections
         #region Test bonus methods
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRsx_ElementsBetweenHotUpdate()
         {
@@ -1100,7 +1100,7 @@ namespace Kaos.Test.Collections
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_ElementsBetween()
         {
             Setup (4);
@@ -1124,7 +1124,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_ElementsFromNull()
         {
             Setup (4);
@@ -1133,7 +1133,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_ElementsFrom()
         {
             Setup (4);
@@ -1151,7 +1151,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsx_ElementsBetweenIndexesA_ArgumentOutOfRange()
         {
@@ -1160,7 +1160,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsx_ElementsBetweenIndexesB_ArgumentOutOfRange()
         {
@@ -1169,7 +1169,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsx_ElementsBetweenIndexesC_ArgumentOutOfRange()
         {
@@ -1178,7 +1178,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsx_ElementsBetweenIndexesD_ArgumentOutOfRange()
         {
@@ -1187,7 +1187,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRsx_ElementsBetweenIndexes_Argument()
         {
@@ -1196,7 +1196,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_ElementsBetweenIndexes()
         {
             int n = 33;
@@ -1217,7 +1217,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_IndexOf()
         {
             Setup (4);
@@ -1238,7 +1238,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsx_RemoveAtA_ArgumentOutOfRange()
         {
@@ -1246,7 +1246,7 @@ namespace Kaos.Test.Collections
             rs.RemoveAt (-1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsx_RemoveAtB_ArgumentOutOfRange()
         {
@@ -1255,7 +1255,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_Replace1()
         {
             var rs = new RankedSet<string> (StringComparer.InvariantCultureIgnoreCase)
@@ -1274,7 +1274,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_Replace2()
         {
             var rs = new RankedSet<string> (StringComparer.InvariantCultureIgnoreCase)
@@ -1296,7 +1296,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_TryGet()
         {
             var rs = new RankedSet<string> (StringComparer.InvariantCultureIgnoreCase);
@@ -1318,7 +1318,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_TryGetLELT()
         {
             Setup (4);
@@ -1372,7 +1372,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_TryGetGEGT()
         {
             Setup (4);
@@ -1426,7 +1426,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_RemoveAt()
         {
             var rs = new RankedSet<int> { Capacity=5 };
@@ -1449,7 +1449,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsx_RemoveRangeA_ArgumentOutOfRange()
         {
@@ -1457,7 +1457,7 @@ namespace Kaos.Test.Collections
             rs.RemoveRange (-1, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsx_RemoveRangeB_ArgumentOutOfRange()
         {
@@ -1465,7 +1465,7 @@ namespace Kaos.Test.Collections
             rs.RemoveRange (0, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRsx_RemoveRange_Argument()
         {
@@ -1474,7 +1474,7 @@ namespace Kaos.Test.Collections
             rs.RemoveRange (1, 2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRsx_RemoveRange()
         {
             var set0 = new RankedSet<int> { Capacity=7 };
@@ -1570,7 +1570,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void StressRsx_RemoveRange()
         {
 #if STRESS
@@ -1599,7 +1599,7 @@ namespace Kaos.Test.Collections
 
         #region Test enumeration
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRs_EtorOverflow_InvalidOperation()
         {
@@ -1613,7 +1613,7 @@ namespace Kaos.Test.Collections
             var val = ((System.Collections.IEnumerator) etor).Current;
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_ocGetEnumerator()
         {
             Setup();
@@ -1626,7 +1626,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (5, xEtor.Current);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_EtorOverflowNoCrash()
         {
             Setup (4);
@@ -1640,7 +1640,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (default (int), val);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_GetEnumerator()
         {
             int e1 = 0, e2 = 0;
@@ -1674,7 +1674,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (10, e2);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRs_EtorHotUpdate()
         {
@@ -1689,7 +1689,7 @@ namespace Kaos.Test.Collections
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_ocCurrent_HotUpdate()
         {
             Setup();
@@ -1706,7 +1706,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (1, etor.Current);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRs_EtorCurrentHotUpdate()
         {
             Setup();
@@ -1729,7 +1729,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRs_oReset()
         {
             Setup (4);

@@ -1,4 +1,4 @@
-﻿//
+//
 // Program: RdBench05.cs
 // Purpose: Benchmark RankedDictionary against SortedDictionary with .csv file results.
 //

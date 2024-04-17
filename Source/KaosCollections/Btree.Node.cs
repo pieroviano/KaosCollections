@@ -1,4 +1,4 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    Btree.Node.cs
 //

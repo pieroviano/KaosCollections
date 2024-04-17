@@ -1,10 +1,10 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    TestRb.cs
 //
 
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Kaos.Collections;
 
 namespace Kaos.Test.Collections
@@ -16,12 +16,12 @@ namespace Kaos.Test.Collections
         public String Name { get; private set; }
     }
 
-    [TestClass]
+    [TestFixture]
     public partial class TestRb : TestBtree
     {
         #region Test constructors
 
-        [TestMethod]
+        [Test]
         public void UnitRb_Inheritance()
         {
             var rb = new RankedBag<int> { 42,21,63 };
@@ -51,7 +51,7 @@ namespace Kaos.Test.Collections
 
         public class DerivedB : RankedBag<int> { }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_CtorSubclass()
         {
             var sub = new DerivedB();
@@ -60,7 +60,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_Ctor0Empty()
         {
             var rb = new RankedBag<int>();
@@ -68,14 +68,14 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRb_Ctor1_ArgumentNull()
         {
             var rb = new RankedBag<int> ((System.Collections.Generic.IEnumerable<int>) null);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRb_Ctor2_ArgumentNull()
         {
@@ -86,7 +86,7 @@ namespace Kaos.Test.Collections
 
         #region Test properties
 
-        [TestMethod]
+        [Test]
         public void UnitRb_IsSynchronized()
         {
             var rb = new RankedBag<int>();
@@ -96,7 +96,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_MinMax()
         {
             var rb = new RankedBag<int>();
@@ -112,7 +112,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_ocSyncRoot()
         {
             var rb = new RankedBag<int>();
@@ -124,7 +124,7 @@ namespace Kaos.Test.Collections
 
         #region Test methods
 
-        [TestMethod]
+        [Test]
         public void UnitRb_AddNull()
         {
             var rb = new RankedBag<NameItem>();
@@ -133,7 +133,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_Add2_ArgumentNull()
         {
@@ -141,7 +141,7 @@ namespace Kaos.Test.Collections
             var zz = rb.Add (1, -1);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_Add2()
         {
             var rb = new RankedBag<int> (new int[] { 0, 0 });
@@ -188,7 +188,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_AddEx1()
         {
             var rb = new RankedBag<int>();
@@ -200,7 +200,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_Clear()
         {
             var rb = new RankedBag<int>();
@@ -224,7 +224,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRb_ContainsAll_ArgumentNull()
         {
@@ -232,7 +232,7 @@ namespace Kaos.Test.Collections
             var zz = rb.ContainsAll (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_ContainsAll()
         {
             var rb1 = new RankedBag<int> { Capacity=4 };
@@ -254,7 +254,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRb_CopyTo1_ArgumentNull()
         {
@@ -262,7 +262,7 @@ namespace Kaos.Test.Collections
             rb.CopyTo (null);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_CopyTo1_Argument()
         {
@@ -271,7 +271,7 @@ namespace Kaos.Test.Collections
             rb.CopyTo (d1);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_CopyTo1()
         {
             var e5 = new int[] { 3, 5, 5, 7, 0 };
@@ -287,7 +287,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (System.Linq.Enumerable.SequenceEqual (e5, d5));
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRb_CopyTo2_ArgumentNull()
         {
@@ -295,7 +295,7 @@ namespace Kaos.Test.Collections
             rb.CopyTo (null, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_CopyTo2_ArgumentOutOfRange()
         {
@@ -304,7 +304,7 @@ namespace Kaos.Test.Collections
             rb.CopyTo (d2, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_CopyTo2_Argument()
         {
@@ -313,7 +313,7 @@ namespace Kaos.Test.Collections
             rb.CopyTo (d2, 1);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_CopyTo2()
         {
             var s2 = new int[] { 3, 5 };
@@ -329,7 +329,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (System.Linq.Enumerable.SequenceEqual (e4, d4));
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRb_CopyTo3_ArgumentNull()
         {
@@ -337,7 +337,7 @@ namespace Kaos.Test.Collections
             rb.CopyTo (null, 0, 1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_CopyTo3A_ArgumentOutOfRange()
         {
@@ -346,7 +346,7 @@ namespace Kaos.Test.Collections
             rb.CopyTo (d2, -1, 1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_CopyTo3B_ArgumentOutOfRange()
         {
@@ -355,7 +355,7 @@ namespace Kaos.Test.Collections
             rb.CopyTo (d2, 0, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_CopyTo3A_Argument()
         {
@@ -364,7 +364,7 @@ namespace Kaos.Test.Collections
             rb.CopyTo (d2, 1, 2);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_CopyTo3B_Argument()
         {
@@ -373,7 +373,7 @@ namespace Kaos.Test.Collections
             rb.CopyTo (d3, 1, 3);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_CopyTo3()
         {
             var s4 = new int[] { 3, 5, 5, 7 };
@@ -401,7 +401,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRb_ocCopyTo2_ArgumentNull()
         {
@@ -410,7 +410,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (null, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_ocCopyTo2_ArgumentOutOfRange()
         {
@@ -421,7 +421,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (d2, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_ocCopyTo2A_Argument()
         {
@@ -432,7 +432,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (d2, 1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_ocCopyTo2C_Argument()
         {
@@ -442,7 +442,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (multi, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_ocCopyTo2D_Argument()
         {
@@ -453,7 +453,7 @@ namespace Kaos.Test.Collections
             oc.CopyTo (a11, 1);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_ocCopyTo2()
         {
             var s4 = new int[] { 3, 5, 5, 7 };
@@ -477,7 +477,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_GetCount()
         {
             var rb0 = new RankedBag<int>();
@@ -493,7 +493,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_GetDistinctCount()
         {
             var rb0 = new RankedBag<int>();
@@ -504,7 +504,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void StressRb_Counts()
         {
 #if STRESS
@@ -529,7 +529,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_IndexOf()
         {
             var rb0 = new RankedBag<int>();
@@ -550,7 +550,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_Remove1()
         {
             var rb0 = new RankedBag<int>();
@@ -577,7 +577,7 @@ namespace Kaos.Test.Collections
             Assert.IsFalse (rem10);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_Remove2_Argument()
         {
@@ -585,7 +585,7 @@ namespace Kaos.Test.Collections
             rb.Remove (1, -1);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_Remove2()
         {
             var rb0 = new RankedBag<int>();
@@ -644,7 +644,7 @@ namespace Kaos.Test.Collections
             Assert.IsFalse (rb3.Contains (6));
         }
 
-        [TestMethod]
+        [Test]
         public void StressRbRemove()
         {
 #if STRESS
@@ -678,7 +678,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRb_RemoveAll_ArgumentNull()
         {
@@ -686,7 +686,7 @@ namespace Kaos.Test.Collections
             rb.RemoveAll (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_RemoveAll()
         {
             var rb0 = new RankedBag<int>();
@@ -714,7 +714,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_RemoveAtA_ArgumentOutOfRange()
         {
@@ -722,7 +722,7 @@ namespace Kaos.Test.Collections
             rb.RemoveAt (-1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_RemoveAtB_ArgumentOutOfRange()
         {
@@ -730,7 +730,7 @@ namespace Kaos.Test.Collections
             rb.RemoveAt (0);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_RemoveAt()
         {
             var rb1 = new RankedBag<int>() { Capacity=5 };
@@ -760,7 +760,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_RemoveRangeA_ArgumentOutOfRange()
         {
@@ -768,7 +768,7 @@ namespace Kaos.Test.Collections
             rb.RemoveRange (-1, 0);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_RemoveRangeB_ArgumentOutOfRange()
         {
@@ -776,7 +776,7 @@ namespace Kaos.Test.Collections
             rb.RemoveRange (0, -1);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_RemoveRange_Argument()
         {
@@ -784,7 +784,7 @@ namespace Kaos.Test.Collections
             rb.RemoveRange (1, 2);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_RemoveRange()
         {
             var rb = new RankedBag<int> { Capacity=7 };
@@ -801,7 +801,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_RemoveWhere()
         {
             var rb0 = new RankedBag<int>();
@@ -816,7 +816,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRb_RetainAll_ArgumentNull()
         {
@@ -824,7 +824,7 @@ namespace Kaos.Test.Collections
             rb.RetainAll (null);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_RetainAll()
         {
             var rb0 = new RankedBag<int>();
@@ -848,7 +848,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_TryGetEQ()
         {
             var rb = new RankedBag<string> (StringComparer.OrdinalIgnoreCase) { Capacity=4 };
@@ -883,7 +883,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_TryGetLELT()
         {
             var rb = new RankedBag<string> (StringComparer.OrdinalIgnoreCase) { Capacity=4 };
@@ -935,7 +935,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_TryGetGEGT()
         {
             var rb = new RankedBag<string> (StringComparer.OrdinalIgnoreCase) { Capacity=4 };
@@ -990,7 +990,7 @@ namespace Kaos.Test.Collections
 
         #region Test enumeration
 
-        [TestMethod]
+        [Test]
         public void UnitRb_ElementsBetween()
         {
             var rb0 = new RankedBag<int>();
@@ -1020,7 +1020,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_ElementsFrom()
         {
             var rb0 = new RankedBag<int>();
@@ -1047,7 +1047,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_ElementsBetweenIndexesA_ArgumentOutOfRange()
         {
@@ -1056,7 +1056,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_ElementsBetweenIndexesB_ArgumentOutOfRange()
         {
@@ -1065,7 +1065,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_ElementsBetweenIndexesC_ArgumentOutOfRange()
         {
@@ -1074,7 +1074,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRb_ElementsBetweenIndexesD_ArgumentOutOfRange()
         {
@@ -1083,7 +1083,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentException))]
         public void CrashRb_ElementsBetweenIndexes_Argument()
         {
@@ -1092,7 +1092,7 @@ namespace Kaos.Test.Collections
             { }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_ElementsBetweenIndexes()
         {
             int n = 33;
@@ -1113,7 +1113,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRb_EtorOverflow_InvalidOperation()
         {
@@ -1127,7 +1127,7 @@ namespace Kaos.Test.Collections
             var val = ((System.Collections.IEnumerator) etor).Current;
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_gcGetEnumerator()
         {
             var rb = new RankedBag<int> { 5 };
@@ -1138,7 +1138,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (5, gcEtor.Current);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_GetEnumerator()
         {
             var rb = new RankedBag<int> { Capacity=4 };
@@ -1164,7 +1164,7 @@ namespace Kaos.Test.Collections
             Assert.IsFalse (isValid);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRb_EtorHotUpdate()
         {
@@ -1179,7 +1179,7 @@ namespace Kaos.Test.Collections
             }
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_ocCurrent_HotUpdate()
         {
             var rb = new RankedBag<int> { 2 };
@@ -1195,7 +1195,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (2, etor.Current);
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRb_EtorCurrentHotUpdate()
         {
             var rb1 = new RankedBag<int> { 2 };
@@ -1217,7 +1217,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRb_oReset()
         {
             var rb = new RankedBag<int> { Capacity=4 };

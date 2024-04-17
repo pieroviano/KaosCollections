@@ -1,4 +1,4 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    Btree.PairLeaf.cs
 // Purpose: Define Btree.PairLeaf class.

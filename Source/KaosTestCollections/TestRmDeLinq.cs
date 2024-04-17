@@ -1,4 +1,4 @@
-﻿//
+//
 // File: TestRmDeLinq.cs
 // Purpose: Test LINQ emulation.
 //
@@ -6,7 +6,7 @@
 using System;
 using SLE=System.Linq.Enumerable;
 using SCG=System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 #if TEST_BCL
 using System.Linq;
 #endif
@@ -18,7 +18,7 @@ namespace Kaos.Test.Collections
     {
         #region Test methods (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmq_ElementAt1_ArgumentOutOfRange()
         {
@@ -30,7 +30,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmq_ElementAt2_ArgumentOutOfRange()
         {
@@ -42,7 +42,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_ElementAt()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -64,7 +64,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_ElementAtOrDefault()
         {
             var rm = new RankedMap<int?,int?>();
@@ -98,7 +98,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmq_First_InvalidOperation()
         {
@@ -111,7 +111,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmq_Last_InvalidOperation()
         {
@@ -123,7 +123,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_FirstLast()
         {
             var rm = new RankedMap<int,int>() { Capacity=5 };
@@ -142,7 +142,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_Skip()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };
@@ -179,7 +179,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_SkipWhile2Ctor()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -197,7 +197,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, SLE.Count (rm.SkipWhile (x => true)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_SkipWhile2F()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };
@@ -219,7 +219,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new SCG.KeyValuePair<int,int>[] { p2,p3 }, rm.Skip(0).SkipWhile (kv => kv.Key%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_SkipWhile2R()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -242,7 +242,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_SkipWhile3Ctor()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -260,7 +260,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, SLE.Count (rm.SkipWhile ((p,i) => true)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_SkipWhile3F()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };
@@ -283,7 +283,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, SLE.Count (rm.Skip (0).SkipWhile ((p,i) => true)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_SkipWhile3R()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -310,7 +310,7 @@ namespace Kaos.Test.Collections
 
         #region Test enumeration (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_ReverseEmpty()
         {
             var rm = new RankedMap<int,int>();
@@ -326,7 +326,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, actual);
         }
 
-        [TestMethod]
+        [Test]
 #if ! TEST_BCL
         [ExpectedException (typeof (InvalidOperationException))]
 #endif
@@ -344,7 +344,7 @@ namespace Kaos.Test.Collections
                     rm.Clear();
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmq_Reverse()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };
@@ -371,7 +371,7 @@ namespace Kaos.Test.Collections
         #region Test bonus (LINQ emulation)
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRmqx_oEtorGetEnumerator()
         {
             var ia = new int[] { 2,2,3,5,6,8,8 };
@@ -400,7 +400,7 @@ namespace Kaos.Test.Collections
 
         #region Test Keys methods (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRmkq_Contains_ArgumentNull()
         {
@@ -412,7 +412,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_Contains()
         {
             var rm = new RankedMap<int,int> { {22,222 } };
@@ -426,7 +426,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmkq_ElementAt_ArgumentOutOfRange1()
         {
@@ -438,7 +438,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmkq_ElementAt_ArgumentOutOfRange2()
         {
@@ -450,7 +450,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_ElementAt()
         {
             var rm = new RankedMap<string,int> { {"0zero",0}, {"1one",-1}, {"1one",-2} };
@@ -467,7 +467,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_ElementAtOrDefault()
         {
             var rm = new RankedMap<string,int> { {"0zero",0}, {"1one",-1}, {"1one",-2} };
@@ -488,7 +488,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmkq_First()
         {
@@ -501,7 +501,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_First()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -518,7 +518,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmkq_Last_InvalidOperation()
         {
@@ -530,7 +530,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_Last()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };
@@ -544,7 +544,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_Skip()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };
@@ -574,7 +574,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, SLE.Count (rm.Keys.Reverse().Skip (3)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_SkipWhile2Ctor()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -593,7 +593,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 2,3 }, rm.Keys.SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_SkipWhile2F()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -612,7 +612,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 2,3 }, rm.Keys.Skip(0).SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_SkipWhile2R()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -632,7 +632,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_SkipWhile3Ctor()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -653,7 +653,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 4,5 }, rm.Keys.SkipWhile ((k,i) => i<2 || k%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_SkipWhile3F()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -673,7 +673,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 3,4 }, rm.Keys.Skip(0).SkipWhile ((k,i) => i<1 || k%2==0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_SkipWhile3R()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -697,7 +697,7 @@ namespace Kaos.Test.Collections
 
         #region Test Keys enumeration (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmkq_DistinctHotUpdate()
         {
@@ -713,7 +713,7 @@ namespace Kaos.Test.Collections
                     rm.Remove ("aa");
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_Distinct()
         {
             var rm0 = new RankedMap<int,int>();
@@ -736,7 +736,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
 #if ! TEST_BCL
         [ExpectedException (typeof (InvalidOperationException))]
 #endif
@@ -754,7 +754,7 @@ namespace Kaos.Test.Collections
                     rm.Clear();
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmkq_Reverse()
         {
             var rm0 = new RankedMap<int,int>();
@@ -786,7 +786,7 @@ namespace Kaos.Test.Collections
         #region Test Keys bonus (LINQ emulation)
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRmkqx_oEtorGetEnumerator()
         {
             var ia = new int[] { 2,3,5,5,6,8 };
@@ -814,7 +814,7 @@ namespace Kaos.Test.Collections
 
         #region Test Values methods (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmvq_ElementAt_ArgumentOutOfRange1()
         {
@@ -826,7 +826,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmvq_ElementAt_ArgumentOutOfRange2()
         {
@@ -838,7 +838,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_ElementAt()
         {
             var rm = new RankedMap<string,int> { {"aa",0}, {"bb",-1}, {"bb",-2} };
@@ -855,7 +855,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_ElementAtOrDefault()
         {
             var rm = new RankedMap<string,int?> { {"aa",0}, {"bb",-1}, {"bb",-2} };
@@ -876,7 +876,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmvq_First()
         {
@@ -888,7 +888,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_First()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -900,7 +900,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmvq_Last()
         {
@@ -912,7 +912,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_Last()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -925,7 +925,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_Skip()
         {
             var rm = new RankedMap<int,int> { Capacity=5 };
@@ -961,7 +961,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_SkipWhile2Ctor()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -980,7 +980,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -2,-3 }, rm.Values.SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_SkipWhile2F()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -999,7 +999,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -2,-3 }, rm.Values.Skip(0).SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_SkipWhile2R()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -1019,7 +1019,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_SkipWhile3Ctor()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -1040,7 +1040,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -4,-5 }, rm.Values.SkipWhile ((v,i) => v>-3 || i%2==0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_SkipWhile3F()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -1060,7 +1060,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { -3,-4 }, rm.Values.Skip(0).SkipWhile ((v,i) => v>-2 || i%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_SkipWhile3R()
         {
             var rm = new RankedMap<int,int> { Capacity=4 };
@@ -1084,7 +1084,7 @@ namespace Kaos.Test.Collections
 
         #region Test Values enumeration (LINQ emulation)
 
-        [TestMethod]
+        [Test]
 #if ! TEST_BCL
         [ExpectedException (typeof (InvalidOperationException))]
 #endif
@@ -1102,7 +1102,7 @@ namespace Kaos.Test.Collections
                     rm.Clear();
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRmvq_Reverse()
         {
             var rm0 = new RankedMap<int,int>();
@@ -1134,7 +1134,7 @@ namespace Kaos.Test.Collections
         #region Test Values bonus (LINQ emulation)
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRmvqx_oEtorGetEnumerator()
         {
             var ia = new int[] { 2,3,3,5,6,8,8 };

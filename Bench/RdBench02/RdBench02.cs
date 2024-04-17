@@ -1,4 +1,4 @@
-﻿//
+//
 // Program: RdBench02.cs
 // Purpose: Perform comparison benchmarks on RankedDictionary and SortedDictionary.
 //

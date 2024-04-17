@@ -1,4 +1,4 @@
-﻿//
+//
 // File: TestRsDeLinq.cs
 // Purpose: Exercise LINQ API optimized with instance methods.
 //
@@ -8,7 +8,7 @@ using SLE=System.Linq.Enumerable;
 #if TEST_BCL
 using System.Linq;
 #endif
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Kaos.Test.Collections
 {
@@ -16,7 +16,7 @@ namespace Kaos.Test.Collections
     {
         #region Test methods (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_Contains()
         {
             Setup();
@@ -41,7 +41,7 @@ namespace Kaos.Test.Collections
         }
 
 #if ! TEST_BCL
-        [TestMethod]
+        [Test]
         public void StressRsq_Contains()
         {
             Setup (4);
@@ -63,7 +63,7 @@ namespace Kaos.Test.Collections
         }
 #endif
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsq_ElementAt1_ArgumentOutOfRange()
         {
@@ -76,7 +76,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsq_ElementAt2_ArgumentOutOfRange()
         {
@@ -88,7 +88,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_ElementAt()
         {
             Setup (4);
@@ -108,7 +108,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_ElementAtOrDefault()
         {
             Setup();
@@ -135,7 +135,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRsq_First_InvalidOperation()
         {
@@ -147,7 +147,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRsq_Last_InvalidOperation()
         {
@@ -159,7 +159,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_FirstLast()
         {
             Setup (4);
@@ -179,7 +179,7 @@ namespace Kaos.Test.Collections
 
         #region Test enumeration (LINQ emulation)
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_Reverse()
         {
             Setup (5);
@@ -205,7 +205,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_Skip()
         {
             Setup (4);
@@ -265,7 +265,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 5,4,3,2,1 }, setI.Reverse().Skip(30).Skip (15)));
         }
 
-        [TestMethod]
+        [Test]
         public void StressRsq_SkipF()
         {
             Setup (4);
@@ -287,7 +287,7 @@ namespace Kaos.Test.Collections
                 }
         }
 
-        [TestMethod]
+        [Test]
         public void StressRsq_SkipR()
         {
             Setup (4);
@@ -309,7 +309,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_SkipWhile2Ctor()
         {
             Setup (5);
@@ -328,7 +328,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 2,3 }, setI.SkipWhile (x => x%2!=0)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_SkipWhile2F()
         {
             Setup (5);
@@ -353,7 +353,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 45,46,47,48,49 }, setI.Skip(30).SkipWhile (x => x<45)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_SkipWhile2R()
         {
             Setup (5);
@@ -379,7 +379,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_SkipWhile3Ctor()
         {
             Setup (5);
@@ -399,7 +399,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 4 }, setI.SkipWhile ((x,i) => x%2!=0 || i<3)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_SkipWhile3F()
         {
             Setup (5);
@@ -424,7 +424,7 @@ namespace Kaos.Test.Collections
             Assert.IsTrue (SLE.SequenceEqual (new int[] { 48,49 }, setI.Skip(30).SkipWhile ((x,i) => x%3!=0 || i<15)));
         }
 
-        [TestMethod]
+        [Test]
         public void UnitRsq_SkipWhile3R()
         {
             Setup (5);
@@ -450,7 +450,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void StressRsq_SkipWhile()
         {
             Setup (5);
@@ -472,7 +472,7 @@ namespace Kaos.Test.Collections
         #region Test bonus (LINQ emulation)
 #if ! TEST_BCL
 
-        [TestMethod]
+        [Test]
         public void UnitRsqx_oEtorGetEnumerator()
         {
             Setup();

@@ -1,4 +1,4 @@
-﻿//
+//
 // Program: RsChart05C.cs
 // Purpose: Show various tree mutation scenarios of SymmetricExceptWith.
 //

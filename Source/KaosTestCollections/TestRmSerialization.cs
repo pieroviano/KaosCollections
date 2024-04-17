@@ -1,4 +1,4 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    TestRmSerializaton.cs
 //
@@ -7,7 +7,7 @@ using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Kaos.Collections;
 
 namespace Kaos.Test.Collections
@@ -42,7 +42,7 @@ namespace Kaos.Test.Collections
 
     public partial class TestRm
     {
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRmz_ArgumentNull()
         {
@@ -50,7 +50,7 @@ namespace Kaos.Test.Collections
             ((ISerializable) map).GetObjectData (null, new StreamingContext());
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRmz_NullCB()
         {
@@ -58,7 +58,7 @@ namespace Kaos.Test.Collections
             ((IDeserializationCallback) map).OnDeserialization (null);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRmz_BadCount()
         {
@@ -68,7 +68,7 @@ namespace Kaos.Test.Collections
               { var map = (PlayerMap) formatter.Deserialize (fs); }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRmz_MismatchKV()
         {
@@ -78,7 +78,7 @@ namespace Kaos.Test.Collections
               { var map = (PlayerMap) formatter.Deserialize (fs); }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRmz_MissingKeys()
         {
@@ -88,7 +88,7 @@ namespace Kaos.Test.Collections
               { var map = (PlayerMap) formatter.Deserialize (fs); }
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException (typeof (SerializationException))]
         public void CrashRmz_MissingValues()
         {
@@ -99,7 +99,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmz_Serialization()
         {
             string fileName = "MapScores.bin";
@@ -123,7 +123,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRmz_BadSerialization()
         {
             string fileName = "BadMapScores.bin";

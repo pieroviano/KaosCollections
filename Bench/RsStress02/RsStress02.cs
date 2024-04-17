@@ -1,4 +1,4 @@
-﻿//
+//
 // Program: RsStress02.cs
 // Purpose: Stress test RemoveRange operation.
 //

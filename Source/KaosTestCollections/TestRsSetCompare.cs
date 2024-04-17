@@ -1,9 +1,9 @@
-﻿//
+//
 // Library: KaosCollections
 // File:    TestRsSetCompare.cs
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 #if TEST_BCL
 using System.Collections.Generic;
 #else
@@ -36,7 +36,7 @@ namespace Kaos.Test.Collections
             = RankedSet<string>.CreateSetComparer();
 #endif
 
-        [TestMethod]
+        [Test]
         public void UnitRsc_Equals()
         {
 #if TEST_BCL
@@ -60,7 +60,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsc_GetHashCode()
         {
             int comparerHashCode0 = setComparer.GetHashCode (null);
@@ -71,7 +71,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsc_SetGetHashCode()
         {
             int hc0 = setComparer.GetHashCode (setS1);
@@ -82,7 +82,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsc_SetEquals1()
         {
             setS1.Add ("ABC");
@@ -108,7 +108,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void UnitRsc_SetEquals2()
         {
 #if TEST_BCL

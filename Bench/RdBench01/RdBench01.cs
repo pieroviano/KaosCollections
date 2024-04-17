@@ -1,4 +1,4 @@
-﻿//
+//
 // Program: RdBench01.cs
 // Purpose: Benchmark SortedDictionary and RankedDictionary comparisons with range query narrative.
 //

@@ -1,4 +1,4 @@
-﻿//
+//
 // Program: RdStress01.cs
 // Purpose: Stress RankedDictionary with permutation deletes.
 //

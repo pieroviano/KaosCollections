@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Kaos.Test.Collections
 {
     public partial class TestRd
     {
-        [TestMethod]
+        [Test]
         public void StressRd_WithLongPermutations()
         {
 #if STRESS
@@ -29,7 +29,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void StressRd_RemoveForLongBranchShift()
         {
             Setup (6);
@@ -58,7 +58,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void StressRd_RemoveSlidingWindowForCoalesce()
         {
             Setup (5);
@@ -90,7 +90,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void StressRd_RemoveSpanForNontrivialCoalesce()
         {
             Setup();
@@ -103,7 +103,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void StressRd_RemoveSpanForBranchBalancing()
         {
             Setup (6);
@@ -122,7 +122,7 @@ namespace Kaos.Test.Collections
         }
 
 
-        [TestMethod]
+        [Test]
         public void StressRd_AddForSplits()
         {
             Setup (5);
