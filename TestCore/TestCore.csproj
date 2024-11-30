@@ -15,7 +15,7 @@
 
     <Description>Test suite (MSTest)</Description>
 
-    <Copyright>Copyright © 2009-2020 github.com/kaosborn</Copyright>
+    <Copyright>Copyright (c) 2009-2020 github.com/kaosborn</Copyright>
 
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 
