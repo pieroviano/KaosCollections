@@ -3,6 +3,16 @@ using System.Collections.Generic;
 
 namespace System.Collections;
 
+/// <summary>
+/// Defines an enumerator that provides advanced iteration and skipping capabilities over a collection of elements of
+/// type T.
+/// </summary>
+/// <remarks>This interface extends standard enumeration by supporting efficient skipping of items, including
+/// index-based and predicate-based skipping. Implementations may offer performance advantages over LINQ-based skipping,
+/// especially for large or indexed collections. The enumerator becomes invalid if the underlying collection is modified
+/// after creation, and subsequent operations may throw an InvalidOperationException. Thread safety and resource
+/// management depend on the specific implementation.</remarks>
+/// <typeparam name="T">The type of elements in the collection to be enumerated.</typeparam>
 public interface ICollectionEnumerator<T>
 {
     /// <summary>Gets the item at the current position of the enumerator.</summary>

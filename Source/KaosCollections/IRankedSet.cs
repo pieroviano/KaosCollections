@@ -1,13 +1,25 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace System.Collections;
 
+/// <summary>
+/// Defines a sorted set collection that maintains items in order according to a specified comparer and provides
+/// efficient indexed access, range queries, and set operations.
+/// </summary>
+/// <remarks>
+/// The IRankedSet&lt;T&gt; interface extends standard set semantics with additional capabilities for indexed
+/// access, efficient range enumeration, and retrieval of items by rank or value. Items are maintained in sorted order
+/// as determined by the set's comparer. Most operations, including insertion, removal, and indexed access, are
+/// optimized for performance and scale logarithmically with the number of items. IRankedSet&lt;T&gt; also supports advanced
+/// set operations such as range removal, batch updates, and efficient skipping/enumeration. Thread safety is not
+/// guaranteed; callers must synchronize access if used concurrently.
+/// </remarks>
+/// <typeparam name="T">The type of elements contained in the set.</typeparam>
+// ReSharper disable once UnusedMember.Global
+// ReSharper disable once PossibleInterfaceMemberAmbiguity
 public interface IRankedSet<T> :
     ISet<T>,
-    ICollection<T>,
     ICollection,
     IReadOnlyCollection<T>,
     ISerializable,
@@ -19,10 +31,6 @@ public interface IRankedSet<T> :
     /// supply an alternate comparer when constructing the set.
     /// </remarks>
     IComparer<T> Comparer { get; }
-
-    /// <summary>Gets the number of items in the set.</summary>
-    /// <remarks>This is a O(1) operation.</remarks>
-    int Count { get; }
 
     /// <summary>Gets the maximum item in the set per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
@@ -52,43 +60,12 @@ public interface IRankedSet<T> :
     /// <exception cref="ArgumentOutOfRangeException">When supplied value is less than zero.</exception>
     int Capacity { get; set; }
 
-    /// <summary>Adds an item to the set and returns a success indicator.</summary>
-    /// <param name="item">The item to add.</param>
-    /// <returns><b>true</b> if <em>item</em> was added to the set; otherwise <b>false</b>.</returns>
-    /// <remarks>
-    /// <para>
-    /// If <em>item</em> is already in the set, this method returns <b>false</b> and does not throw an exception.
-    /// </para>
-    /// <para>This is a O(log <em>n</em>) operation.</para>
-    /// </remarks>
-    /// <exception cref="ArgumentException">When no comparer is available.</exception>
-    bool Add(T item);
-
-    /// <summary>Removes all items from the set.</summary>
-    /// <remarks>This is a O(1) operation.</remarks>
-    void Clear();
-
-    /// <summary>Determines whether the set contains the supplied item.</summary>
-    /// <param name="item">The item to locate.</param>
-    /// <returns><b>true</b> if <em>item</em> is contained in the set; otherwise <b>false</b>.</returns>
-    /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    bool Contains(T item);
-
     /// <summary>Copies the set to a compatible array, starting at the beginning of the array.</summary>
     /// <param name="array">A one-dimensional array that is the destination of the copy.</param>
     /// <remarks>This is a O(<em>n</em>) operation.</remarks>
     /// <exception cref="ArgumentNullException">When <em>array</em> is <b>null</b>.</exception>
     /// <exception cref="ArgumentException">When not enough space is available for the copy.</exception>
     void CopyTo(T[] array);
-
-    /// <summary>Copies the set to a compatible array, starting at the supplied position.</summary>
-    /// <param name="array">A one-dimensional array that is the destination of the copy.</param>
-    /// <param name="index">The zero-based starting position in <em>array</em>.</param>
-    /// <remarks>This is a O(<em>n</em>) operation.</remarks>
-    /// <exception cref="ArgumentNullException">When <em>array</em> is <b>null</b>.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero.</exception>
-    /// <exception cref="ArgumentException">When not enough space is available for the copy.</exception>
-    void CopyTo(T[] array, int index);
 
     /// <summary>Copies a supplied number of items to a compatible array, starting at the supplied position.</summary>
     /// <param name="array">A one-dimensional array that is the destination of the copy.</param>
@@ -100,18 +77,12 @@ public interface IRankedSet<T> :
     /// <exception cref="ArgumentException">When not enough space is available for the copy.</exception>
     void CopyTo(T[] array, int index, int count);
 
-    /// <summary>Removes the supplied item from the set.</summary>
-    /// <param name="item">The item to remove.</param>
-    /// <returns><b>true</b> if <em>item</em> was found and removed; otherwise <b>false</b>.</returns>
-    /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    bool Remove(T item);
-
     /// <summary>Removes an index range of items from the set.</summary>
     /// <param name="index">The zero-based starting index of the range of items to remove.</param>
     /// <param name="count">The number of items to remove.</param>
-    /// <remarks>This is a O(log <em>n</em>) operation where <em>n</em> is <see cref="Count"/>.</remarks>
+    /// <remarks>This is a O(log <em>n</em>) operation where <em>n</em> is &lt;see cref="Count"/&gt;.</remarks>
     /// <example>
-    /// <para>Here, this method is is used to truncate a set.</para>
+    /// <para>Here, this method is used to truncate a set.</para>
     /// <code source="..\Bench\RsExample01\RsExample01.cs" lang="cs"/>
     /// </example>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> or <em>count</em> is less than zero.</exception>
@@ -123,7 +94,7 @@ public interface IRankedSet<T> :
     /// <returns>The number of items removed from the set.</returns>
     /// <remarks>
     /// This is a O(<em>n</em> log <em>m</em>) operation
-    /// where <em>m</em> is the number of items removed and <em>n</em> is <see cref="Count"/>.
+    /// where <em>m</em> is the number of items removed and <em>n</em> is &lt;see cref="Count"/&gt;.
     /// </remarks>
     /// <example>
     /// <para>Here, this method is is used to remove strings containing a space.</para>
@@ -131,98 +102,6 @@ public interface IRankedSet<T> :
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>match</em> is <b>null</b>.</exception>
     int RemoveWhere(Predicate<T> match);
-
-    /// <summary>Removes all items in the supplied collection from the set.</summary>
-    /// <param name="other">The collection of items to remove.</param>
-    /// <remarks>
-    /// Duplicate values in <em>other</em> are ignored.
-    /// Values in <em>other</em> that are not in the set are ignored.
-    /// </remarks>
-    /// <example>
-    /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
-    /// </example>
-    /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    void ExceptWith(IEnumerable<T> other);
-
-    /// <summary>Removes all items that are not in a supplied collection.</summary>
-    /// <param name="other">The collection of items to intersect.</param>
-    /// <example>
-    /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
-    /// </example>
-    /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    void IntersectWith(IEnumerable<T> other);
-
-    /// <summary>Determines whether the set is a proper subset of the supplied collection.</summary>
-    /// <param name="other">The collection to compare to this set.</param>
-    /// <returns><b>true</b> if the set is a proper subset of <em>other</em>; otherwise <b>false</b>.</returns>
-    /// <example>
-    /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
-    /// </example>
-    /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    bool IsProperSubsetOf(IEnumerable<T> other);
-
-    /// <summary>Determines whether the set is a proper superset of the supplied collection.</summary>
-    /// <param name="other">The collection to compare to this set.</param>
-    /// <returns><b>true</b> if the set is a proper superset of <em>other</em>; otherwise <b>false</b>.</returns>
-    /// <example>
-    /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
-    /// </example>
-    /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    bool IsProperSupersetOf(IEnumerable<T> other);
-
-    /// <summary>Determines whether the set is a subset of the supplied collection.</summary>
-    /// <param name="other">The collection to compare to this set.</param>
-    /// <returns><b>true</b> if the set is a subset of <em>other</em>; otherwise <b>false</b>.</returns>
-    /// <example>
-    /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
-    /// </example>
-    /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    bool IsSubsetOf(IEnumerable<T> other);
-
-    /// <summary>Determines whether a set is a superset of the supplied collection.</summary>
-    /// <param name="other">The items to compare to the current set.</param>
-    /// <returns><b>true</b> if the set is a superset of <em>other</em>; otherwise <b>false</b>.</returns>
-    /// <example>
-    /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
-    /// </example>
-    /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    bool IsSupersetOf(IEnumerable<T> other);
-
-    /// <summary>Determines whether the set and a supplied collection share common items.</summary>
-    /// <param name="other">The collection to compare to this set.</param>
-    /// <returns><b>true</b> if the set and <em>other</em> share at least one common item; otherwise <b>false</b>.</returns>
-    /// <example>
-    /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
-    /// </example>
-    /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    bool Overlaps(IEnumerable<T> other);
-
-    /// <summary>Determines whether the set and the supplied collection contain the same items.</summary>
-    /// <param name="other">The collection to compare to this set.</param>
-    /// <returns><b>true</b> if the set is equal to <em>other</em>; otherwise <b>false</b>.</returns>
-    /// <remarks>Duplicate values in <em>other</em> are ignored.</remarks>
-    /// <example>
-    /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
-    /// </example>
-    /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    bool SetEquals(IEnumerable<T> other);
-
-    /// <summary>Modifies the set so that it contains only items that are present either in itself or in the supplied collection, but not both.</summary>
-    /// <param name="other">The collection to compare to this set.</param>
-    /// <example>
-    /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
-    /// </example>
-    /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    void SymmetricExceptWith(IEnumerable<T> other);
-
-    /// <summary>Add all items in <em>other</em> to this set that are not already in this set.</summary>
-    /// <param name="other">The collection to add to this set.</param>
-    /// <remarks>Duplicate values in <em>other</em> are ignored.</remarks>
-    /// <example>
-    /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
-    /// </example>
-    /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    void UnionWith(IEnumerable<T> other);
 
     /// <summary>Gets the item at the supplied index.</summary>
     /// <param name="index">The zero-based index of the item to get.</param>
@@ -240,13 +119,13 @@ public interface IRankedSet<T> :
     /// <summary>Gets the minimum item in the set per the comparer.</summary>
     /// <returns>The minimum item in the set.</returns>
     /// <remarks>This is a O(1) operation.</remarks>
-    /// <exception cref="InvalidOperationException">When <see cref="Count"/> is zero.</exception>
+    /// <exception cref="InvalidOperationException">When &lt;see cref="Count"/&gt; is zero.</exception>
     T First();
 
     /// <summary>Gets the maximum item in the set per the comparer.</summary>
     /// <returns>The maximum item in the set.</returns>
     /// <remarks>This is a O(1) operation.</remarks>
-    /// <exception cref="InvalidOperationException">When <see cref="Count"/> is zero.</exception>
+    /// <exception cref="InvalidOperationException">When &lt;see cref="Count"/&gt; is zero.</exception>
     T Last();
 
     /// <summary>Returns an IEnumerable that iterates thru the set in reverse order.</summary>
@@ -284,8 +163,8 @@ public interface IRankedSet<T> :
     /// Retrieving each subsequent item is a O(1) operation.
     /// </para>
     /// </remarks>
-    /// <exception cref="ArgumentOutOfRangeException">When <em>lowerIndex</em> is less than zero or not less than <see cref="Count"/>.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">When <em>upperIndex</em> is less than zero or not less than <see cref="Count"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">When <em>lowerIndex</em> is less than zero or not less than &lt;see cref="Count"/&gt;.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">When <em>upperIndex</em> is less than zero or not less than &lt;see cref="Count"/&gt;.</exception>
     /// <exception cref="ArgumentException">When <em>lowerIndex</em> and <em>upperIndex</em> do not denote a valid range of indexes.</exception>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
     IEnumerable<T> ElementsBetweenIndexes(int lowerIndex, int upperIndex);
@@ -328,7 +207,7 @@ public interface IRankedSet<T> :
     /// <para>
     /// This is a O(log <em>n</em>) operation.
     /// </para>
-    /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or greater than or equal to <see cref="Count"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or greater than or equal to &lt;see cref="Count"/&gt;.</exception>
     void RemoveAt(int index);
 
     /// <summary>Replace an item if present.</summary>
@@ -336,8 +215,8 @@ public interface IRankedSet<T> :
     /// <returns><b>true</b> if an item is replaced; otherwise <b>false</b>.</returns>
     /// <remarks>
     /// This single operation is equivalent to performing a
-    /// <see cref="Remove"/> operation followed by an
-    /// <see cref="Add"/> operation.
+    /// &lt;see cref="Remove"/> operation followed by a
+    /// &lt;see cref="Add"/> operation.
     /// </remarks>
     bool Replace(T item);
 
@@ -412,5 +291,5 @@ public interface IRankedSet<T> :
 
     /// <summary>Returns an enumerator that iterates thru the set.</summary>
     /// <returns>An enumerator that iterates thru the set in sorted order.</returns>
-    ICollectionEnumerator<T> GetEnumerator();
+    new ICollectionEnumerator<T> GetEnumerator();
 }
