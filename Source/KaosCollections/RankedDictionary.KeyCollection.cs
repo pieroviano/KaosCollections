@@ -14,7 +14,12 @@ using System.Diagnostics;
 
 namespace Kaos.Collections
 {
-    public partial class RankedDictionary<TKey,TValue>
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        partial class RankedDictionary<TKey,TValue>
     {
         /// <summary>
         /// Represents a collection of keys of a <see cref="RankedDictionary{TKey,TValue}"/>.

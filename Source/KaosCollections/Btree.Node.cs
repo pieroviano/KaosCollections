@@ -12,7 +12,12 @@ using System.Text;
 
 namespace Kaos.Collections
 {
-    public abstract partial class Btree<T>
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        abstract partial class Btree<T>
     {
         /// <summary>Base page of the B+ tree. May be internal (Branch) or terminal (Leaf, PairLeaf).</summary>
         /// <exclude />

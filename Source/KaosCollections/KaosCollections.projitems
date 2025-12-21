@@ -16,6 +16,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Btree.Node.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Btree.NodeVector.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Btree.PairLeaf.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ICollectionEnumerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IRankedSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KeyEnumerator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KVDebugView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PairEnumerator.cs" />

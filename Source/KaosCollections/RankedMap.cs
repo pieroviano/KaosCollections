@@ -30,7 +30,12 @@ namespace Kaos.Collections
     [DebuggerTypeProxy (typeof (ICollectionDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
     [Serializable]
-    public partial class RankedMap<TKey,TValue> :
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        partial class RankedMap<TKey,TValue> :
         Btree<TKey>,
         ICollection<KeyValuePair<TKey,TValue>>,
         ICollection,

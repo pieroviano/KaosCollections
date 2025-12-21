@@ -10,7 +10,12 @@ using System.Collections.Generic;
 
 namespace Kaos.Collections
 {
-    public abstract partial class Btree<T>
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        abstract partial class Btree<T>
     {
         /// <summary>Internal node containing subdivisions.</summary>
         /// <remarks>

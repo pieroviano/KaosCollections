@@ -6,11 +6,17 @@
 // MIT License - Use and redistribute freely
 //
 
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Kaos.Collections
 {
-    public partial class RankedSet<T>
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        partial class RankedSet<T> : IRankedSet<T>
     {
         private class RankedSetEqualityComparer : IEqualityComparer<RankedSet<T>>
         {

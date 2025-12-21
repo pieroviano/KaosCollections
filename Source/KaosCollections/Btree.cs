@@ -17,7 +17,12 @@ namespace Kaos.Collections
     /// <summary>Provides base functionality for other classes in this library.</summary>
     /// <typeparam name="T">The type of the keys in the derived class.</typeparam>
     /// <remarks>This class cannot be directly instantiated.</remarks>
-    public abstract partial class Btree<T>
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        abstract partial class Btree<T>
     {
         private const int MinimumOrder = 4;
         private const int DefaultOrder = 128;

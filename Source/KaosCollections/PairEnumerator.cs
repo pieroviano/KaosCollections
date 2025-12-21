@@ -12,7 +12,12 @@ using System.Collections.Generic;
 
 namespace Kaos.Collections
 {
-    public abstract partial class Btree<T>
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        abstract partial class Btree<T>
     {
         /// <exclude />
         private protected class PairEnumerator<V> : BaseEnumerator

@@ -76,7 +76,12 @@ namespace Kaos.Collections
     [DebuggerTypeProxy (typeof (ICollectionDebugView<,>))]
     [DebuggerDisplay ("Count = {Count}")]
     [Serializable]
-    public partial class RankedDictionary<TKey,TValue> :
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        partial class RankedDictionary<TKey,TValue> :
         Btree<TKey>,
         IDictionary<TKey,TValue>,
         IDictionary,

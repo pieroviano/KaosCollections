@@ -9,7 +9,12 @@ using System;
 
 namespace Kaos.Collections
 {
-    public abstract partial class Btree<T>
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+    abstract partial class Btree<T>
     {
         /// <exclude />
         private protected abstract class BaseEnumerator

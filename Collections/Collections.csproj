@@ -1,44 +1,50 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>KaosCollections</AssemblyName>
-    <RootNamespace>Kaos.Collections</RootNamespace>
-    <Version>4.2.0.1$(Suffix)</Version>
-    <Authors>Kasey O.</Authors>
-    <Description>KaosCollections is a .NET library that provides generic collection classes for storing elements that are both sorted and indexed. Two of these classes emulate Microsoft's SortedDictionary and SortedSet while delivering superior performance and greatly enhanced capability. Also included are sorted bag and a map classes. Based on order statistic B+ trees, all classes provide getting elements by index, getting the index of an element, range removal by index, range enumeration, and more.
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<AssemblyName>KaosCollections</AssemblyName>
+		<RootNamespace>Kaos.Collections</RootNamespace>
+		<Version>4.2.0.1$(Suffix)</Version>
+		<Authors>Kasey O.</Authors>
+		<Description>
+			KaosCollections is a .NET library that provides generic collection classes for storing elements that are both sorted and indexed. Two of these classes emulate Microsoft's SortedDictionary and SortedSet while delivering superior performance and greatly enhanced capability. Also included are sorted bag and a map classes. Based on order statistic B+ trees, all classes provide getting elements by index, getting the index of an element, range removal by index, range enumeration, and more.
 
-Primary types provided are:
-Kaos.Collections.RankedDictionary&lt;TKey,TValue&gt;
-Kaos.Collections.RankedSet&lt;T&gt;
-Kaos.Collections.RankedMap&lt;TKey,TValue&gt;
-Kaos.Collections.RankedBag&lt;T&gt;</Description>
-    <AssemblyVersion>4.2.0.1</AssemblyVersion>
-    <FileVersion>4.2.0.1</FileVersion>
-    <Company>github.com/kaosborn</Company>
-    <PackageId>Kaos.Collections</PackageId>
-    <Copyright>Copyright (c) 2009-2021 github.com/kaosborn</Copyright>
-    <PackageProjectUrl>https://github.com/kaosborn/KaosCollections/</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/kaosborn/KaosCollections.git</RepositoryUrl>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <RepositoryType>Git</RepositoryType>
-    <PackageReleaseNotes>For complete documentation including release history:
-https://kaosborn.github.io/help/KaosCollections/</PackageReleaseNotes>
-    <PackageTags>Generics Collections SortedDictionary SortedSet SortedList BTree Order Statistic Dictionary Set Bag Multiset Multimap</PackageTags>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-  </PropertyGroup>
+			Primary types provided are:
+			Kaos.Collections.RankedDictionary&lt;TKey,TValue&gt;
+			Kaos.Collections.RankedSet&lt;T&gt;
+			Kaos.Collections.RankedMap&lt;TKey,TValue&gt;
+			Kaos.Collections.RankedBag&lt;T&gt;
+		</Description>
+		<AssemblyVersion>4.2.0.1</AssemblyVersion>
+		<FileVersion>4.2.0.1</FileVersion>
+		<Company>github.com/kaosborn</Company>
+		<PackageId>Kaos.Collections</PackageId>
+		<Copyright>Copyright (c) 2009-2021 github.com/kaosborn</Copyright>
+		<PackageProjectUrl>https://github.com/kaosborn/KaosCollections/</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/kaosborn/KaosCollections.git</RepositoryUrl>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<RepositoryType>Git</RepositoryType>
+		<PackageReleaseNotes>
+			For complete documentation including release history:
+			https://kaosborn.github.io/help/KaosCollections/
+		</PackageReleaseNotes>
+		<PackageTags>Generics Collections SortedDictionary SortedSet SortedList BTree Order Statistic Dictionary Set Bag Multiset Multimap</PackageTags>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<LangVersion>latest</LangVersion>
+		<DefineConstants>PUBLIC</DefineConstants>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
-  <Import Project="..\Source\KaosCollections\KaosCollections.projitems" Label="Shared" />
+	<Import Project="..\Source\KaosCollections\KaosCollections.projitems" Label="Shared" />
 
 </Project>

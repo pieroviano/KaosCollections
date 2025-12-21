@@ -12,7 +12,12 @@ using System.Diagnostics;
 
 namespace Kaos.Collections
 {
-    public abstract partial class Btree<T>
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        abstract partial class Btree<T>
     {
         /// <summary>A terminal B+ tree node for key/value pairs.</summary>
         /// <exclude />

@@ -43,7 +43,12 @@ namespace Kaos.Collections
     [DebuggerTypeProxy (typeof (ICollectionDebugView<>))]
     [DebuggerDisplay ("Count = {Count}")]
     [Serializable]
-    public class RankedBag<T> :
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        class RankedBag<T> :
         Btree<T>,
         ICollection<T>,
         ICollection,

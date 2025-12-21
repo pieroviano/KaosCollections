@@ -65,7 +65,12 @@ namespace Kaos.Collections
     [DebuggerTypeProxy (typeof (ICollectionDebugView<>))]
     [DebuggerDisplay ("Count = {Count}")]
     [Serializable]
-    public partial class RankedSet<T> :
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        partial class RankedSet<T> :
         Btree<T>,
         ISet<T>,
         ICollection<T>,
@@ -511,7 +516,7 @@ namespace Kaos.Collections
                 return;
 
             StageBump();
-            Enumerator oEtor = oSet.GetEnumerator();
+            ICollectionEnumerator<T> oEtor = oSet.GetEnumerator();
             oEtor.MoveNext();
             T oKey = oEtor.Current;
 
@@ -697,7 +702,7 @@ namespace Kaos.Collections
         /// <summary>Returns an IEnumerable that iterates thru the set in reverse order.</summary>
         /// <returns>An enumerator that reverse iterates thru the set.</returns>
         /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-        public Enumerator Reverse()
+        public ICollectionEnumerator<T> Reverse()
          => new Enumerator (this, isReverse:true);
 
         #endregion
@@ -913,7 +918,7 @@ namespace Kaos.Collections
         /// <code source="..\Bench\RxExample01\RxExample01.cs" lang="cs" region="RsSkip" />
         /// </example>
         /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-        public Enumerator Skip (int count)
+        public ICollectionEnumerator<T> Skip (int count)
          => new Enumerator (this, count);
 
         /// <summary>
@@ -922,7 +927,7 @@ namespace Kaos.Collections
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-        public Enumerator SkipWhile (Func<T,bool> predicate)
+        public ICollectionEnumerator<T> SkipWhile (Func<T,bool> predicate)
          => new Enumerator (this, predicate);
 
         /// <summary>
@@ -931,7 +936,7 @@ namespace Kaos.Collections
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-        public Enumerator SkipWhile (Func<T,int,bool> predicate)
+        public ICollectionEnumerator<T> SkipWhile (Func<T,int,bool> predicate)
          => new Enumerator (this, predicate);
 
         /// <summary>Gets the actual item for the supplied search item.</summary>
@@ -1059,7 +1064,7 @@ namespace Kaos.Collections
 
         /// <summary>Returns an enumerator that iterates thru the set.</summary>
         /// <returns>An enumerator that iterates thru the set in sorted order.</returns>
-        public Enumerator GetEnumerator()
+        public ICollectionEnumerator<T> GetEnumerator()
          => new Enumerator (this);
 
         /// <summary>Returns an enumerator that iterates thru the set.</summary>
@@ -1074,7 +1079,7 @@ namespace Kaos.Collections
 
         /// <summary>Enumerates the items of a <see cref="RankedSet{T}"/> in sort order.</summary>
         [DebuggerTypeProxy (typeof (IEnumerableDebugView<>))]
-        public struct Enumerator : IEnumerator<T>, IEnumerable<T>
+        public struct Enumerator : IEnumerator<T>, IEnumerable<T>, ICollectionEnumerator<T>
         {
             private readonly KeyEnumerator etor;
 
@@ -1139,7 +1144,7 @@ namespace Kaos.Collections
             /// <code source="..\Bench\RxExample01\RxExample01.cs" lang="cs" region="RsSkip" />
             /// </example>
             /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-            public Enumerator Skip (int count)
+            public ICollectionEnumerator<T> Skip (int count)
             {
                 etor.Bypass (count);
                 return this;
@@ -1151,7 +1156,7 @@ namespace Kaos.Collections
             /// <param name="predicate">The condition to test for.</param>
             /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
             /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-            public Enumerator SkipWhile (Func<T,bool> predicate)
+            public ICollectionEnumerator<T> SkipWhile (Func<T,bool> predicate)
             {
                 etor.BypassKey (predicate);
                 return this;
@@ -1163,7 +1168,7 @@ namespace Kaos.Collections
             /// <param name="predicate">The condition to test for.</param>
             /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
             /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-            public Enumerator SkipWhile (Func<T,int,bool> predicate)
+            public ICollectionEnumerator<T> SkipWhile (Func<T,int,bool> predicate)
             {
                 etor.BypassKey (predicate);
                 return this;

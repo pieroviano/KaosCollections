@@ -10,7 +10,12 @@ using System.Diagnostics;
 
 namespace Kaos.Collections
 {
-    public abstract partial class Btree<T>
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        abstract partial class Btree<T>
     {
         /// <summary>Stack trace from root to leaf.</summary>
         /// <remarks>

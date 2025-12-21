@@ -14,7 +14,12 @@ using System.Diagnostics;
 
 namespace Kaos.Collections
 {
-    public partial class RankedMap<TKey,TValue>
+#if PUBLIC
+    public
+#else
+    internal
+#endif
+        partial class RankedMap<TKey,TValue>
     {
         /// <summary>
         /// Represents a collection of keys of a <see cref="RankedMap{TKey,TValue}"/>.
