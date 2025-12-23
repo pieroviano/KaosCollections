@@ -83,7 +83,7 @@ namespace BenchApp
 
                 Console.WriteLine ($"{rdMs,6};{sdMs,6};{rdSMs,6};{sdSMs,6};{rdEMs,6};{sdEMs,6}");
 
-                sumChange += ((float) sumRd) / (float) sumSd;
+                sumChange += sumRd / (float) sumSd;
             }
             float change = sumChange * 10 + 0.5F;
             Console.WriteLine ($"Add improvement={(100 - (int) change)}%");

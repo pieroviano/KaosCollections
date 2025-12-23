@@ -53,7 +53,9 @@ namespace ExampleApp
                 Console.WriteLine ($"  {item}");
 
             string fileName = "Exams.bin";
+#pragma warning disable SYSLIB0011
             IFormatter formatter = new BinaryFormatter();
+#pragma warning restore SYSLIB0011
 
             SerializeExams (fileName, bag1, formatter);
             Console.WriteLine ($"\nWrote {bag1.Count} items to file '{fileName}'.");
@@ -66,13 +68,17 @@ namespace ExampleApp
                 Console.WriteLine ($"  {p2}");
         }
 
+#pragma warning disable SYSLIB0011
         static void SerializeExams (string fn, RankedBag<Exam> bag, IFormatter formatter)
+#pragma warning restore SYSLIB0011
         {
             using (var fs = new FileStream (fn, FileMode.Create))
             { formatter.Serialize (fs, bag); }
         }
 
+#pragma warning disable SYSLIB0011
         static RankedBag<Exam> DeserializeExams (string fn, IFormatter formatter)
+#pragma warning restore SYSLIB0011
         {
             using (var fs = new FileStream (fn, FileMode.Open))
             { return (RankedBag<Exam>) formatter.Deserialize (fs); }

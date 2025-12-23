@@ -5,6 +5,8 @@
 // Copyright © 2009-2021 Kasey Osborn (github.com/kaosborn)
 // MIT License - Use and redistribute freely
 
+#nullable enable
+
 using System;
 
 namespace Kaos.Collections;
@@ -19,16 +21,16 @@ internal
     private protected abstract class BaseEnumerator
     {
         private readonly Btree<T> tree;
-        private readonly bool isReverse=false;
-        protected Leaf leaf=null;
+        private readonly bool isReverse;
+        protected Leaf? leaf;
         protected int leafIndex;
-        private int start=0;
+        private int start;
         private readonly int stageFreeze;
         private int state;  // -1=rewound; 0=active; 1=consumed
 
         public bool NotActive => state != 0;
 
-        public BaseEnumerator (Btree<T> owner, bool isReverse=false)
+        public BaseEnumerator(Btree<T> owner, bool isReverse = false)
         {
             this.tree = owner;
             this.isReverse = isReverse;
@@ -36,15 +38,15 @@ internal
             this.state = -1;
             if (isReverse)
             {
-                this.start = owner.root.Weight-1;
+                this.start = owner.root.Weight - 1;
                 this.leaf = owner.rightmostLeaf;
-                this.leafIndex = owner.rightmostLeaf.KeyCount-1;
+                this.leafIndex = owner.rightmostLeaf.KeyCount - 1;
             }
             else
                 this.leaf = owner.leftmostLeaf;
         }
 
-        public BaseEnumerator (Btree<T> owner, int count)
+        public BaseEnumerator(Btree<T> owner, int count)
         {
             this.tree = owner;
             this.stageFreeze = owner.stage;
@@ -68,7 +70,7 @@ internal
 
         protected bool AdvanceBase()
         {
-            tree.StageCheck (stageFreeze);
+            tree.StageCheck(stageFreeze);
             if (state == 0)
                 if (isReverse)
                     --leafIndex;
@@ -82,7 +84,7 @@ internal
                     if (start >= tree.root.Weight)
                     { state = 1; return false; }
                     else
-                        leaf = (Leaf) tree.Find (start, out leafIndex);
+                        leaf = (Leaf)tree.Find(start, out leafIndex);
                 state = 0;
             }
 
@@ -90,24 +92,27 @@ internal
             {
                 if (leafIndex < 0)
                 {
-                    leaf = leaf.leftLeaf;
+                    leaf = leaf?.leftLeaf;
                     if (leaf == null)
                     { state = 1; return false; }
                     leafIndex = leaf.KeyCount - 1;
                 }
             }
-            else if (leafIndex >= leaf.KeyCount)
+            else if (leafIndex >= (leaf?.KeyCount ?? 0))
             {
-                leaf = leaf.rightLeaf;
+                leaf = leaf?.rightLeaf;
                 if (leaf == null)
-                { state = 1; return false; }
+                {
+                    state = 1;
+                    return false;
+                }
                 leafIndex = 0;
             }
 
             return true;
         }
 
-        public void Bypass (int count)
+        public void Bypass(int count)
         {
             if (state < 0 && count > 0)
                 if (isReverse)
@@ -136,7 +141,7 @@ internal
                 }
         }
 
-        protected void Bypass2<X> (Func<X,bool> condition, Func<Leaf,int,X> getter)
+        protected void Bypass2<X>(Func<X, bool> condition, Func<Leaf, int, X> getter)
         {
             if (state > 0)
                 return;
@@ -146,9 +151,9 @@ internal
                 if (start >= 0)
                 {
                     if (leaf == null)
-                        leaf = (Leaf) tree.Find (start, out leafIndex);
+                        leaf = (Leaf)tree.Find(start, out leafIndex);
 
-                    for (;;)
+                    for (; ; )
                     {
                         if (leafIndex < 0)
                         {
@@ -158,7 +163,7 @@ internal
                             leafIndex = leaf.KeyCount - 1;
                         }
 
-                        if (! condition (getter (leaf, leafIndex)))
+                        if (!condition(getter(leaf, leafIndex)))
                             return;
                         --leafIndex;
                         --start;
@@ -168,9 +173,9 @@ internal
             else if (start < tree.root.Weight)
             {
                 if (leaf == null)
-                    leaf = (Leaf) tree.Find (start, out leafIndex);
+                    leaf = (Leaf)tree.Find(start, out leafIndex);
 
-                for (;;)
+                for (; ; )
                 {
                     if (leafIndex >= leaf.KeyCount)
                     {
@@ -180,7 +185,7 @@ internal
                         leafIndex = 0;
                     }
 
-                    if (! condition (getter (leaf, leafIndex)))
+                    if (!condition(getter(leaf, leafIndex)))
                         return;
                     ++leafIndex;
                     ++start;
@@ -190,7 +195,7 @@ internal
             state = 1;
         }
 
-        protected void Bypass3<X> (Func<X,int,bool> condition, Func<Leaf,int,X> getter)
+        protected void Bypass3<X>(Func<X, int, bool> condition, Func<Leaf, int, X> getter)
         {
             if (state > 0)
                 return;
@@ -200,9 +205,9 @@ internal
                 if (start >= 0)
                 {
                     if (leaf == null)
-                        leaf = (Leaf) tree.Find (start, out leafIndex);
+                        leaf = (Leaf)tree.Find(start, out leafIndex);
 
-                    for (int offset = 0;; ++offset)
+                    for (var offset = 0; ; ++offset)
                     {
                         if (leafIndex < 0)
                         {
@@ -212,7 +217,7 @@ internal
                             leafIndex = leaf.KeyCount - 1;
                         }
 
-                        if (! condition (getter (leaf, leafIndex), offset))
+                        if (!condition(getter(leaf, leafIndex), offset))
                         { start -= offset; return; }
                         --leafIndex;
                     }
@@ -221,9 +226,9 @@ internal
             else if (start < tree.root.Weight)
             {
                 if (leaf == null)
-                    leaf = (Leaf) tree.Find (start, out leafIndex);
+                    leaf = (Leaf)tree.Find(start, out leafIndex);
 
-                for (int offset = 0;; ++offset)
+                for (var offset = 0; ; ++offset)
                 {
                     if (leafIndex >= leaf.KeyCount)
                     {
@@ -233,7 +238,7 @@ internal
                         leafIndex = 0;
                     }
 
-                    if (! condition (getter (leaf, leafIndex), offset))
+                    if (!condition(getter(leaf, leafIndex), offset))
                     { start += offset; return; }
                     ++leafIndex;
                 }

@@ -62,11 +62,11 @@ namespace Kaos.Collections;
 /// <para>Note: Serialization is not supported in .NET Standard 1.0.</para>
 /// <code source="..\Bench\RsExample05\RsExample05.cs" lang="cs" />
 /// </example>
-[DebuggerTypeProxy (typeof (ICollectionDebugView<>))]
-[DebuggerDisplay ("Count = {Count}")]
+[DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
+[DebuggerDisplay("Count = {Count}")]
 [Serializable]
 #if PUBLIC
-    public
+public
 #else
 internal
 #endif
@@ -82,7 +82,7 @@ internal
     #region Constructors
 
     /// <summary>Initializes a new set instance that uses the default item comparer.</summary>
-    public RankedSet() : base (Comparer<T>.Default, new Leaf())
+    public RankedSet() : base(Comparer<T>.Default, new Leaf())
     { }
 
     /// <summary>Initializes a new set instance that uses the supplied comparer.</summary>
@@ -92,7 +92,7 @@ internal
     /// <code source="..\Bench\RsExample01\RsExample01.cs" lang="cs" />
     /// </example>
     /// <exception cref="InvalidOperationException">When <em>comparer</em> is <b>null</b> and no other comparer available.</exception>
-    public RankedSet (IComparer<T> comparer) : base (comparer, new Leaf())
+    public RankedSet(IComparer<T> comparer) : base(comparer, new Leaf())
     { }
 
     /// <summary>Initializes a new set instance that contains items copied from the supplied collection.</summary>
@@ -101,7 +101,7 @@ internal
     /// This constructor is a O(<em>n</em> log <em>n</em>) operation, where <em>n</em> is the number of items.
     /// </remarks>
     /// <exception cref="ArgumentNullException">When <em>collection</em> is <b>null</b>.</exception>
-    public RankedSet (IEnumerable<T> collection) : this (collection, Comparer<T>.Default)
+    public RankedSet(IEnumerable<T> collection) : this(collection, Comparer<T>.Default)
     { }
 
     /// <summary>Initializes a new set instance that contains items copied from the supplied collection.</summary>
@@ -112,13 +112,13 @@ internal
     /// </remarks>
     /// <exception cref="ArgumentNullException">When <em>collection</em> is <b>null</b>.</exception>
     /// <exception cref="InvalidOperationException">When <em>comparer</em> is <b>null</b> and no other comparer available.</exception>
-    public RankedSet (IEnumerable<T> collection, IComparer<T> comparer) : this (comparer)
+    public RankedSet(IEnumerable<T> collection, IComparer<T> comparer) : this(comparer)
     {
         if (collection == null)
-            throw new ArgumentNullException (nameof (collection));
+            throw new ArgumentNullException(nameof(collection));
 
-        foreach (T key in collection)
-            Add (key);
+        foreach (var key in collection)
+            Add(key);
     }
 
     #endregion
@@ -149,7 +149,7 @@ internal
     /// <summary>Gets the maximum item in the set per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
     public T Max
-        => Count == 0 ? default : rightmostLeaf.GetKey (rightmostLeaf.KeyCount - 1);
+        => Count == 0 ? default : rightmostLeaf.GetKey(rightmostLeaf.KeyCount - 1);
 
     /// <summary>Gets the minimum item in the set per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
@@ -166,8 +166,8 @@ internal
 
     /// <summary>Adds an item to the set.</summary>
     /// <param name="item">The item to add.</param>
-    void ICollection<T>.Add (T item)
-        => Add (item);
+    void ICollection<T>.Add(T item)
+        => Add(item!);
 
     /// <summary>Adds an item to the set and returns a success indicator.</summary>
     /// <param name="item">The item to add.</param>
@@ -179,13 +179,17 @@ internal
     /// <para>This is a O(log <em>n</em>) operation.</para>
     /// </remarks>
     /// <exception cref="ArgumentException">When no comparer is available.</exception>
-    public bool Add (T item)
+    public bool Add(T item)
     {
-        var path = new NodeVector (this, item);
+        if (Comparer == null)
+        {
+            throw new InvalidOperationException();
+        }
+        var path = new NodeVector(this, item);
         if (path.IsFound)
             return false;
 
-        return AddKey (item, path);
+        return AddKey(item, path);
     }
 
     /// <summary>Removes all items from the set.</summary>
@@ -197,9 +201,9 @@ internal
     /// <param name="item">The item to locate.</param>
     /// <returns><b>true</b> if <em>item</em> is contained in the set; otherwise <b>false</b>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    public bool Contains (T item)
+    public bool Contains(T item)
     {
-        Leaf _ = Find (item, out int index);
+        var _ = Find(item, out var index);
         return index >= 0;
     }
 
@@ -208,8 +212,8 @@ internal
     /// <remarks>This is a O(<em>n</em>) operation.</remarks>
     /// <exception cref="ArgumentNullException">When <em>array</em> is <b>null</b>.</exception>
     /// <exception cref="ArgumentException">When not enough space is available for the copy.</exception>
-    public void CopyTo (T[] array)
-        => CopyKeysTo1 (array, 0, Count);
+    public void CopyTo(T[] array)
+        => CopyKeysTo1(array, 0, Count);
 
     /// <summary>Copies the set to a compatible array, starting at the supplied position.</summary>
     /// <param name="array">A one-dimensional array that is the destination of the copy.</param>
@@ -218,8 +222,8 @@ internal
     /// <exception cref="ArgumentNullException">When <em>array</em> is <b>null</b>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero.</exception>
     /// <exception cref="ArgumentException">When not enough space is available for the copy.</exception>
-    public void CopyTo (T[] array, int index)
-        => CopyKeysTo1 (array, index, Count);
+    public void CopyTo(T[] array, int index)
+        => CopyKeysTo1(array, index, Count);
 
     /// <summary>Copies a supplied number of items to a compatible array, starting at the supplied position.</summary>
     /// <param name="array">A one-dimensional array that is the destination of the copy.</param>
@@ -229,26 +233,26 @@ internal
     /// <exception cref="ArgumentNullException">When <em>array</em> is <b>null</b>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> or <em>count</em> is less than zero.</exception>
     /// <exception cref="ArgumentException">When not enough space is available for the copy.</exception>
-    public void CopyTo (T[] array, int index, int count)
-        => CopyKeysTo1 (array, index, count);
+    public void CopyTo(T[] array, int index, int count)
+        => CopyKeysTo1(array, index, count);
 
     /// <summary>Copies the set to a compatible array, starting at the supplied array index.</summary>
     /// <param name="array">A one-dimensional array that is the destination of the copy.</param>
     /// <param name="index">The zero-based starting position in <em>array</em>.</param>
-    void ICollection.CopyTo (Array array, int index)
-        => CopyKeysTo2 (array, index);
+    void ICollection.CopyTo(Array array, int index)
+        => CopyKeysTo2(array, index);
 
     /// <summary>Removes the supplied item from the set.</summary>
     /// <param name="item">The item to remove.</param>
     /// <returns><b>true</b> if <em>item</em> was found and removed; otherwise <b>false</b>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    public bool Remove (T item)
+    public bool Remove(T item)
     {
-        var path = new NodeVector (this, item);
-        if (! path.IsFound)
+        var path = new NodeVector(this, item);
+        if (!path.IsFound)
             return false;
 
-        Remove2 (path);
+        Remove2(path);
         return true;
     }
 
@@ -262,18 +266,18 @@ internal
     /// </example>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> or <em>count</em> is less than zero.</exception>
     /// <exception cref="ArgumentException">When <em>index</em> and <em>count</em> do not denote a valid range of items in the set.</exception>
-    public void RemoveRange (int index, int count)
+    public void RemoveRange(int index, int count)
     {
         if (index < 0)
-            throw new ArgumentOutOfRangeException ("Argument was out of the range of valid values.", nameof (index));
+            throw new ArgumentOutOfRangeException("Argument was out of the range of valid values.", nameof(index));
 
         if (count < 0)
-            throw new ArgumentOutOfRangeException ("Argument was out of the range of valid values.", nameof (count));
+            throw new ArgumentOutOfRangeException("Argument was out of the range of valid values.", nameof(count));
 
         if (count > root.Weight - index)
-            throw new ArgumentException ("Argument was out of the range of valid values.");
+            throw new ArgumentException("Argument was out of the range of valid values.");
 
-        RemoveRange2 (index, count);
+        RemoveRange2(index, count);
     }
 
     /// <summary>Removes all items that match the condition defined by the supplied predicate from the set.</summary>
@@ -288,8 +292,8 @@ internal
     /// <code source="..\Bench\RsExample01\RsExample01.cs" lang="cs"/>
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>match</em> is <b>null</b>.</exception>
-    public int RemoveWhere (Predicate<T> match)
-        => RemoveWhere2 (match);
+    public int RemoveWhere(Predicate<T> match)
+        => RemoveWhere2(match);
 
     #endregion
 
@@ -305,18 +309,18 @@ internal
     /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public void ExceptWith (IEnumerable<T> other)
+    public void ExceptWith(IEnumerable<T> other)
     {
         if (other == null)
-            throw new ArgumentNullException (nameof (other));
+            throw new ArgumentNullException(nameof(other));
 
         StageBump();
         if (Count > 0)
             if (other == this)
                 Clear();
             else
-                foreach (T key in other)
-                    Remove (key);
+                foreach (var key in other)
+                    Remove(key);
     }
 
     /// <summary>Removes all items that are not in a supplied collection.</summary>
@@ -325,30 +329,30 @@ internal
     /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public void IntersectWith (IEnumerable<T> other)
+    public void IntersectWith(IEnumerable<T> other)
     {
         if (other == null)
-            throw new ArgumentNullException (nameof (other));
+            throw new ArgumentNullException(nameof(other));
 
         if (Count == 0)
             return;
 
         StageBump();
-        var oSet = other as RankedSet<T> ?? new RankedSet<T> (other, Comparer);
+        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
 
-        if (oSet.Count == 0 || Comparer.Compare (oSet.Max, Min) < 0 || Comparer.Compare (oSet.Min, Max) > 0)
+        if (oSet.Count == 0 || Comparer.Compare(oSet.Max, Min) < 0 || Comparer.Compare(oSet.Min, Max) > 0)
         {
             Clear();
             return;
         }
 
-        for (Leaf leaf = rightmostLeaf; leaf != null; leaf = leaf.leftLeaf)
-        for (int ix = leaf.KeyCount-1; ix >= 0; --ix)
-        {
-            T key = leaf.GetKey (ix);
-            if (! oSet.Contains (key))
-                Remove (key);
-        }
+        for (var leaf = rightmostLeaf; leaf != null; leaf = leaf.leftLeaf)
+            for (var ix = leaf.KeyCount - 1; ix >= 0; --ix)
+            {
+                var key = leaf.GetKey(ix);
+                if (!oSet.Contains(key))
+                    Remove(key);
+            }
     }
 
     /// <summary>Determines whether the set is a proper subset of the supplied collection.</summary>
@@ -358,18 +362,18 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool IsProperSubsetOf (IEnumerable<T> other)
+    public bool IsProperSubsetOf(IEnumerable<T> other)
     {
         if (other == null)
-            throw new ArgumentNullException (nameof (other));
+            throw new ArgumentNullException(nameof(other));
 
-        var oSet = other as RankedSet<T> ?? new RankedSet<T> (other, Comparer);
+        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
 
         if (Count >= oSet.Count)
             return false;
 
-        foreach (T key in this)
-            if (! oSet.Contains (key))
+        foreach (var key in this)
+            if (!oSet.Contains(key))
                 return false;
 
         return true;
@@ -382,18 +386,18 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool IsProperSupersetOf (IEnumerable<T> other)
+    public bool IsProperSupersetOf(IEnumerable<T> other)
     {
         if (other == null)
-            throw new ArgumentNullException (nameof (other));
+            throw new ArgumentNullException(nameof(other));
 
-        var oSet = other as RankedSet<T> ?? new RankedSet<T> (other, Comparer);
+        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
 
         if (Count <= oSet.Count)
             return false;
 
-        foreach (T key in other)
-            if (! Contains (key))
+        foreach (var key in other)
+            if (!Contains(key))
                 return false;
 
         return true;
@@ -406,18 +410,18 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool IsSubsetOf (IEnumerable<T> other)
+    public bool IsSubsetOf(IEnumerable<T> other)
     {
         if (other == null)
-            throw new ArgumentNullException (nameof (other));
+            throw new ArgumentNullException(nameof(other));
 
-        var oSet = other as RankedSet<T> ?? new RankedSet<T> (other, Comparer);
+        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
 
         if (Count > oSet.Count)
             return false;
 
-        foreach (T key in this)
-            if (! oSet.Contains (key))
+        foreach (var key in this)
+            if (!oSet.Contains(key))
                 return false;
 
         return true;
@@ -430,13 +434,13 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool IsSupersetOf (IEnumerable<T> other)
+    public bool IsSupersetOf(IEnumerable<T> other)
     {
         if (other == null)
-            throw new ArgumentNullException (nameof (other));
+            throw new ArgumentNullException(nameof(other));
 
-        foreach (T key in other)
-            if (! Contains (key))
+        foreach (var key in other)
+            if (!Contains(key))
                 return false;
 
         return true;
@@ -449,10 +453,10 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool Overlaps (IEnumerable<T> other)
+    public bool Overlaps(IEnumerable<T> other)
     {
         if (other == null)
-            throw new ArgumentNullException (nameof (other));
+            throw new ArgumentNullException(nameof(other));
 
         if (Count != 0)
             if (other is RankedSet<T> oSet)
@@ -463,13 +467,13 @@ internal
                 else
                 { set2 = this; set1 = oSet; }
 
-                foreach (T key in set2.ElementsBetween (set1.Min, set1.Max))
-                    if (set1.Contains (key))
+                foreach (var key in set2.ElementsBetween(set1.Min, set1.Max))
+                    if (set1.Contains(key))
                         return true;
             }
             else
-                foreach (T key in other)
-                    if (Contains (key))
+                foreach (var key in other)
+                    if (Contains(key))
                         return true;
 
         return false;
@@ -483,18 +487,18 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool SetEquals (IEnumerable<T> other)
+    public bool SetEquals(IEnumerable<T> other)
     {
         if (other == null)
-            throw new ArgumentNullException (nameof (other));
+            throw new ArgumentNullException(nameof(other));
 
-        var oSet = other as RankedSet<T> ?? new RankedSet<T> (other, Comparer);
+        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
 
         if (Count != oSet.Count)
             return false;
 
-        foreach (T key in oSet)
-            if (! Contains (key))
+        foreach (var key in oSet)
+            if (!Contains(key))
                 return false;
 
         return true;
@@ -506,49 +510,49 @@ internal
     /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public void SymmetricExceptWith (IEnumerable<T> other)
+    public void SymmetricExceptWith(IEnumerable<T> other)
     {
         if (other == null)
-            throw new ArgumentNullException (nameof (other));
+            throw new ArgumentNullException(nameof(other));
 
-        var oSet = other as RankedSet<T> ?? new RankedSet<T> (other, Comparer);
+        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
         if (oSet.Count == 0)
             return;
 
         StageBump();
-        ICollectionEnumerator<T> oEtor = oSet.GetEnumerator();
+        var oEtor = oSet.GetEnumerator();
         oEtor.MoveNext();
-        T oKey = oEtor.Current;
+        var oKey = oEtor.Current;
 
-        for (Leaf leaf = leftmostLeaf; leaf != null; leaf = leaf.rightLeaf)
-        for (int ix = 0; ix < leaf.KeyCount; )
-        for (T key = leaf.GetKey (ix);;)
-        {
-            int diff = Comparer.Compare (oKey, key);
-            if (diff >= 0)
-            {
-                if (diff > 0)
-                    ++ix;
-                else
+        for (var leaf = leftmostLeaf; leaf != null; leaf = leaf.rightLeaf)
+            for (var ix = 0; ix < leaf.KeyCount;)
+                for (var key = leaf.GetKey(ix); ;)
                 {
-                    Remove (key);
-                    if (! oEtor.MoveNext())
+                    var diff = Comparer.Compare(oKey, key);
+                    if (diff >= 0)
+                    {
+                        if (diff > 0)
+                            ++ix;
+                        else
+                        {
+                            Remove(key);
+                            if (!oEtor.MoveNext())
+                                return;
+                            oKey = oEtor.Current;
+                        }
+                        break;
+                    }
+
+                    Add(oKey);
+                    if (!oEtor.MoveNext())
                         return;
                     oKey = oEtor.Current;
                 }
-                break;
-            }
 
-            Add (oKey);
-            if (! oEtor.MoveNext())
-                return;
-            oKey = oEtor.Current;
-        }
-
-        for (;;)
+        for (; ; )
         {
-            Add (oKey);
-            if (! oEtor.MoveNext())
+            Add(oKey);
+            if (!oEtor.MoveNext())
                 return;
             oKey = oEtor.Current;
         }
@@ -561,14 +565,14 @@ internal
     /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public void UnionWith (IEnumerable<T> other)
+    public void UnionWith(IEnumerable<T> other)
     {
         if (other == null)
-            throw new ArgumentNullException (nameof (other));
+            throw new ArgumentNullException(nameof(other));
 
         StageBump();
-        foreach (T key in other)
-            Add (key);
+        foreach (var key in other)
+            Add(key);
     }
 
     #endregion
@@ -580,52 +584,52 @@ internal
     /// <summary>Initializes a new set instance that contains serialized data.</summary>
     /// <param name="info">The object that contains the information required to serialize the set.</param>
     /// <param name="context">The structure that contains the source and destination of the serialized stream.</param>
-    protected RankedSet (SerializationInfo info, StreamingContext context) : base (new Btree<T>.Leaf())
+    protected RankedSet(SerializationInfo info, StreamingContext context) : base(new Btree<T>.Leaf())
         => this.serializationInfo = info;
 
     /// <summary>Returns the data needed to serialize the set.</summary>
     /// <param name="info">An object that contains the information required to serialize the set.</param>
     /// <param name="context">A structure that contains the source and destination of the serialized stream.</param>
     /// <exception cref="ArgumentNullException">When <em>info</em> is <b>null</b>.</exception>
-    protected virtual void GetObjectData (SerializationInfo info, StreamingContext context)
+    protected virtual void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         if (info == null)
-            throw new ArgumentNullException (nameof (info));
+            throw new ArgumentNullException(nameof(info));
 
-        info.AddValue ("Count", Count);
-        info.AddValue ("Comparer", Comparer, typeof (IComparer<T>));
-        info.AddValue ("Stage", stage);
+        info.AddValue("Count", Count);
+        info.AddValue("Comparer", Comparer, typeof(IComparer<T>));
+        info.AddValue("Stage", stage);
 
         var items = new T[Count];
-        CopyTo (items, 0);
-        info.AddValue ("Items", items, typeof (T[]));
+        CopyTo(items, 0);
+        info.AddValue("Items", items, typeof(T[]));
     }
 
     /// <summary>Implements the deserialization callback and raises the deserialization event when completed.</summary>
     /// <param name="sender">The source of the deserialization event.</param>
     /// <exception cref="ArgumentNullException">When <em>sender</em> is <b>null</b>.</exception>
     /// <exception cref="SerializationException">When the associated <em>SerializationInfo</em> is invalid.</exception>
-    protected virtual void OnDeserialization (object sender)
+    protected virtual void OnDeserialization(object sender)
     {
         if (keyComparer != null)
             return;  // Owner did the fixups.
 
         if (serializationInfo == null)
-            throw new SerializationException ("Missing information.");
+            throw new SerializationException("Missing information.");
 
-        keyComparer = (IComparer<T>) serializationInfo.GetValue ("Comparer", typeof (IComparer<T>));
-        int storedCount = serializationInfo.GetInt32 ("Count");
-        stage = serializationInfo.GetInt32 ("Stage");
+        keyComparer = (IComparer<T>)serializationInfo.GetValue("Comparer", typeof(IComparer<T>));
+        var storedCount = serializationInfo.GetInt32("Count");
+        stage = serializationInfo.GetInt32("Stage");
 
-        var items = (T[]) serializationInfo.GetValue ("Items", typeof (T[]));
+        var items = (T[])serializationInfo.GetValue("Items", typeof(T[]));
         if (items == null)
-            throw new SerializationException ("Missing Items.");
+            throw new SerializationException("Missing Items.");
 
-        for (int ix = 0; ix < items.Length; ++ix)
-            Add (items[ix]);
+        for (var ix = 0; ix < items.Length; ++ix)
+            Add(items[ix]);
 
         if (storedCount != Count)
-            throw new SerializationException ("Mismatched count.");
+            throw new SerializationException("Mismatched count.");
 
         serializationInfo = null;
     }
@@ -634,15 +638,15 @@ internal
     /// <param name="info">An object that contains the information required to serialize the set.</param>
     /// <param name="context">A structure that contains the source and destination of the serialized stream.</param>
     /// <exception cref="ArgumentNullException">When <em>info</em> is <b>null</b>.</exception>
-    void ISerializable.GetObjectData (SerializationInfo info, StreamingContext context)
-        => GetObjectData (info, context);
+    void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        => GetObjectData(info, context);
 
     /// <summary>Implements the deserialization callback and raises the deserialization event when completed.</summary>
     /// <param name="sender">The source of the deserialization event.</param>
     /// <exception cref="ArgumentNullException">When <em>sender</em> is <b>null</b>.</exception>
     /// <exception cref="SerializationException">When the associated <em>SerializationInfo</em> is invalid.</exception>
-    void IDeserializationCallback.OnDeserialization (Object sender)
-        => OnDeserialization (sender);
+    void IDeserializationCallback.OnDeserialization(Object sender)
+        => OnDeserialization(sender);
 
     #endregion
 
@@ -653,26 +657,26 @@ internal
     /// <returns>The item at <em>index</em>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or not less than the number of items.</exception>
-    public T ElementAt (int index)
+    public T ElementAt(int index)
     {
         if (index < 0 || index >= Count)
-            throw new ArgumentOutOfRangeException (nameof (index), "Argument was out of the range of valid values.");
+            throw new ArgumentOutOfRangeException(nameof(index), "Argument was out of the range of valid values.");
 
-        var leaf = (Leaf) Find (index, out int leafIndex);
-        return leaf.GetKey (leafIndex);
+        var leaf = (Leaf)Find(index, out var leafIndex);
+        return leaf.GetKey(leafIndex);
     }
 
     /// <summary>Gets the item at the supplied index or the default if the index is out of range.</summary>
     /// <param name="index">The zero-based index of the item to get.</param>
     /// <returns>The item at <em>index</em>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    public T ElementAtOrDefault (int index)
+    public T ElementAtOrDefault(int index)
     {
         if (index < 0 || index >= Count)
             return default;
 
-        var leaf = (Leaf) Find (index, out int leafIndex);
-        return leaf.GetKey (leafIndex);
+        var leaf = (Leaf)Find(index, out var leafIndex);
+        return leaf.GetKey(leafIndex);
     }
 
     /// <summary>Gets the minimum item in the set per the comparer.</summary>
@@ -682,7 +686,7 @@ internal
     public T First()
     {
         if (Count == 0)
-            throw new InvalidOperationException ("Sequence contains no elements.");
+            throw new InvalidOperationException("Sequence contains no elements.");
 
         return leftmostLeaf.Key0;
     }
@@ -694,16 +698,16 @@ internal
     public T Last()
     {
         if (Count == 0)
-            throw new InvalidOperationException ("Sequence contains no elements.");
+            throw new InvalidOperationException("Sequence contains no elements.");
 
-        return rightmostLeaf.GetKey (rightmostLeaf.KeyCount - 1);
+        return rightmostLeaf.GetKey(rightmostLeaf.KeyCount - 1);
     }
 
     /// <summary>Returns an IEnumerable that iterates thru the set in reverse order.</summary>
     /// <returns>An enumerator that reverse iterates thru the set.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
     public ICollectionEnumerator<T> Reverse()
-        => new Enumerator (this, isReverse:true);
+        => new Enumerator(this, isReverse: true);
 
     #endregion
 
@@ -724,24 +728,24 @@ internal
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public IEnumerable<T> ElementsBetween (T lower, T upper)
+    public IEnumerable<T> ElementsBetween(T lower, T upper)
     {
-        int stageFreeze = stage;
-        var leaf = (Leaf) Find (lower, out int index);
+        var stageFreeze = stage;
+        var leaf = Find(lower, out var index);
 
         // When the supplied start key is not be found, start with the next highest key.
         if (index < 0)
             index = ~index;
 
-        for (;;)
+        for (; ; )
         {
             if (index < leaf.KeyCount)
             {
-                if (Comparer.Compare (leaf.GetKey (index), upper) > 0)
+                if (Comparer.Compare(leaf.GetKey(index), upper) > 0)
                     yield break;
 
-                yield return leaf.GetKey (index);
-                StageCheck (stageFreeze);
+                yield return leaf.GetKey(index);
+                StageCheck(stageFreeze);
                 ++index;
                 continue;
             }
@@ -771,27 +775,27 @@ internal
     /// <exception cref="ArgumentOutOfRangeException">When <em>upperIndex</em> is less than zero or not less than <see cref="Count"/>.</exception>
     /// <exception cref="ArgumentException">When <em>lowerIndex</em> and <em>upperIndex</em> do not denote a valid range of indexes.</exception>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public IEnumerable<T> ElementsBetweenIndexes (int lowerIndex, int upperIndex)
+    public IEnumerable<T> ElementsBetweenIndexes(int lowerIndex, int upperIndex)
     {
         if (lowerIndex < 0 || lowerIndex >= Count)
-            throw new ArgumentOutOfRangeException (nameof (lowerIndex), "Argument was out of the range of valid values.");
+            throw new ArgumentOutOfRangeException(nameof(lowerIndex), "Argument was out of the range of valid values.");
 
         if (upperIndex < 0 || upperIndex >= Count)
-            throw new ArgumentOutOfRangeException (nameof (upperIndex), "Argument was out of the range of valid values.");
+            throw new ArgumentOutOfRangeException(nameof(upperIndex), "Argument was out of the range of valid values.");
 
-        int toGo = upperIndex - lowerIndex;
+        var toGo = upperIndex - lowerIndex;
         if (toGo < 0)
-            throw new ArgumentException ("Arguments were out of the range of valid values.");
+            throw new ArgumentException("Arguments were out of the range of valid values.");
 
-        int stageFreeze = stage;
-        var leaf = (Leaf) Find (lowerIndex, out int index);
+        var stageFreeze = stage;
+        var leaf = (Leaf)Find(lowerIndex, out var index);
         do
         {
             if (index >= leaf.KeyCount)
             { index = 0; leaf = leaf.rightLeaf; }
 
-            yield return leaf.GetKey (index);
-            StageCheck (stageFreeze);
+            yield return leaf.GetKey(index);
+            StageCheck(stageFreeze);
             ++index;
         }
         while (--toGo >= 0);
@@ -810,26 +814,26 @@ internal
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public IEnumerable<T> ElementsFrom (T lower)
+    public IEnumerable<T> ElementsFrom(T lower)
     {
-        int stageFreeze = stage;
-        var leaf = (Leaf) Find (lower, out int index);
+        var stageFreeze = stage;
+        var leaf = Find(lower, out var index);
 
         // When the supplied start key is not be found, start with the next highest key.
         if (index < 0)
             index = ~index;
 
-        for (;;)
+        for (; ; )
         {
             if (index < leaf.KeyCount)
             {
-                yield return leaf.GetKey (index);
-                StageCheck (stageFreeze);
+                yield return leaf.GetKey(index);
+                StageCheck(stageFreeze);
                 ++index;
                 continue;
             }
 
-            leaf = (Leaf) leaf.rightLeaf;
+            leaf = leaf.rightLeaf;
             if (leaf == null)
                 yield break;
 
@@ -850,8 +854,8 @@ internal
     /// This is a O(log <em>n</em>) operation.
     /// </para>
     /// </remarks>
-    public int IndexOf (T item)
-        => FindEdgeForIndex (item, out Leaf _, out int _, leftEdge:true);
+    public int IndexOf(T item)
+        => FindEdgeForIndex(item, out var _, out var _, leftEdge: true);
 
     /// <summary>Removes the item at the supplied index from the set.</summary>
     /// <param name="index">The zero-based position of the item to remove.</param>
@@ -862,12 +866,12 @@ internal
     /// This is a O(log <em>n</em>) operation.
     /// </para>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or greater than or equal to <see cref="Count"/>.</exception>
-    public void RemoveAt (int index)
+    public void RemoveAt(int index)
     {
         if (index < 0 || index >= Count)
-            throw new ArgumentOutOfRangeException (nameof (index), "Argument is out of the range of valid values.");
+            throw new ArgumentOutOfRangeException(nameof(index), "Argument is out of the range of valid values.");
 
-        RemoveAt2 (index);
+        RemoveAt2(index);
     }
 
     /// <summary>Replace an item if present.</summary>
@@ -878,13 +882,13 @@ internal
     /// <see cref="Remove"/> operation followed by an
     /// <see cref="Add"/> operation.
     /// </remarks>
-    public bool Replace (T item)
+    public bool Replace(T item)
     {
-        var path = new NodeVector (this, item);
-        if (! path.IsFound)
+        var path = new NodeVector(this, item);
+        if (!path.IsFound)
             return false;
 
-        ReplaceKey (path, item);
+        ReplaceKey(path, item);
         return true;
     }
 
@@ -895,17 +899,17 @@ internal
     /// <remarks>
     /// This operation is an optimized alternative to performing the implicit operations separately.
     /// </remarks>
-    public bool Replace (T item, bool addIfMissing)
+    public bool Replace(T item, bool addIfMissing)
     {
-        var path = new NodeVector (this, item);
-        if (! path.IsFound)
+        var path = new NodeVector(this, item);
+        if (!path.IsFound)
         {
             if (addIfMissing)
-                AddKey (item, path);
+                AddKey(item, path);
             return false;
         }
 
-        ReplaceKey (path, item);
+        ReplaceKey(path, item);
         return true;
     }
 
@@ -918,8 +922,8 @@ internal
     /// <code source="..\Bench\RxExample01\RxExample01.cs" lang="cs" region="RsSkip" />
     /// </example>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public ICollectionEnumerator<T> Skip (int count)
-        => new Enumerator (this, count);
+    public ICollectionEnumerator<T> Skip(int count)
+        => new Enumerator(this, count);
 
     /// <summary>
     /// Bypasses elements as long as a supplied condition is true and yields the remaining items.
@@ -927,8 +931,8 @@ internal
     /// <param name="predicate">The condition to test for.</param>
     /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public ICollectionEnumerator<T> SkipWhile (Func<T,bool> predicate)
-        => new Enumerator (this, predicate);
+    public ICollectionEnumerator<T> SkipWhile(Func<T, bool> predicate)
+        => new Enumerator(this, predicate);
 
     /// <summary>
     /// Bypasses elements as long as a supplied index-based condition is true and yields the remaining items.
@@ -936,8 +940,8 @@ internal
     /// <param name="predicate">The condition to test for.</param>
     /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public ICollectionEnumerator<T> SkipWhile (Func<T,int,bool> predicate)
-        => new Enumerator (this, predicate);
+    public ICollectionEnumerator<T> SkipWhile(Func<T, int, bool> predicate)
+        => new Enumerator(this, predicate);
 
     /// <summary>Gets the actual item for the supplied search item.</summary>
     /// <param name="getItem">The item to find.</param>
@@ -946,13 +950,13 @@ internal
     /// otherwise it will be loaded with the default for its type.
     /// </param>
     /// <returns><b>true</b> if <em>getItem</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGet (T getItem, out T item)
+    public bool TryGet(T getItem, out T item)
     {
-        var leaf = Find (getItem, out int index);
+        var leaf = Find(getItem, out var index);
         if (index < 0)
         { item = default; return false; }
 
-        item = leaf.GetKey (index);
+        item = leaf.GetKey(index);
         return true;
     }
 
@@ -960,52 +964,52 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item greater than <em>getItem</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGetGreaterThan (T getItem, out T item)
+    public bool TryGetGreaterThan(T getItem, out T item)
     {
-        TryGetGT (getItem, out Leaf leaf, out int index);
+        TryGetGT(getItem, out var leaf, out var index);
         if (leaf == null)
         { item = default; return false; }
         else
-        { item = leaf.GetKey (index); return true; }
+        { item = leaf.GetKey(index); return true; }
     }
 
     /// <summary>Gets the least item greater than or equal to the supplied item.</summary>
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item greater than or equal to <em>getItem</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetGreaterThanOrEqual (T getItem, out T item)
+    public bool TryGetGreaterThanOrEqual(T getItem, out T item)
     {
-        TryGetGE (getItem, out Leaf leaf, out int index);
+        TryGetGE(getItem, out var leaf, out var index);
         if (leaf == null)
         { item = default; return false; }
         else
-        { item = leaf.GetKey (index); return true; }
+        { item = leaf.GetKey(index); return true; }
     }
 
     /// <summary>Gets the greatest item that is less than the supplied item.</summary>
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item less than <em>item</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetLessThan (T getItem, out T item)
+    public bool TryGetLessThan(T getItem, out T item)
     {
-        TryGetLT (getItem, out Leaf leaf, out int index);
+        TryGetLT(getItem, out var leaf, out var index);
         if (leaf == null)
         { item = default; return false; }
         else
-        { item = leaf.GetKey (index); return true; }
+        { item = leaf.GetKey(index); return true; }
     }
 
     /// <summary>Gets the greatest item that is less than or equal to the supplied item.</summary>
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item less than or equal to <em>item</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetLessThanOrEqual (T getItem, out T item)
+    public bool TryGetLessThanOrEqual(T getItem, out T item)
     {
-        TryGetLE (getItem, out Leaf leaf, out int index);
+        TryGetLE(getItem, out var leaf, out var index);
         if (leaf == null)
         { item = default; return false; }
         else
-        { item = leaf.GetKey (index); return true; }
+        { item = leaf.GetKey(index); return true; }
     }
 
     #endregion
@@ -1018,18 +1022,18 @@ internal
     /// <code source="..\Bench\RsExample06\RsExample06.cs" lang="cs" />
     /// </example>
     public static IEqualityComparer<RankedSet<T>> CreateSetComparer()
-        => CreateSetComparer (null);
+        => CreateSetComparer(null);
 
     /// <summary>Returns an equality comparer using a supplied comparer that can be used to create a collection that contains sets.</summary>
     /// <param name="memberEqualityComparer">Used for creating the returned comparer.</param>
     /// <returns>An equality comparer for creating a collection of sets.</returns>
-    public static IEqualityComparer<RankedSet<T>> CreateSetComparer (IEqualityComparer<T> memberEqualityComparer)
-        => new RankedSetEqualityComparer (memberEqualityComparer);
+    public static IEqualityComparer<RankedSet<T>> CreateSetComparer(IEqualityComparer<T> memberEqualityComparer)
+        => new RankedSetEqualityComparer(memberEqualityComparer);
 
-    private bool HasEqualComparer (RankedSet<T> other)
-        => Comparer == other.Comparer || Comparer.Equals (other.Comparer);
+    private bool HasEqualComparer(RankedSet<T> other)
+        => Comparer == other.Comparer || Comparer.Equals(other.Comparer);
 
-    private static bool RankedSetEquals (RankedSet<T> set1, RankedSet<T> set2, IComparer<T> comparer)
+    private static bool RankedSetEquals(RankedSet<T> set1, RankedSet<T> set2, IComparer<T> comparer)
     {
         if (set1 == null)
             return set2 == null;
@@ -1037,21 +1041,21 @@ internal
         if (set2 == null)
             return false;
 
-        if (set1.HasEqualComparer (set2))
-            return set1.Count == set2.Count && set1.SetEquals (set2);
-            
+        if (set1.HasEqualComparer(set2))
+            return set1.Count == set2.Count && set1.SetEquals(set2);
+
         bool found;
-        foreach (T item1 in set1)
+        foreach (var item1 in set1)
         {
             found = false;
-            foreach (T item2 in set2)
-                if (comparer.Compare (item1, item2) == 0)
+            foreach (var item2 in set2)
+                if (comparer.Compare(item1, item2) == 0)
                 {
                     found = true;
                     break;
                 }
 
-            if (! found)
+            if (!found)
                 return false;
         }
 
@@ -1065,35 +1069,35 @@ internal
     /// <summary>Returns an enumerator that iterates thru the set.</summary>
     /// <returns>An enumerator that iterates thru the set in sorted order.</returns>
     public ICollectionEnumerator<T> GetEnumerator()
-        => new Enumerator (this);
+        => new Enumerator(this);
 
     /// <summary>Returns an enumerator that iterates thru the set.</summary>
     /// <returns>An enumerator that iterates thru the set in sorted order.</returns>
     IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        => new Enumerator (this);
+        => new Enumerator(this);
 
     /// <summary>Returns an enumerator that iterates thru the collection.</summary>
     /// <returns>An enumerator that iterates thru the collection in sorted order.</returns>
     IEnumerator IEnumerable.GetEnumerator()
-        => new Enumerator (this);
+        => new Enumerator(this);
 
     /// <summary>Enumerates the items of a <see cref="RankedSet{T}"/> in sort order.</summary>
-    [DebuggerTypeProxy (typeof (IEnumerableDebugView<>))]
+    [DebuggerTypeProxy(typeof(IEnumerableDebugView<>))]
     public struct Enumerator : IEnumerator<T>, IEnumerable<T>, ICollectionEnumerator<T>
     {
         private readonly KeyEnumerator etor;
 
-        internal Enumerator (RankedSet<T> set, bool isReverse=false)
-            => etor = new KeyEnumerator (set, isReverse);
+        internal Enumerator(RankedSet<T> set, bool isReverse = false)
+            => etor = new KeyEnumerator(set, isReverse);
 
-        internal Enumerator (RankedSet<T> set, int count)
-            => etor = new KeyEnumerator (set, count);
+        internal Enumerator(RankedSet<T> set, int count)
+            => etor = new KeyEnumerator(set, count);
 
-        internal Enumerator (RankedSet<T> set, Func<T,bool> predicate)
-            => etor = new KeyEnumerator (set, predicate);
+        internal Enumerator(RankedSet<T> set, Func<T, bool> predicate)
+            => etor = new KeyEnumerator(set, predicate);
 
-        internal Enumerator (RankedSet<T> set, Func<T,int,bool> predicate)
-            => etor = new KeyEnumerator (set, predicate);
+        internal Enumerator(RankedSet<T> set, Func<T, int, bool> predicate)
+            => etor = new KeyEnumerator(set, predicate);
 
         /// <summary>Gets the item at the current position.</summary>
         /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
@@ -1102,8 +1106,8 @@ internal
             get
             {
                 if (etor.NotActive)
-                    throw new InvalidOperationException ("Enumerator is not active.");
-                return (object) etor.CurrentKey;
+                    throw new InvalidOperationException("Enumerator is not active.");
+                return etor.CurrentKey;
             }
         }
 
@@ -1144,9 +1148,9 @@ internal
         /// <code source="..\Bench\RxExample01\RxExample01.cs" lang="cs" region="RsSkip" />
         /// </example>
         /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-        public ICollectionEnumerator<T> Skip (int count)
+        public ICollectionEnumerator<T> Skip(int count)
         {
-            etor.Bypass (count);
+            etor.Bypass(count);
             return this;
         }
 
@@ -1156,9 +1160,9 @@ internal
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-        public ICollectionEnumerator<T> SkipWhile (Func<T,bool> predicate)
+        public ICollectionEnumerator<T> SkipWhile(Func<T, bool> predicate)
         {
-            etor.BypassKey (predicate);
+            etor.BypassKey(predicate);
             return this;
         }
 
@@ -1168,9 +1172,9 @@ internal
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-        public ICollectionEnumerator<T> SkipWhile (Func<T,int,bool> predicate)
+        public ICollectionEnumerator<T> SkipWhile(Func<T, int, bool> predicate)
         {
-            etor.BypassKey (predicate);
+            etor.BypassKey(predicate);
             return this;
         }
     }

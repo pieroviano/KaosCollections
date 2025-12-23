@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
 using Kaos.Collections;
+#pragma warning disable SYSLIB0011
 
 namespace Kaos.Test.Collections
 {
@@ -43,59 +44,73 @@ namespace Kaos.Test.Collections
     public partial class TestRm
     {
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRmz_ArgumentNull()
         {
-            var map = new PlayerMap();
-            ((ISerializable) map).GetObjectData (null, new StreamingContext());
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var map = new PlayerMap();
+#pragma warning disable SYSLIB0050
+                ((ISerializable) map).GetObjectData (null!, new StreamingContext());
+#pragma warning restore SYSLIB0050
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRmz_NullCB()
         {
-            var map = new PlayerMap ((SerializationInfo) null, new StreamingContext());
-            ((IDeserializationCallback) map).OnDeserialization (null);
+            Assert.Throws<SerializationException>(() =>
+            {
+                var map = new PlayerMap (null, new StreamingContext());
+                ((IDeserializationCallback) map).OnDeserialization (null);
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRmz_BadCount()
         {
-            string fileName = @"Targets\MapBadCount.bin";
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-              { var map = (PlayerMap) formatter.Deserialize (fs); }
+            Assert.Throws<SerializationException>(() =>
+            {
+                string fileName = @"Targets\MapBadCount.bin";
+                IFormatter formatter = new BinaryFormatter();
+                using (var fs = new FileStream (fileName, FileMode.Open))
+                { var map = (PlayerMap) formatter.Deserialize (fs); }
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRmz_MismatchKV()
         {
-            string fileName = @"Targets\MapMismatchKV.bin";
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-              { var map = (PlayerMap) formatter.Deserialize (fs); }
+            Assert.Throws<SerializationException>(() =>
+            {
+                string fileName = @"Targets\MapMismatchKV.bin";
+                IFormatter formatter = new BinaryFormatter();
+                using (var fs = new FileStream (fileName, FileMode.Open))
+                { var map = (PlayerMap) formatter.Deserialize (fs); }
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRmz_MissingKeys()
         {
-            string fileName = @"Targets\MapMissingKeys.bin";
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-              { var map = (PlayerMap) formatter.Deserialize (fs); }
+            Assert.Throws<SerializationException>(() =>
+            {
+                string fileName = @"Targets\MapMissingKeys.bin";
+                IFormatter formatter = new BinaryFormatter();
+                using (var fs = new FileStream (fileName, FileMode.Open))
+                { var map = (PlayerMap) formatter.Deserialize (fs); }
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRmz_MissingValues()
         {
-            string fileName = @"Targets\MapMissingValues.bin";
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-              { var map = (PlayerMap) formatter.Deserialize (fs); }
+            Assert.Throws<SerializationException>(() =>
+            {
+                string fileName = @"Targets\MapMissingValues.bin";
+                IFormatter formatter = new BinaryFormatter();
+                using (var fs = new FileStream (fileName, FileMode.Open))
+                { var map = (PlayerMap) formatter.Deserialize (fs); }
+            });
         }
 
 

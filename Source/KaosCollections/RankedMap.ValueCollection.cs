@@ -141,7 +141,7 @@ internal
                 throw new ArgumentException ("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof (array));
 
             for (var leaf = (PairLeaf<TValue>) tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>) leaf.rightLeaf)
-            for (int ix = 0; ix < leaf.KeyCount; ++ix)
+            for (var ix = 0; ix < leaf.KeyCount; ++ix)
             {
                 array.SetValue (leaf.GetValue (ix), index);
                 ++index;
@@ -168,7 +168,7 @@ internal
             if (index < 0 || index >= Count)
                 throw new ArgumentOutOfRangeException (nameof (index), "Argument is out of the range of valid values.");
 
-            var leaf = (PairLeaf<TValue>) tree.Find (index, out int leafIndex);
+            var leaf = (PairLeaf<TValue>) tree.Find (index, out var leafIndex);
             return leaf.GetValue (leafIndex);
         }
 
@@ -181,7 +181,7 @@ internal
             if (index < 0 || index >= Count)
                 return default;
 
-            var leaf = (PairLeaf<TValue>) tree.Find (index, out int leafIndex);
+            var leaf = (PairLeaf<TValue>) tree.Find (index, out var leafIndex);
             return leaf.GetValue (leafIndex);
         }
 
@@ -297,7 +297,7 @@ internal
                 {
                     if (etor.NotActive)
                         throw new InvalidOperationException ("Enumerator is not active.");
-                    return (object) etor.CurrentValue;
+                    return etor.CurrentValue;
                 }
             }
 

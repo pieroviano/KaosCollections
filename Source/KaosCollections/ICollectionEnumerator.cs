@@ -13,7 +13,7 @@ namespace System.Collections;
 /// after creation, and subsequent operations may throw an InvalidOperationException. Thread safety and resource
 /// management depend on the specific implementation.</remarks>
 /// <typeparam name="T">The type of elements in the collection to be enumerated.</typeparam>
-public interface ICollectionEnumerator<T>
+public interface ICollectionEnumerator<T>: IEnumerable<T>
 {
     /// <summary>Gets the item at the current position of the enumerator.</summary>
     T Current { get; }
@@ -25,10 +25,6 @@ public interface ICollectionEnumerator<T>
 
     /// <summary>Releases all resources used by the enumerator.</summary>
     void Dispose();
-
-    /// <summary>Gets an iterator for this collection.</summary>
-    /// <returns>An iterator for this collection.</returns>
-    IEnumerator<T> GetEnumerator();
 
     /// <summary>Bypasses a supplied number of items and yields the remaining items.</summary>
     /// <param name="count">Number of items to skip.</param>

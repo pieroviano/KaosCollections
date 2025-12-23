@@ -166,7 +166,7 @@ internal
             if (index < 0 || index >= Count)
                 throw new ArgumentOutOfRangeException (nameof (index), "Argument is out of the range of valid values.");
 
-            var leaf = tree.Find (index, out int leafIndex);
+            var leaf = tree.Find (index, out var leafIndex);
             return leaf.GetKey (leafIndex);
         }
 
@@ -179,7 +179,7 @@ internal
             if (index < 0 || index >= Count)
                 return default;
 
-            var leaf = tree.Find (index, out int leafIndex);
+            var leaf = tree.Find (index, out var leafIndex);
             return leaf.GetKey (leafIndex);
         }
 
@@ -197,7 +197,7 @@ internal
         /// </para>
         /// </remarks>
         public int IndexOf (TKey key)
-            => tree.FindEdgeForIndex (key, out Leaf _, out int _, leftEdge:true);
+            => tree.FindEdgeForIndex (key, out var _, out var _, leftEdge:true);
 
         /// <summary>Gets the minimum key in the dictionary per the comparer.</summary>
         /// <returns>The minimum key in the dictionary.</returns>
@@ -262,7 +262,7 @@ internal
         /// <returns><b>true</b> if <em>getKey</em> is found; otherwise <b>false</b>.</returns>
         public bool TryGet (TKey getKey, out TKey key)
         {
-            var leaf = tree.Find (getKey, out int index);
+            var leaf = tree.Find (getKey, out var index);
             if (index < 0)
             { key = default; return false; }
 
@@ -276,7 +276,7 @@ internal
         /// <returns><b>true</b> if a key greater than <em>getKey</em> is found; otherwise <b>false</b>.</returns>
         public bool TryGetGreaterThan (TKey getKey, out TKey key)
         {
-            tree.TryGetGT (getKey, out Leaf leaf, out int index);
+            tree.TryGetGT (getKey, out var leaf, out var index);
             if (leaf == null)
             { key = default; return false; }
             else
@@ -289,7 +289,7 @@ internal
         /// <returns><b>true</b> if a key greater than or equal to <em>getKey</em> found; otherwise <b>false</b>.</returns>
         public bool TryGetGreaterThanOrEqual (TKey getKey, out TKey key)
         {
-            tree.TryGetGE (getKey, out Leaf leaf, out int index);
+            tree.TryGetGE (getKey, out var leaf, out var index);
             if (leaf == null)
             { key = default; return false; }
             else
@@ -302,7 +302,7 @@ internal
         /// <returns><b>true</b> if a key less than <em>getKey</em> is found; otherwise <b>false</b>.</returns>
         public bool TryGetLessThan (TKey getKey, out TKey key)
         {
-            tree.TryGetLT (getKey, out Leaf leaf, out int index);
+            tree.TryGetLT (getKey, out var leaf, out var index);
             if (leaf == null)
             { key = default; return false; }
             else
@@ -315,7 +315,7 @@ internal
         /// <returns><b>true</b> if a key less than or equal to <em>getKey</em> found; otherwise <b>false</b>.</returns>
         public bool TryGetLessThanOrEqual (TKey getKey, out TKey key)
         {
-            tree.TryGetLE (getKey, out Leaf leaf, out int index);
+            tree.TryGetLE (getKey, out var leaf, out var index);
             if (leaf == null)
             { key = default; return false; }
             else
@@ -373,7 +373,7 @@ internal
                 {
                     if (etor.NotActive)
                         throw new InvalidOperationException ("Enumerator is not active.");
-                    return (object) etor.CurrentKey;
+                    return etor.CurrentKey;
                 }
             }
 

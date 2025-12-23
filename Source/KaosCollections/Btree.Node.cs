@@ -5,6 +5,8 @@
 // Copyright © 2009-2021 Kasey Osborn (github.com/kaosborn)
 // MIT License - Use and redistribute freely
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,7 +37,7 @@ internal
         public void AddKey (T key) => keys.Add (key);
         public T GetKey (int index) => keys[index];
         public int Search (T key) => keys.BinarySearch (key);
-        public int Search (T key, IComparer<T> comparer) => keys.BinarySearch (key, comparer);
+        public int Search (T key, IComparer<T>? comparer) => keys.BinarySearch (key, comparer);
         public void SetKey (int index, T key) => keys[index] = key;
         public void RemoveKey (int index) => keys.RemoveAt (index);
         public void RemoveKeys (int index, int count) => keys.RemoveRange (index, count);
@@ -47,14 +49,14 @@ internal
         {
             Debug.Assert (count > 0);
 
-            int startCount = keys.Count;
-            int add0 = count + index - startCount;
+            var startCount = keys.Count;
+            var add0 = count + index - startCount;
 
             if (add0 >= 0)
             {
                 while (--add0 >= 0)
                     keys.Add (key);
-                for (int p1 = index; p1 < startCount; ++p1)
+                for (var p1 = index; p1 < startCount; ++p1)
                 {
                     keys.Add (keys[p1]);
                     keys[p1] = key;
@@ -62,8 +64,8 @@ internal
             }
             else
             {
-                int p3 = startCount - count;
-                for (int p2 = p3; p2 < startCount; ++p2)
+                var p3 = startCount - count;
+                for (var p2 = p3; p2 < startCount; ++p2)
                     keys.Add (keys[p2]);
                 while (--p3 >= index)
                     keys[p3+count] = keys[p3];

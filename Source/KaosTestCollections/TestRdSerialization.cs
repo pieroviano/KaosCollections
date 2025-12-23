@@ -12,6 +12,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 #else
 using Kaos.Collections;
+#pragma warning disable SYSLIB0050
 #endif
 
 namespace Kaos.Test.Collections
@@ -94,59 +95,79 @@ namespace Kaos.Test.Collections
     {
 #if ! TEST_BCL
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdz_ArgumentNull()
         {
-            var dary = new PlayerDary();
-            ((ISerializable) dary).GetObjectData (null, new StreamingContext());
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var dary = new PlayerDary();
+                ((ISerializable) dary).GetObjectData (null!, new StreamingContext());
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRdz_NullCB()
         {
-            var dary = new PlayerDary ((SerializationInfo) null, new StreamingContext());
-            ((IDeserializationCallback) dary).OnDeserialization (null);
+            Assert.Throws<SerializationException>(() =>
+            {
+                var dary = new PlayerDary (null, new StreamingContext());
+                ((IDeserializationCallback) dary).OnDeserialization (null);
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRdz_BadCount()
         {
-            string fileName = @"Targets\DaryBadCount.bin";
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-              { var dary = (PlayerDary) formatter.Deserialize (fs); }
+            Assert.Throws<SerializationException>(() =>
+            {
+                string fileName = @"Targets\DaryBadCount.bin";
+#pragma warning disable SYSLIB0011
+                IFormatter formatter = new BinaryFormatter();
+#pragma warning restore SYSLIB0011
+                using (var fs = new FileStream (fileName, FileMode.Open))
+                  { var dary = (PlayerDary) formatter.Deserialize (fs); }
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRdz_MismatchKV()
         {
-            string fileName = @"Targets\DaryMismatchKV.bin";
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-              { var dary = (PlayerDary) formatter.Deserialize (fs); }
+            Assert.Throws<SerializationException>(() =>
+            {
+                string fileName = @"Targets\DaryMismatchKV.bin";
+#pragma warning disable SYSLIB0011
+                IFormatter formatter = new BinaryFormatter();
+#pragma warning restore SYSLIB0011
+                using (var fs = new FileStream (fileName, FileMode.Open))
+                  { var dary = (PlayerDary) formatter.Deserialize (fs); }
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRdz_MissingKeys()
         {
-            string fileName = @"Targets\DaryMissingKeys.bin";
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-              { var dary = (PlayerDary) formatter.Deserialize (fs); }
+            Assert.Throws<SerializationException>(() =>
+            {
+                string fileName = @"Targets\DaryMissingKeys.bin";
+#pragma warning disable SYSLIB0011
+                IFormatter formatter = new BinaryFormatter();
+#pragma warning restore SYSLIB0011
+                using (var fs = new FileStream (fileName, FileMode.Open))
+                  { var dary = (PlayerDary) formatter.Deserialize (fs); }
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRdz_MissingValues()
         {
-            string fileName = @"Targets\DaryMissingValues.bin";
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-              { var dary = (PlayerDary) formatter.Deserialize (fs); }
+            Assert.Throws<SerializationException>(() =>
+            {
+                string fileName = @"Targets\DaryMissingValues.bin";
+#pragma warning disable SYSLIB0011
+                IFormatter formatter = new BinaryFormatter();
+#pragma warning restore SYSLIB0011
+                using (var fs = new FileStream (fileName, FileMode.Open))
+                  { var dary = (PlayerDary) formatter.Deserialize (fs); }
+            });
         }
 #endif
 
@@ -162,7 +183,9 @@ namespace Kaos.Test.Collections
             p1.Add (new Player ("A1", "Ziggy"), 55);
             p1.Add (new Player ("GG", null), 66);
 
+#pragma warning disable SYSLIB0011
             IFormatter formatter = new BinaryFormatter();
+#pragma warning restore SYSLIB0011
             using (var fs = new FileStream (fileName, FileMode.Create))
             { formatter.Serialize (fs, p1); }
 
@@ -181,7 +204,9 @@ namespace Kaos.Test.Collections
             var p1 = new BadPlayerDary ();
             p1.Add (new Player ("YY", "Josh"), 88);
 
+#pragma warning disable SYSLIB0011
             IFormatter formatter = new BinaryFormatter();
+#pragma warning restore SYSLIB0011
             using (var fs = new FileStream (fileName, FileMode.Create))
             { formatter.Serialize (fs, p1); }
 

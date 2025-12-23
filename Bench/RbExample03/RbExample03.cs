@@ -9,7 +9,7 @@ namespace ExampleApp
         static double Median (RankedBag<int> vals)
         {
             if (vals.Count == 0) return 0D;
-            if (vals.Count % 2 == 1) return (double) vals.ElementAt (vals.Count/2);
+            if (vals.Count % 2 == 1) return vals.ElementAt (vals.Count/2);
             return (vals.ElementAt (vals.Count/2-1) + vals.ElementAt (vals.Count/2)) / 2D;
         }
 

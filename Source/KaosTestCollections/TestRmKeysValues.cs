@@ -18,10 +18,12 @@ namespace Kaos.Test.Collections
         #region Test Keys constructor
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRmk_Ctor_ArgumentNull()
         {
-            var kc = new RankedMap<int,int>.KeyCollection (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var kc = new RankedMap<int,int>.KeyCollection (null);
+            });
         }
 
         [Test]
@@ -78,32 +80,38 @@ namespace Kaos.Test.Collections
         #region Test Keys methods
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRmk_gcAdd_NotSupported()
         {
-            var rm = new RankedMap<string,int>();
-            var gc = (ICollection<string>) rm.Keys;
-            gc.Add ("omega");
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                var rm = new RankedMap<string,int>();
+                var gc = (ICollection<string>) rm.Keys;
+                gc.Add ("omega");
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRmk_gcClear_NotSupported()
         {
-            var rm = new RankedMap<int,int>();
-            var gc = (ICollection<int>) rm.Keys;
-            gc.Clear();
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                var gc = (ICollection<int>) rm.Keys;
+                gc.Clear();
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRmk_gcContains_ArgumentNull()
         {
-            var rm = new RankedMap<string,int> { {"zed", 26} };
-            var gc = (ICollection<string>) rm.Keys;
-            var zz = gc.Contains (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var rm = new RankedMap<string,int> { {"zed", 26} };
+                var gc = (ICollection<string>) rm.Keys;
+                var zz = gc.Contains (null);
+            });
         }
 
         [Test]
@@ -121,33 +129,39 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRmk_CopyTo_ArgumentNull()
         {
-            var rm = new RankedMap<int,int>();
-            rm.Keys.CopyTo (null, -1);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                rm.Keys.CopyTo (null!, -1);
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmk_CopyTo_ArgumentOutOfRange()
         {
-            var rm = new RankedMap<int,int> { {1,11} };
-            var target = new int[1];
-            rm.Keys.CopyTo (target, -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rm = new RankedMap<int,int> { {1,11} };
+                var target = new int[1];
+                rm.Keys.CopyTo (target, -1);
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRmk_CopyTo_Argument()
         {
-            var rm = new RankedMap<int,int>();
-            var target = new int[4];
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                var target = new int[4];
 
-            for (int key = 1; key < 10; ++key)
-                rm.Add (key, key + 1000);
+                for (int key = 1; key < 10; ++key)
+                    rm.Add (key, key + 1000);
 
-            rm.Keys.CopyTo (target, 2);
+                rm.Keys.CopyTo (target, 2);
+            });
         }
 
         [Test]
@@ -243,14 +257,15 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRmk_gcRemove_NotSupported()
         {
-            var rm = new RankedMap<string,int>();
-            var gc = (ICollection<string>) rm.Keys;
-            gc.Remove ("omega");
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                var rm = new RankedMap<string,int>();
+                var gc = (ICollection<string>) rm.Keys;
+                gc.Remove ("omega");
+            });
         }
-
 
         [Test]
         public void UnitRmk_TryGetGEGT()
@@ -377,15 +392,17 @@ namespace Kaos.Test.Collections
         }
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmk_EtorHotUpdate()
         {
-            var rm = new RankedMap<string,int> { {"vv",1}, {"mm",2}, {"qq",3} };
-            int n = 0;
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<string,int> { {"vv",1}, {"mm",2}, {"qq",3} };
+                int n = 0;
 
-            foreach (var kv in rm.Keys)
-                if (++n == 2)
-                    rm.Remove ("vv");
+                foreach (var kv in rm.Keys)
+                    if (++n == 2)
+                        rm.Remove ("vv");
+            });
         }
 
         [Test]
@@ -413,14 +430,16 @@ namespace Kaos.Test.Collections
         #region Test Keys object enumeration
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmk_ocCurrent_InvalidOperation()
         {
-            var rm = new RankedMap<char,int> { {'C',3} };
-            var oc = (ICollection) rm.Keys;
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<char,int> { {'C',3} };
+                var oc = (ICollection) rm.Keys;
 
-            IEnumerator etor = oc.GetEnumerator();
-            object cur = etor.Current;
+                IEnumerator etor = oc.GetEnumerator();
+                object cur = etor.Current;
+            });
         }
 
         [Test]
@@ -492,10 +511,12 @@ namespace Kaos.Test.Collections
         #region Test Values constructor
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRmv_Ctor_ArgumentNull()
         {
-            var vc = new RankedMap<int,int>.ValueCollection (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var vc = new RankedMap<int,int>.ValueCollection (null);
+            });
         }
 
         [Test]
@@ -552,22 +573,26 @@ namespace Kaos.Test.Collections
         #region Test Values methods
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRmv_gcAdd_NotSupported()
         {
-            var rm = new RankedMap<string,int>();
-            var gc = (ICollection<int>) rm.Values;
-            gc.Add (9);
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                var rm = new RankedMap<string,int>();
+                var gc = (ICollection<int>) rm.Values;
+                gc.Add (9);
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRmv_gcClear_NotSupported()
         {
-            var rm = new RankedMap<int,int>();
-            var gc = (ICollection<int>) rm.Values;
-            gc.Clear();
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                var gc = (ICollection<int>) rm.Values;
+                gc.Clear();
+            });
         }
 
 
@@ -586,33 +611,39 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRmv_CopyTo_ArgumentNull()
         {
-            var rm = new RankedMap<int,int>();
-            rm.Values.CopyTo (null, -1);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                rm.Values.CopyTo (null!, -1);
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmv_CopyTo_ArgumentOutOfRange()
         {
-            var rm = new RankedMap<int,int>() { {1,11} };
-            var target = new int[1];
-            rm.Values.CopyTo (target, -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rm = new RankedMap<int,int>() { {1,11} };
+                var target = new int[1];
+                rm.Values.CopyTo (target, -1);
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRmv_CopyTo_Argument()
         {
-            var rm = new RankedMap<int,int>();
-            var target = new int[4];
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                var target = new int[4];
 
-            for (int key = 1; key < 10; ++key)
-                rm.Add (key, key + 1000);
+                for (int key = 1; key < 10; ++key)
+                    rm.Add (key, key + 1000);
 
-            rm.Values.CopyTo (target, 2);
+                rm.Values.CopyTo (target, 2);
+            });
         }
 
 
@@ -653,47 +684,55 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRmv_ocCopyTo_ArgumentNull()
         {
-            var rm = new RankedMap<int,int>();
-            var oc = (ICollection) rm.Values;
-            oc.CopyTo (null, 0);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                var oc = (ICollection) rm.Values;
+                oc.CopyTo (null!, 0);
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRmv_ocCopyToMultiDimensional_Argument()
         {
-            var rm = new RankedMap<int,int> { {42,420} };
-            var oc = (ICollection) rm.Values;
-            object[,] target = new object[2,3];
-            oc.CopyTo (target, -1);
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var rm = new RankedMap<int,int> { {42,420} };
+                var oc = (ICollection) rm.Values;
+                object[,] target = new object[2,3];
+                oc.CopyTo (target, -1);
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmv_ocCopyTo_ArgumentOutOfRange()
         {
-            var rm = new RankedMap<int,int> { {42,420} };
-            var oc = (ICollection) rm.Values;
-            var target = new object[1];
-            oc.CopyTo (target, -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rm = new RankedMap<int,int> { {42,420} };
+                var oc = (ICollection) rm.Values;
+                var target = new object[1];
+                oc.CopyTo (target, -1);
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRmv_ocCopyToNotLongEnough_Argument()
         {
-            var rm = new RankedMap<int,int> { Capacity=4 };
-            var oc = (ICollection) rm.Values;
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var rm = new RankedMap<int,int> { Capacity=4 };
+                var oc = (ICollection) rm.Values;
 
-            for (int i = 0; i < 10; ++i)
-                rm.Add (i + 100, i + 1000);
-            var target = new object[10];
+                for (int i = 0; i < 10; ++i)
+                    rm.Add (i + 100, i + 1000);
+                var target = new object[10];
 
-            oc.CopyTo (target, 5);
+                oc.CopyTo (target, 5);
+            });
         }
 
         [Test]
@@ -738,19 +777,21 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (0, rm.Values.IndexOf (1));
             Assert.AreEqual (1, rm.Values.IndexOf (2));
             Assert.AreEqual (3, rm.Values.IndexOf (3));
-            Assert.AreEqual (4, rm.Values.IndexOf ((int?) null));
+            Assert.AreEqual (4, rm.Values.IndexOf (null));
             Assert.AreEqual (-1, rm.Values.IndexOf (0));
             Assert.AreEqual (-1, rm.Values.IndexOf (4));
         }
 
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRmv_gcRemove_NotSupported()
         {
-            var rm = new RankedMap<int,int>();
-            var gc = (ICollection<int>) rm.Values;
-            gc.Remove (9);
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                var gc = (ICollection<int>) rm.Values;
+                gc.Remove (9);
+            });
         }
 
         #endregion
@@ -802,15 +843,17 @@ namespace Kaos.Test.Collections
         }
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmv_EtorHotUpdate()
         {
-            var rm = new RankedMap<string,int> { {"vv",1}, {"mm",2}, {"qq",3} };
-            int n = 0;
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<string,int> { {"vv",1}, {"mm",2}, {"qq",3} };
+                int n = 0;
 
-            foreach (var kv in rm.Values)
-                if (++n == 2)
-                    rm.Remove ("vv");
+                foreach (var kv in rm.Values)
+                    if (++n == 2)
+                        rm.Remove ("vv");
+            });
         }
 
         [Test]
@@ -835,14 +878,16 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmv_ocCurrent_InvalidOperation()
         {
-            var rm = new RankedMap<char,int> { {'C',3} };
-            var oc = (ICollection) rm.Values;
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<char,int> { {'C',3} };
+                var oc = (ICollection) rm.Values;
 
-            IEnumerator etor = oc.GetEnumerator();
-            object cur = etor.Current;
+                IEnumerator etor = oc.GetEnumerator();
+                object cur = etor.Current;
+            });
         }
 
         #endregion

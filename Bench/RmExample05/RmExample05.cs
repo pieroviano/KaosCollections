@@ -18,7 +18,7 @@ namespace ExampleApp
     }
 
     [Serializable]
-    public class PlayerMap : RankedMap<Player,int>
+    internal class PlayerMap : RankedMap<Player,int>
     {
         public string Game { get; set; }
 
@@ -74,7 +74,9 @@ namespace ExampleApp
             map1.Add (new Player ("GG", "Edwin"), 66);
             map1.Add (new Player (null, "Player"), 77);
 
+#pragma warning disable SYSLIB0011
             IFormatter formatter = new BinaryFormatter();
+#pragma warning restore SYSLIB0011
             using (var fs = new FileStream (fileName, FileMode.Create))
             { formatter.Serialize (fs, map1); }
 

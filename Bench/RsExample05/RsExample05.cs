@@ -48,7 +48,9 @@ namespace ExampleApp
             set1.Add (new Person ("Hammond", "Egger"));
 
             string fileName = "Persons.bin";
+#pragma warning disable SYSLIB0011
             IFormatter formatter = new BinaryFormatter();
+#pragma warning restore SYSLIB0011
 
             SerializePersons (fileName, set1, formatter);
             Console.WriteLine ($"Wrote {set1.Count} items to file '{fileName}'.");
@@ -61,13 +63,17 @@ namespace ExampleApp
                 Console.WriteLine (p2);
         }
 
+#pragma warning disable SYSLIB0011
         public static void SerializePersons (string fn, RankedSet<Person> set, IFormatter formatter)
+#pragma warning restore SYSLIB0011
         {
             using (var fs = new FileStream (fn, FileMode.Create))
             { formatter.Serialize (fs, set); }
         }
 
+#pragma warning disable SYSLIB0011
         static RankedSet<Person> DeserializePersons (string fn, IFormatter formatter)
+#pragma warning restore SYSLIB0011
         {
             using (var fs = new FileStream (fn, FileMode.Open))
             { return (RankedSet<Person>) formatter.Deserialize (fs); }

@@ -18,27 +18,31 @@ namespace Kaos.Test.Collections
         #region Test methods (LINQ emulation)
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRbq_ElementAtA_ArgumentOutOfRange()
         {
-            var rb = new RankedBag<int>();
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rb = new RankedBag<int>();
 #if TEST_BCL
-            var zz = Enumerable.ElementAt (rb, -1);
+                var zz = Enumerable.ElementAt (rb, -1);
 #else
-            var zz = rb.ElementAt (-1);
+                var zz = rb.ElementAt (-1);
 #endif
+            });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRbq_ElementAtB_ArgumentOutOfRange()
         {
-            var rb = new RankedBag<int>();
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rb = new RankedBag<int>();
 #if TEST_BCL
-            var zz = Enumerable.ElementAt (rb, 0);
+                var zz = Enumerable.ElementAt (rb, 0);
 #else
-            var zz = rb.ElementAt (0);
+                var zz = rb.ElementAt (0);
 #endif
+            });
         }
 
 
@@ -90,28 +94,32 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRbq_First_InvalidOperation()
         {
-            var rb = new RankedBag<int>();
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rb = new RankedBag<int>();
 #if TEST_BCL
-            var zz = Enumerable.First (rb);
+                var zz = Enumerable.First (rb);
 #else
-            var zz = rb.First();
+                var zz = rb.First();
 #endif
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRbq_Last_InvalidOperation()
         {
-            var rb = new RankedBag<int>();
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rb = new RankedBag<int>();
 #if TEST_BCL
-            var zz = Enumerable.Last (rb);
+                var zz = Enumerable.Last (rb);
 #else
-            var zz = rb.Last();
+                var zz = rb.Last();
 #endif
+            });
         }
 
         [Test]
@@ -354,19 +362,21 @@ namespace Kaos.Test.Collections
         #region Test enumeration (LINQ emulation)
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRbq_DistinctHotUpdate()
         {
-            var rb = new RankedBag<int> { Capacity=4 };
-            foreach (int ii in new int[] { 1,1,3,5,7,9 }) rb.Add (ii);
-            int n = 0;
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rb = new RankedBag<int> { Capacity=4 };
+                foreach (int ii in new int[] { 1,1,3,5,7,9 }) rb.Add (ii);
+                int n = 0;
 #if TEST_BCL
-            foreach (var x in Enumerable.Distinct (rb))
+                foreach (var x in Enumerable.Distinct (rb))
 #else
-            foreach (var x in rb.Distinct())
+                foreach (var x in rb.Distinct())
 #endif
-                if (++n == 2)
-                    rb.Remove (3);
+                    if (++n == 2)
+                        rb.Remove (3);
+            });
         }
 
         [Test]
@@ -391,10 +401,23 @@ namespace Kaos.Test.Collections
         }
 
 
-        [Test]
 #if ! TEST_BCL
-        [ExpectedException (typeof (InvalidOperationException))]
-#endif
+        [Test]
+        public void CrashRbq_ReverseHotUpdate()
+        {
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rb = new RankedBag<int> { Capacity=4 };
+                for (int ii = 9; ii >= 0; --ii) rb.Add (ii);
+
+                int a = 0;
+                foreach (var x in rb.Reverse())
+                    if (++a == 2)
+                        rb.Clear();
+            });
+        }
+#else
+        [Test]
         public void CrashRbq_ReverseHotUpdate()
         {
             var rb = new RankedBag<int> { Capacity=4 };
@@ -409,6 +432,7 @@ namespace Kaos.Test.Collections
                 if (++a == 2)
                     rb.Clear();
         }
+#endif
 
         [Test]
         public void UnitRbq_Reverse()

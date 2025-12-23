@@ -43,7 +43,9 @@ namespace ExampleApp
     {
         static void Main()
         {
+#pragma warning disable SYSLIB0011
             IFormatter formatter = new BinaryFormatter();
+#pragma warning restore SYSLIB0011
             var set1 = new RankedDictionary<Person,string> (new PersonComparer());
 
             set1.Add (new Person ("Hugh", "Mann"), "B+");
@@ -60,13 +62,17 @@ namespace ExampleApp
                 Console.WriteLine (kv);
         }
 
+#pragma warning disable SYSLIB0011
         public static void SerializePersons (string fn, RankedDictionary<Person,string> set, IFormatter formatter)
+#pragma warning restore SYSLIB0011
         {
             using (var fs = new FileStream (fn, FileMode.Create))
             { formatter.Serialize (fs, set); }
         }
 
+#pragma warning disable SYSLIB0011
         static RankedDictionary<Person,string> DeserializePersons (string fn, IFormatter formatter)
+#pragma warning restore SYSLIB0011
         {
             using (var fs = new FileStream (fn, FileMode.Open))
             { return (RankedDictionary<Person,string>) formatter.Deserialize (fs); }

@@ -64,7 +64,7 @@ internal
 
         public void Add (PairLeaf<TValue> source, int sourceStart, int sourceStop)
         {
-            for (int ix = sourceStart; ix < sourceStop; ++ix)
+            for (var ix = sourceStart; ix < sourceStop; ++ix)
                 Add (source.GetKey (ix), source.GetValue (ix));
         }
 
@@ -74,7 +74,7 @@ internal
         public override void Coalesce()
         {
             var right = (PairLeaf<TValue>) rightLeaf;
-            for (int ix = 0; ix < right.values.Count; ++ix)
+            for (var ix = 0; ix < right.values.Count; ++ix)
                 values.Add (right.values[ix]);
             base.Coalesce();
         }
@@ -89,7 +89,7 @@ internal
         public override void MoveLeft (int count)
         {
             var right = (PairLeaf<TValue>) rightLeaf;
-            for (int ix = 0; ix < count; ++ix)
+            for (var ix = 0; ix < count; ++ix)
                 values.Add (right.values[ix]);
             right.values.RemoveRange (0, count);
             base.MoveLeft (count);

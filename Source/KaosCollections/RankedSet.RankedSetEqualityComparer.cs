@@ -33,9 +33,9 @@ internal
 
         public int GetHashCode (RankedSet<T> set)
         {
-            int hashCode = 0;
+            var hashCode = 0;
             if (set != null)
-                foreach (T item in set)
+                foreach (var item in set)
                     hashCode ^= (equalityComparer.GetHashCode (item) & 0x7FFFFFFF);
 
             return hashCode;

@@ -14,14 +14,19 @@ namespace Kaos.Test.Collections
         #region Test Keys constructor
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdk_Ctor_ArgumentNull()
         {
             Setup();
 #if TEST_BCL
-            var zz = new SortedDictionary<int,int>.KeyCollection (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var zz = new SortedDictionary<int,int>.KeyCollection (null);
+            });
 #else
-            var zz = new RankedDictionary<int,int>.KeyCollection (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var zz = new RankedDictionary<int,int>.KeyCollection (null);
+            });
 #endif
         }
 
@@ -75,27 +80,24 @@ namespace Kaos.Test.Collections
         #region Test Keys methods
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdk_gcAdd_NotSupported()
         {
             Setup();
             var gc = (System.Collections.Generic.ICollection<string>) dary2.Keys;
-            gc.Add ("omega");
+            Assert.Throws<NotSupportedException>(() => { gc.Add ("omega"); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdk_gcClear_NotSupported()
         {
             Setup();
             var gc = (System.Collections.Generic.ICollection<string>) dary2.Keys;
-            gc.Clear();
+            Assert.Throws<NotSupportedException>(() => { gc.Clear(); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdk_gcContains_ArgumentNull()
         {
             Setup();
@@ -103,7 +105,7 @@ namespace Kaos.Test.Collections
 
             dary2.Add ("alpha", 10);
 
-            var zz = gc.Contains (null);
+            Assert.Throws<ArgumentNullException>(() => { var zz = gc.Contains (null); });
         }
 
         [Test]
@@ -121,25 +123,22 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdk_CopyTo_ArgumentNull()
         {
             Setup();
             var target = new int[10];
-            dary1.Keys.CopyTo (null, -1);
+            Assert.Throws<ArgumentNullException>(() => { dary1.Keys.CopyTo (null!, -1); });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdk_CopyTo_ArgumentOutOfRange()
         {
             Setup();
             var target = new int[iVals1.Length];
-            dary1.Keys.CopyTo (target, -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => { dary1.Keys.CopyTo (target, -1); });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRdk_CopyTo_Argument()
         {
             Setup();
@@ -147,7 +146,7 @@ namespace Kaos.Test.Collections
                 dary1.Add (key, key + 1000);
 
             var target = new int[4];
-            dary1.Keys.CopyTo (target, 2);
+            Assert.Throws<ArgumentException>(() => { dary1.Keys.CopyTo (target, 2); });
         }
 
         [Test]
@@ -188,12 +187,11 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdk_gcRemove_NotSupported()
         {
             Setup();
             var gc = (System.Collections.Generic.ICollection<string>) dary2.Keys;
-            gc.Remove ("omega");
+            Assert.Throws<NotSupportedException>(() => { gc.Remove ("omega"); });
         }
 
         #endregion
@@ -213,19 +211,17 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdkx_ElementAt_ArgumentOutOfRange1()
         {
             var rd = new RankedDictionary<int,int>();
-            var zz = rd.Keys.ElementAt (-1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => { var zz = rd.Keys.ElementAt (-1); });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdkx_ElementAt_ArgumentOutOfRange2()
         {
             var rd = new RankedDictionary<int,int>();
-            var zz = rd.Keys.ElementAt (0);
+            Assert.Throws<ArgumentOutOfRangeException>(() => { var zz = rd.Keys.ElementAt (0); });
         }
 
         [Test]
@@ -346,7 +342,6 @@ namespace Kaos.Test.Collections
         #region Test Keys enumeration
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdk_ocCurrent_InvalidOperation()
         {
             Setup();
@@ -355,7 +350,7 @@ namespace Kaos.Test.Collections
             System.Collections.ICollection oc = objCol2.Keys;
             System.Collections.IEnumerator etor = oc.GetEnumerator();
 
-            object zz = etor.Current;
+            Assert.Throws<InvalidOperationException>(() => { object zz = etor.Current; });
         }
 
         [Test]
@@ -390,7 +385,7 @@ namespace Kaos.Test.Collections
             var etor = genKeys2.GetEnumerator();
 
             var rewoundKey = etor.Current;
-            Assert.AreEqual (rewoundKey, default (string));
+            Assert.AreEqual (rewoundKey, null);
 
             while (etor.MoveNext())
             {
@@ -422,7 +417,6 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdk_EtorHotUpdate()
         {
             Setup (4);
@@ -430,12 +424,15 @@ namespace Kaos.Test.Collections
             dary2.Add ("mm", 2);
             dary2.Add ("qq", 3);
 
-            int n = 0;
-            foreach (var kv in dary2.Keys)
+            Assert.Throws<InvalidOperationException>(() =>
             {
-                if (++n == 2)
-                    dary2.Remove ("vv");
-            }
+                int n = 0;
+                foreach (var kv in dary2.Keys)
+                {
+                    if (++n == 2)
+                        dary2.Remove ("vv");
+                }
+            });
         }
 
         [Test]
@@ -516,14 +513,19 @@ namespace Kaos.Test.Collections
         #region Test Values constructor
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdv_Ctor_ArgumentNull()
         {
             Setup();
 #if TEST_BCL
-            var vals = new SortedDictionary<int,int>.ValueCollection (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var vals = new SortedDictionary<int,int>.ValueCollection (null);
+            });
 #else
-            var vals = new RankedDictionary<int,int>.ValueCollection (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var vals = new RankedDictionary<int,int>.ValueCollection (null);
+            });
 #endif
         }
 
@@ -577,22 +579,20 @@ namespace Kaos.Test.Collections
         #region Test Values methods
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdv_gcAdd_NotSupported()
         {
             Setup();
             var gc = (System.Collections.Generic.ICollection<int>) dary2.Values;
-            gc.Add (9);
+            Assert.Throws<NotSupportedException>(() => { gc.Add (9); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdv_gcClear_NotSupported()
         {
             Setup();
             var gc = (System.Collections.Generic.ICollection<int>) dary2.Values;
-            gc.Clear();
+            Assert.Throws<NotSupportedException>(() => { gc.Clear(); });
         }
 
 
@@ -611,25 +611,22 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdv_CopyTo_ArgumentNull()
         {
             Setup();
             var target = new int[iVals1.Length];
-            dary1.Values.CopyTo (null, -1);
+            Assert.Throws<ArgumentNullException>(() => { dary1.Values.CopyTo (null!, -1); });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdv_CopyTo_ArgumentOutOfRange()
         {
             Setup();
             var target = new int[10];
-            dary1.Values.CopyTo (target, -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => { dary1.Values.CopyTo (target, -1); });
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRdv_CopyTo_Argument()
         {
             Setup();
@@ -638,7 +635,7 @@ namespace Kaos.Test.Collections
                 dary1.Add (key, key + 1000);
 
             var target = new int[4];
-            dary1.Values.CopyTo (target, 2);
+            Assert.Throws<ArgumentException>(() => { dary1.Values.CopyTo (target, 2); });
         }
 
         [Test]
@@ -679,12 +676,11 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (NotSupportedException))]
         public void CrashRdv_gcRemove_NotSupported()
         {
             Setup();
             var gc = (System.Collections.Generic.ICollection<int>) dary2.Values;
-            gc.Remove (9);
+            Assert.Throws<NotSupportedException>(() => { gc.Remove (9); });
         }
 
         #endregion
@@ -722,7 +718,6 @@ namespace Kaos.Test.Collections
         #region Test Values enumeration
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdv_ocCurrent_InvalidOperation()
         {
             Setup();
@@ -731,7 +726,7 @@ namespace Kaos.Test.Collections
             System.Collections.ICollection oc = objCol2.Values;
             System.Collections.IEnumerator etor = oc.GetEnumerator();
 
-            object zz = etor.Current;
+            Assert.Throws<InvalidOperationException>(() => { object zz = etor.Current; });
         }
 
         [Test]
@@ -817,7 +812,6 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRdv_EtorHotUpdate()
         {
             Setup (4);
@@ -825,14 +819,16 @@ namespace Kaos.Test.Collections
             dary2.Add ("mm", 2);
             dary2.Add ("qq", 3);
 
-            int n = 0;
-            foreach (var kv in dary2.Keys)
+            Assert.Throws<InvalidOperationException>(() =>
             {
-                if (++n == 2)
-                    dary2.Clear();
-            }
+                int n = 0;
+                foreach (var kv in dary2.Keys)
+                {
+                    if (++n == 2)
+                        dary2.Clear();
+                }
+            });
         }
-
 
         [Test]
         public void UnitRdv_oReset()

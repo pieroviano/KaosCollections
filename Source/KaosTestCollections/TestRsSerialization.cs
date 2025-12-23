@@ -12,6 +12,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 #else
 using Kaos.Collections;
+#pragma warning disable SYSLIB0050
+#pragma warning disable SYSLIB0011
 #endif
 
 namespace Kaos.Test.Collections
@@ -78,40 +80,68 @@ namespace Kaos.Test.Collections
     public partial class TestRs
     {
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRsz_ArgumentNull()
         {
-            var set = new StudentSet();
-            ((ISerializable) set).GetObjectData (null, new StreamingContext());
+            try
+            {
+                var set = new StudentSet();
+                ((ISerializable)set).GetObjectData(null!, new StreamingContext());
+                Assert.Fail("Expected exception not thrown.");
+            }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("OK");
+            }
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRsz_NullCB()
         {
-            var set = new StudentSet ((SerializationInfo) null, new StreamingContext());
-            ((IDeserializationCallback) set).OnDeserialization (null);
+            try
+            {
+                var set = new StudentSet(null, new StreamingContext());
+                ((IDeserializationCallback)set).OnDeserialization(null);
+                Assert.Fail("Expected exception not thrown.");
+            }
+            catch (SerializationException)
+            {
+                Console.WriteLine("OK");
+            }
         }
 
 #if ! TEST_BCL
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRsz_BadCount()
         {
-            string fileName = @"Targets\SetBadCount.bin";
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-              { var set = (StudentSet) formatter.Deserialize (fs); }
+            try
+            {
+                string fileName = @"Targets\SetBadCount.bin";
+                IFormatter formatter = new BinaryFormatter();
+                using (var fs = new FileStream(fileName, FileMode.Open))
+                { var set = (StudentSet)formatter.Deserialize(fs); }
+                Assert.Fail("Expected exception not thrown.");
+            }
+            catch (SerializationException)
+            {
+                Console.WriteLine("OK");
+            }
         }
 
         [Test]
-        [ExpectedException (typeof (SerializationException))]
         public void CrashRsz_MissingItems()
         {
-            string fileName = @"Targets\SetMissingItems.bin";
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-              { var set = (StudentSet) formatter.Deserialize (fs); }
+            try
+            {
+                string fileName = @"Targets\SetMissingItems.bin";
+                IFormatter formatter = new BinaryFormatter();
+                using (var fs = new FileStream(fileName, FileMode.Open))
+                { var set = (StudentSet)formatter.Deserialize(fs); }
+                Assert.Fail("Expected exception not thrown.");
+            }
+            catch (SerializationException)
+            {
+                Console.WriteLine("OK");
+            }
         }
 #endif
 

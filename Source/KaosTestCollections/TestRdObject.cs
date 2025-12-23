@@ -36,13 +36,12 @@ namespace Kaos.Test.Collections
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odItemGet_ArgumentNull()
         {
             Setup();
             var od = (IDictionary) dary2;
             od.Add ("foo", 10);
-            object zz = od[null];
+            Assert.Throws<ArgumentNullException>(() => { object zz = od[null!]; });
         }
 
 
@@ -58,46 +57,42 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odItemSetKey_ArgumentNull()
         {
             Setup();
             var od = (IDictionary) dary2;
             od.Add ("foo", 10);
-            od[null] = "bar";
+            Assert.Throws<ArgumentNullException>(() => { od[null!] = "bar"; });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odItemSetValue_ArgumentNull()
         {
             Setup();
             var od = (IDictionary) dary2;
             od.Add ("foo", 10);
-            od["foo"] = null;
+            Assert.Throws<ArgumentNullException>(() => { od["foo"] = null; });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odItemSetBadKey_Argument()
         {
             Setup();
             var od = (IDictionary) dary2;
             od.Add ("foo", 10);
-            od[23] = 45;
+            Assert.Throws<ArgumentException>(() => { od[23] = 45; });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odItemSetBadValue_Argument()
         {
             Setup();
             var od = (IDictionary) dary2;
             od.Add ("foo", 10);
-            od["red"] = "blue";
+            Assert.Throws<ArgumentException>(() => { od["red"] = "blue"; });
         }
 
 
@@ -144,43 +139,42 @@ namespace Kaos.Test.Collections
         #region Test object methods
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odAddNullKey_Argument()
         {
             Setup();
             var od = (IDictionary) dary2;
-            od.Add ((String) null, 1);
+            Assert.Throws<ArgumentNullException>(() => { od.Add (null!, 1); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odAddBadKey_Argument()
         {
             Setup();
             var od = (IDictionary) dary2;
-            od.Add (23, 45);
-        }
+            Assert.Throws<ArgumentException>(() => { od.Add (23, 45); });
+        }   
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odAddBadValue_Argument()
         {
             Setup();
             var od = (IDictionary) dary2;
-            od.Add ("razz", "matazz");
+            Assert.Throws<ArgumentException>(() => { od.Add ("razz", "matazz"); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odAddDupl_Argument()
         {
             Setup();
             var od = (IDictionary) dary2;
-            od.Add ("nn", 1);
-            od.Add ("nn", 2);
+            Assert.Throws<ArgumentException>(() =>
+            {
+                od.Add ("nn", 1);
+                od.Add ("nn", 2);
+            });
         }
 
 
@@ -200,50 +194,45 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odContainsKey_ArgumentNull()
         {
             Setup();
             var od = (IDictionary) dary2;
-            bool isOK = objCol2.Contains (null);
+            Assert.Throws<ArgumentNullException>(() => { bool isOK = objCol2.Contains (null!); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odCopyTo_ArgumentNull()
         {
             Setup();
             var od = (IDictionary) dary1;
             var target = new KeyValuePair<int,int>[iVals1.Length];
-            od.CopyTo (null, -1);
+            Assert.Throws<ArgumentNullException>(() => { od.CopyTo (null!, -1); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRd_odCopyTo_ArgumentOutOfRange()
         {
             Setup();
             var od = (IDictionary) dary1;
             var target = new KeyValuePair<int,int>[iVals1.Length];
-            od.CopyTo (target, -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => { od.CopyTo (target, -1); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odCopyTo1_Argument()
         {
             Setup();
             var od = (IDictionary) dary1;
             var target = new KeyValuePair<int,int>[iVals1.Length,2];
-            od.CopyTo (target, 0);
+            Assert.Throws<ArgumentException>(() => { od.CopyTo (target, 0); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odCopyTo2_Argument()
         {
             Setup();
@@ -253,12 +242,11 @@ namespace Kaos.Test.Collections
                 dary1.Add (key, key + 1000);
 
             var target = new KeyValuePair<int,int>[1];
-            od.CopyTo (target, 0);
+            Assert.Throws<ArgumentException>(() => { od.CopyTo (target, 0); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_odCopyToBadType_Argument()
         {
             Setup();
@@ -266,7 +254,7 @@ namespace Kaos.Test.Collections
             dary1.Add (42, 420);
 
             var target = new string[5];
-            od.CopyTo (target, 0);
+            Assert.Throws<ArgumentException>(() => { od.CopyTo (target, 0); });
         }
 
 
@@ -305,12 +293,11 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_odRemove_ArgumentNull()
         {
             Setup();
             var od = (IDictionary) dary1;
-            od.Remove (null);
+            Assert.Throws<ArgumentNullException>(() => { od.Remove (null!); });
         }
 
 
@@ -336,7 +323,6 @@ namespace Kaos.Test.Collections
         #region Test object enumeration
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_odEtorKey_InvalidOperation()
         {
             Setup();
@@ -344,11 +330,10 @@ namespace Kaos.Test.Collections
             dary2.Add ("cc", 3);
 
             IDictionaryEnumerator oEtor = od.GetEnumerator();
-            var key = oEtor.Key;
+            Assert.Throws<InvalidOperationException>(() => { var key = oEtor.Key; });
         }
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_odEtorValue_InvalidOperation()
         {
             Setup();
@@ -356,11 +341,10 @@ namespace Kaos.Test.Collections
             dary2.Add ("cc", 3);
 
             IDictionaryEnumerator etor = od.GetEnumerator();
-            var val = etor.Value;
+            Assert.Throws<InvalidOperationException>(() => { var val = etor.Value; });
         }
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_odEtorEntry_InvalidOperation()
         {
             Setup();
@@ -368,11 +352,10 @@ namespace Kaos.Test.Collections
             dary2.Add ("cc", 3);
 
             IDictionaryEnumerator oEtor = od.GetEnumerator();
-            DictionaryEntry entry = oEtor.Entry;
+            Assert.Throws<InvalidOperationException>(() => { DictionaryEntry entry = oEtor.Entry; });
         }
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_odEtorCurrent_InvalidOperation()
         {
             Setup();
@@ -380,7 +363,7 @@ namespace Kaos.Test.Collections
             dary2.Add ("cc", 3);
 
             IDictionaryEnumerator oEtor = od.GetEnumerator();
-            var val = oEtor.Current;
+            Assert.Throws<InvalidOperationException>(() => { var val = oEtor.Current; });
         }
 
         [Test]
@@ -451,17 +434,15 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdk_ocCopyTo_ArgumentNull()
         {
             Setup();
             var oc = (ICollection) dary1.Keys;
-            oc.CopyTo (null, -1);
+            Assert.Throws<ArgumentNullException>(() => { oc.CopyTo (null!, -1); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRdk_ocCopyToMultiDimensional_Argument()
         {
             Setup();
@@ -469,12 +450,11 @@ namespace Kaos.Test.Collections
             dary1.Add (42, 420);
 
             object[,] target = new object[2, 3];
-            oc.CopyTo (target, -1);
+            Assert.Throws<ArgumentException>(() => { oc.CopyTo (target, -1); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdk_ocCopyTo_ArgumentOutOfRange()
         {
             Setup();
@@ -482,12 +462,11 @@ namespace Kaos.Test.Collections
             dary1.Add (42, 420);
 
             object[] target = new object[1];
-            oc.CopyTo (target, -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => { oc.CopyTo (target, -1); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRdk_ocCopyToNotLongEnough_Argument()
         {
             Setup();
@@ -498,7 +477,7 @@ namespace Kaos.Test.Collections
 
 
             object[] target = new object[10];
-            oc.CopyTo (target, 5);
+            Assert.Throws<ArgumentException>(() => { oc.CopyTo (target, 5); });
         }
 
 
@@ -569,17 +548,15 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdv_ocCopyTo_ArgumentNull()
         {
             Setup();
             var oc = (ICollection) dary1.Values;
-            oc.CopyTo (null, -1);
+            Assert.Throws<ArgumentNullException>(() => { oc.CopyTo (null!, -1); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRdv_ocCopyToMultiDimensional_Argument()
         {
             Setup();
@@ -588,12 +565,11 @@ namespace Kaos.Test.Collections
             dary1.Add (42, 420);
             object[,] target = new object[2, 3];
 
-            oc.CopyTo (target, -1);
+            Assert.Throws<ArgumentException>(() => { oc.CopyTo (target, -1); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdv_ocCopyTo_ArgumentOutOfRange()
         {
             Setup();
@@ -602,12 +578,11 @@ namespace Kaos.Test.Collections
             dary1.Add (42, 420);
             object[] target = new object[1];
 
-            oc.CopyTo (target, -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => { oc.CopyTo (target, -1); });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRdv_ocCopyToNotLongEnough_Argument()
         {
             Setup();
@@ -617,7 +592,7 @@ namespace Kaos.Test.Collections
                 dary1.Add (i + 100, i + 1000);
             var target = new object[10];
 
-            oc.CopyTo (target, 5);
+            Assert.Throws<ArgumentException>(() => { oc.CopyTo (target, 5); });
         }
 
 

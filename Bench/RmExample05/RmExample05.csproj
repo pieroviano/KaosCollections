@@ -1,7 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
-  <Import Project="..\..\Source\KaosCollections\KaosCollections.projitems" Label="Shared" />
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <Import Project="$(NuGetPackageRoot)net4x.nugetutility/$(NuGetUtilityVersion)/build/NuGet.Utility.props" Condition="Exists('$(NuGetPackageRoot)net4x.nugetutility/$(NuGetUtilityVersion)/build/NuGet.Utility.props')" />
+    <PropertyGroup>
+        <PackageOutputPath>$(SolutionDir)Packages/</PackageOutputPath>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+        <Version>$(VersionPrefix).$(VersionSuffix)</Version>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <DefineConsts>$(DefineConsts);PUBLIC</DefineConsts>
+    </PropertyGroup>
+    <Import Project="..\..\Source\KaosCollections\KaosCollections.projitems" Label="Shared" />
+    <Import Project="$(NuGetPackageRoot)net4x.nugetutility/$(NuGetUtilityVersion)/build/NuGet.Utility.targets" Condition="Exists('$(NuGetPackageRoot)net4x.nugetutility/$(NuGetUtilityVersion)/build/NuGet.Utility.targets')" />
 </Project>

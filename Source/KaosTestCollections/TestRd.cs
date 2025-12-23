@@ -76,21 +76,25 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-#if TEST_BCL
-        [ExpectedException (typeof (ArgumentException))]
-#else
-        [ExpectedException (typeof (InvalidOperationException))]
-#endif
         public void CrashRd_Ctor1NoComparer_InvalidOperation()
         {
-            var comp0 = (System.Collections.Generic.Comparer<Person>) null;
 #if TEST_BCL
-            var d1 = new SortedDictionary<Person,int> (comp0);
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var comp0 = (System.Collections.Generic.Comparer<Person>) null;
+                var d1 = new SortedDictionary<Person,int> (comp0);
+                d1.Add (new Person ("Zed"), 1);
+                d1.Add (new Person ("Macron"), 2);
+            });
 #else
-            var d1 = new RankedDictionary<Person,int> (comp0);
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var comp0 = (System.Collections.Generic.Comparer<Person>) null;
+                var d1 = new RankedDictionary<Person,int> (comp0);
+                d1.Add (new Person ("Zed"), 1);
+                d1.Add (new Person ("Macron"), 2);
+            });
 #endif
-            d1.Add (new Person ("Zed"), 1);
-            d1.Add (new Person ("Macron"), 2);
         }
 
         [Test]
@@ -143,17 +147,18 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_Ctor1B_ArgumentNull()
         {
-            IDictionary<int,int> listArg = null;
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                IDictionary<int,int> listArg = null;
 #if TEST_BCL
-            IDictionary<int,int> gcp = new SortedDictionary<int,int> (listArg);
+                IDictionary<int,int> gcp = new SortedDictionary<int,int> (listArg);
 #else
-            IDictionary<int,int> gcp = new RankedDictionary<int,int> (listArg);
+                IDictionary<int,int> gcp = new RankedDictionary<int,int> (listArg);
 #endif
+            });
         }
-
 
         [Test]
         public void UnitRd_Ctor1B()
@@ -226,42 +231,50 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_Item_ArgumentNullA()
         {
-            Setup();
-            dary2[null] = 42;
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Setup();
+                dary2[null!] = 42;
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_Item_ArgumentNullB()
         {
-            Setup();
-            int zz = dary2[null];
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Setup();
+                int zz = dary2[null!];
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (KeyNotFoundException))]
         public void CrashRd_Item_KeyNotFoundA()
         {
-            Setup();
-            dary2.Add ("pi", 9);
+            Assert.Throws<KeyNotFoundException>(() =>
+            {
+                Setup();
+                dary2.Add ("pi", 9);
 
-            int zz = dary2["omicron"];
+                int zz = dary2["omicron"];
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (KeyNotFoundException))]
         public void CrashRd_Item_KeyNotFoundB()
         {
-            Setup();
-            dary1.Add (23, 230);
+            Assert.Throws<KeyNotFoundException>(() =>
+            {
+                Setup();
+                dary1.Add (23, 230);
 
-            int zz = dary1[9];
+                int zz = dary1[9];
+            });
         }
 
 
@@ -285,21 +298,25 @@ namespace Kaos.Test.Collections
         #region Test methods
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_Add_ArgumentNull()
         {
-            Setup();
-            dary2.Add (null, 0);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Setup();
+                dary2.Add (null!, 0);
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_Add_Argument()
         {
-            Setup();
-            dary2.Add ("foo", 1);
-            dary2.Add ("foo", 2);
+            Assert.Throws<ArgumentException>(() =>
+            {
+                Setup();
+                dary2.Add ("foo", 1);
+                dary2.Add ("foo", 2);
+            });
         }
 
 
@@ -335,15 +352,17 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_ContainsKey_ArgumentNull()
         {
-            Setup();
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Setup();
 
-            dary2.Add ("gamma", 3);
+                dary2.Add ("gamma", 3);
 
-            // The nongeneric interface allows insert null key, but this is BCL behavior so...
-            bool zz = dary2.ContainsKey (null);
+                // The nongeneric interface allows insert null key, but this is BCL behavior so...
+                bool zz = dary2.ContainsKey (null!);
+            });
         }
 
 
@@ -412,48 +431,56 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_CopyTo_ArgumentNull()
         {
-            Setup();
-            dary1.CopyTo (null, -1);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Setup();
+                dary1.CopyTo (null!, -1);
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRd_CopyTo_ArgumentOutOfRange()
         {
-            Setup();
-            var target = new KeyValuePair<int,int>[iVals1.Length];
-            dary1.CopyTo (target, -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                Setup();
+                var target = new KeyValuePair<int,int>[iVals1.Length];
+                dary1.CopyTo (target, -1);
+            });
         }
 
 
         // MS docs incorrectly state ArgumentOutOfRangeException for this case.
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_CopyTo_ArgumentA()
         {
-            Setup();
-            for (int key = 1; key < 10; ++key)
-                dary1.Add (key, key + 1000);
+            Assert.Throws<ArgumentException>(() =>
+            {
+                Setup();
+                for (int key = 1; key < 10; ++key)
+                    dary1.Add (key, key + 1000);
 
-            var target = new KeyValuePair<int,int>[10];
-            dary1.CopyTo (target, 25);
+                var target = new KeyValuePair<int,int>[10];
+                dary1.CopyTo (target, 25);
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_CopyTo_ArgumentB()
         {
-            Setup();
-            for (int key = 1; key < 10; ++key)
-                dary1.Add (key, key + 1000);
+            Assert.Throws<ArgumentException>(() =>
+            {
+                Setup();
+                for (int key = 1; key < 10; ++key)
+                    dary1.Add (key, key + 1000);
 
-            var target = new System.Collections.Generic.KeyValuePair<int,int>[4];
-            dary1.CopyTo (target, 2);
+                var target = new System.Collections.Generic.KeyValuePair<int,int>[4];
+                dary1.CopyTo (target, 2);
+            });
         }
 
 
@@ -486,13 +513,15 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_Remove_ArgumentNull()
         {
-            Setup();
-            dary2.Add ("delta", 4);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Setup();
+                dary2.Add ("delta", 4);
 
-            bool isRemoved = dary2.Remove ((String) null);
+                bool isRemoved = dary2.Remove (null!);
+            });
         }
 
 
@@ -515,13 +544,15 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_TryGetValue_ArgumentNull()
         {
-            Setup();
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Setup();
 
-            int resultValue;
-            dary2.TryGetValue (null, out resultValue);
+                int resultValue;
+                dary2.TryGetValue (null!, out resultValue);
+            });
         }
 
 
@@ -555,7 +586,7 @@ namespace Kaos.Test.Collections
 #endif
 
             for (char c = 'A'; c <= 'Z'; ++c)
-                sd.Add (c.ToString(), (int) c);
+                sd.Add (c.ToString(), c);
 
             bool result1 = sd.TryGetValue ("M", out int val1);
             bool result2 = sd.TryGetValue ("U", out int val2);
@@ -657,29 +688,34 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_oeCurrent_InvalidOperationA()
         {
-            Setup();
-            dary2.Add ("cc", 3);
-            IEnumerator<KeyValuePair<string,int>> kvEtor = dary2.GetEnumerator();
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                Setup();
+                dary2.Add ("cc", 3);
+                IEnumerator<KeyValuePair<string,int>> kvEtor = dary2.GetEnumerator();
 
-            object zz = ((System.Collections.IEnumerator) kvEtor).Current;
+                object zz = ((System.Collections.IEnumerator) kvEtor).Current;
+            });
         }
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_oeCurrent_InvalidOperationB()
         {
-            Setup();
-            dary2.Add ("cc", 3);
-            IEnumerator<KeyValuePair<string,int>> kvEtor = dary2.GetEnumerator();
-            kvEtor.MoveNext();
-            kvEtor.MoveNext();
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                Setup();
+                dary2.Add ("cc", 3);
+                IEnumerator<KeyValuePair<string,int>> kvEtor = dary2.GetEnumerator();
+                kvEtor.MoveNext();
+                kvEtor.MoveNext();
 
-            object zz = ((System.Collections.IEnumerator) kvEtor).Current;
+                object zz = ((System.Collections.IEnumerator) kvEtor).Current;
+            });
         }
+
 
         [Test]
         public void UnitRd_EtorPair()
@@ -705,20 +741,22 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRd_EtorHotUpdate()
         {
-            Setup (4);
-            dary2.Add ("vv", 1);
-            dary2.Add ("mm", 2);
-            dary2.Add ("qq", 3);
-
-            int n = 0;
-            foreach (var kv in dary2)
+            Assert.Throws<InvalidOperationException>(() =>
             {
-                if (++n == 2)
-                    dary2.Add ("breaks enum", 4);
-            }
+                Setup (4);
+                dary2.Add ("vv", 1);
+                dary2.Add ("mm", 2);
+                dary2.Add ("qq", 3);
+
+                int n = 0;
+                foreach (var kv in dary2)
+                {
+                    if (++n == 2)
+                        dary2.Add ("breaks enum", 4);
+                }
+            });
         }
 
 
@@ -738,6 +776,7 @@ namespace Kaos.Test.Collections
             dary2.Clear();
             Assert.AreEqual (kv, etor.Current);
         }
+
 
         [Test]
         public void UnitRd_EtorCurrentHotUpdate()
@@ -778,26 +817,28 @@ namespace Kaos.Test.Collections
         #region Test explicit implementation
 
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRd_pcAdd_Argument()
         {
-            Setup();
-            var pc = (ICollection<KeyValuePair<string,int>>) dary2;
+            Assert.Throws<ArgumentException>(() =>
+            {
+                Setup();
+                var pc = (ICollection<KeyValuePair<string,int>>) dary2;
 
-            var p1 = new KeyValuePair<string,int> ("beta", 1);
-            var p2 = new KeyValuePair<string,int> (null, 98);
-            var p3 = new KeyValuePair<string,int> (null, 99);
+                var p1 = new KeyValuePair<string,int> ("beta", 1);
+                var p2 = new KeyValuePair<string,int> (null, 98);
+                var p3 = new KeyValuePair<string,int> (null, 99);
 
-            pc.Add (p1);
+                pc.Add (p1);
 
-            // Adding a null key is allowed here!
-            pc.Add (p2);
+                // Adding a null key is allowed here!
+                pc.Add (p2);
 
-            int result2 = dary2.Count;
-            Assert.AreEqual (2, result2);
+                int result2 = dary2.Count;
+                Assert.AreEqual (2, result2);
 
-            // Should bomb on the second null key.
-            pc.Add (p3);
+                // Should bomb on the second null key.
+                pc.Add (p3);
+            });
         }
 
 
@@ -1064,12 +1105,15 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_Capacity_ArgumentOutOfRange()
         {
-            var rd = new RankedDictionary<int,int>();
-            rd.Capacity = -1;
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rd = new RankedDictionary<int,int>();
+                rd.Capacity = -1;
+            });
         }
+
 
         [Test]
         public void UnitRdx_Capacity()
@@ -1116,6 +1160,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (3, actual);
         }
 
+
         [Test]
         public void UnitRdx_ElementsBetweenB()
         {
@@ -1135,6 +1180,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (2, iterations);
             Assert.AreEqual (-290, sumVals);
         }
+
 
         [Test]
         public void UnitRdx_ElementsBetweenPassedEnd()
@@ -1177,6 +1223,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (3, actual2);
         }
 
+
         [Test]
         public void UnitRdx_ElementsFromB()
         {
@@ -1197,6 +1244,7 @@ namespace Kaos.Test.Collections
             Assert.AreEqual (501, firstKey);
             Assert.AreEqual (500, iterations);
         }
+
 
         [Test]
         public void UnitRdx_ElementsFromMissingVal()
@@ -1220,6 +1268,7 @@ namespace Kaos.Test.Collections
             }
         }
 
+
         [Test]
         public void UnitRdx_ElementsFromPassedEnd()
         {
@@ -1237,49 +1286,64 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_ElementsBetweenIndexes_ArgumentOutOfRangeA()
         {
-            var rd = new RankedDictionary<int,int> { { 0,0 }, { 1,-1 } };
-            foreach (var pair in rd.ElementsBetweenIndexes (-1, 0))
-            { }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rd = new RankedDictionary<int,int> { { 0,0 }, { 1,-1 } };
+                foreach (var pair in rd.ElementsBetweenIndexes (-1, 0))
+                { }
+            });
         }
 
+
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_ElementsBetweenIndexes_ArgumentOutOfRangeB()
         {
-            var rd = new RankedDictionary<int,int> { { 0,0 }, { 1,-1 } };
-            foreach (var pair in rd.ElementsBetweenIndexes (2, 0))
-            { }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rd = new RankedDictionary<int,int> { { 0,0 }, { 1,-1 } };
+                foreach (var pair in rd.ElementsBetweenIndexes (2, 0))
+                { }
+            });
         }
 
+
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_ElementsBetweenIndexes_ArgumentOutOfRangeC()
         {
-            var rd = new RankedDictionary<int,int> { { 0,0 }, { 1,-1 } };
-            foreach (var pair in rd.ElementsBetweenIndexes (0, -1))
-            { }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rd = new RankedDictionary<int,int> { { 0,0 }, { 1,-1 } };
+                foreach (var pair in rd.ElementsBetweenIndexes (0, -1))
+                { }
+            });
         }
 
+
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_ElementsBetweenIndexes_ArgumentOutOfRangeD()
         {
-            var rd = new RankedDictionary<int,int> { { 0,0 }, { 1,-1 } };
-            foreach (var pair in rd.ElementsBetweenIndexes (0, 2))
-            { }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rd = new RankedDictionary<int,int> { { 0,0 }, { 1,-1 } };
+                foreach (var pair in rd.ElementsBetweenIndexes (0, 2))
+                { }
+            });
         }
 
+
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRdx_ElementsBetweenIndexes_Argument()
         {
-            var rd = new RankedDictionary<int,int> { { 0,0 }, { 1,-1 }, { 2,-2 } };
-            foreach (var pair in rd.ElementsBetweenIndexes (2, 1))
-            { }
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var rd = new RankedDictionary<int,int> { { 0,0 }, { 1,-1 }, { 2,-2 } };
+                foreach (var pair in rd.ElementsBetweenIndexes (2, 1))
+                { }
+            });
         }
+
 
         [Test]
         public void UnitRdx_ElementsBetweenIndexes()
@@ -1303,12 +1367,15 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdx_IndexOfKey_ArgumentNull()
         {
-            var rd = new RankedDictionary<string,int>();
-            int ix = rd.IndexOfKey (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var rd = new RankedDictionary<string,int>();
+                int ix = rd.IndexOfKey (null);
+            });
         }
+
 
         [Test]
         public void UnitRdx_IndexOfKey()
@@ -1347,12 +1414,15 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_RemoveAll_ArgumentNull()
         {
-            Setup();
-            dary1.RemoveAll (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Setup();
+                dary1.RemoveAll (null);
+            });
         }
+
 
         [Test]
         public void UnitRd_RemoveAll()
@@ -1379,21 +1449,27 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_RemoveAtA_ArgumentOutOfRange()
         {
-            var rd = new RankedDictionary<int,int>();
-            rd.Add (42, 24);
-            rd.RemoveAt (-1);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rd = new RankedDictionary<int,int>();
+                rd.Add (42, 24);
+                rd.RemoveAt (-1);
+            });
         }
 
+
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_RemoveAtB_ArgumentOutOfRange()
         {
-            var rd = new RankedDictionary<int,int>();
-            rd.RemoveAt (0);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rd = new RankedDictionary<int,int>();
+                rd.RemoveAt (0);
+            });
         }
+
 
         [Test]
         public void UnitRdx_RemoveAt()
@@ -1414,29 +1490,38 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_RemoveRange_ArgumentOutOfRangeA()
         {
-            var rd = new RankedDictionary<int,int>();
-            rd.RemoveRange (-1, 0);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rd = new RankedDictionary<int,int>();
+                rd.RemoveRange (-1, 0);
+            });
         }
 
+
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRdx_RemoveRange_ArgumentOutOfRangeB()
         {
-            var rd = new RankedDictionary<int,int>();
-            rd.RemoveRange (0, -1);
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rd = new RankedDictionary<int,int>();
+                rd.RemoveRange (0, -1);
+            });
         }
 
+
         [Test]
-        [ExpectedException (typeof (ArgumentException))]
         public void CrashRdx_RemoveRange_Argument()
         {
-            var rd = new RankedDictionary<int,int>();
-            rd.Add (3, 33); rd.Add (5, 55);
-            rd.RemoveRange (1, 2);
+            Assert.Throws<ArgumentException>(() =>
+            {
+                var rd = new RankedDictionary<int,int>();
+                rd.Add (3, 33); rd.Add (5, 55);
+                rd.RemoveRange (1, 2);
+            });
         }
+
 
         [Test]
         public void UnitRdx_RemoveRange()
@@ -1542,12 +1627,15 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRd_RemoveWhere_ArgumentNull()
         {
-            var rd = new RankedDictionary<int,int>();
-            rd.RemoveWhere (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var rd = new RankedDictionary<int,int>();
+                rd.RemoveWhere (null);
+            });
         }
+
 
         [Test]
         public void UnitRdx_RemoveWhereA()
@@ -1583,12 +1671,15 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRdx_RemoveWhereElement_ArgumentNull()
         {
-            var rd = new RankedDictionary<int,int>();
-            rd.RemoveWhereElement (null);
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var rd = new RankedDictionary<int,int>();
+                rd.RemoveWhereElement (null);
+            });
         }
+
 
         [Test]
         public void UnitRdx_RemoveWhereElement()
@@ -1618,6 +1709,7 @@ namespace Kaos.Test.Collections
 
             Assert.AreEqual (0, total);
         }
+
 
         [Test]
         public void UnitRdx_Reverse()

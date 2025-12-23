@@ -3,12 +3,14 @@
 // Copyright © 2009-2020 Kasey Osborn (github.com/kaosborn)
 // MIT License - Use and redistribute freely
 //
+#nullable enable
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+// ReSharper disable NotResolvedInText
 
 namespace Kaos.Collections;
 
@@ -72,7 +74,7 @@ internal
     /// <code source="..\Bench\RbExample01\RbExample01.cs" lang="cs" />
     /// </example>
     /// <exception cref="InvalidOperationException">When <em>comparer</em> is <b>null</b> and no other comparer available.</exception>
-    public RankedBag (IComparer<T> comparer) : base (comparer, new Leaf())
+    public RankedBag (IComparer<T>? comparer) : base (comparer, new Leaf())
     { }
 
     /// <summary>Initializes a new bag instance that contains items copied from the supplied collection.</summary>
@@ -97,12 +99,12 @@ internal
     /// </remarks>
     /// <exception cref="ArgumentNullException">When <em>collection</em> is <b>null</b>.</exception>
     /// <exception cref="InvalidOperationException">When <em>comparer</em> is <b>null</b> and no other comparer available.</exception>
-    public RankedBag (IEnumerable<T> collection, IComparer<T> comparer) : this (comparer)
+    public RankedBag (IEnumerable<T> collection, IComparer<T>? comparer) : this (comparer)
     {
         if (collection == null)
             throw new ArgumentNullException (nameof (collection));
 
-        foreach (T key in collection)
+        foreach (var key in collection)
             Add (key);
     }
 
@@ -120,12 +122,12 @@ internal
 
     /// <summary>Gets the maximum item in the bag per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
-    public T Max
+    public T? Max
         => Count == 0 ? default : rightmostLeaf.GetKey (rightmostLeaf.KeyCount-1);
 
     /// <summary>Gets the minimum item in the bag per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
-    public T Min
+    public T? Min
         => Count == 0 ? default : leftmostLeaf.Key0;
 
     /// <summary>Returns a wrapper of the method used to order items in the bag.</summary>
@@ -133,7 +135,7 @@ internal
     /// To override sorting based on the default comparer,
     /// supply an alternate comparer when constructing the bag.
     /// </remarks>
-    public IComparer<T> Comparer
+    public IComparer<T>? Comparer
         => keyComparer;
 
     /// <summary>Gets the total number of occurrences of all items in the bag.</summary>
@@ -193,12 +195,12 @@ internal
             throw new ArgumentException ("Must be non-negative.", nameof (count));
 
         var path = new NodeVector (this, item);
-        bool result = path.IsFound;
+        var result = path.IsFound;
 
         if (count > 0)
             for (;;)
             {
-                int leafAdds = maxKeyCount - path.TopNode.KeyCount;
+                var leafAdds = maxKeyCount - path.TopNode.KeyCount;
                 if (leafAdds == 0)
                 {
                     AddKey (item, path);
@@ -233,7 +235,7 @@ internal
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
     public bool Contains (T item)
     {
-        Leaf _ = Find (item, out int ix);
+        var _ = Find (item, out var ix);
         return ix >= 0;
     }
 
@@ -254,13 +256,13 @@ internal
         if (oBag.Count == 0)
             return true;
 
-        Leaf leaf1 = oBag.leftmostLeaf;
-        int leafIx1 = 0;
-        int treeIx1 = 0;
+        var leaf1 = oBag.leftmostLeaf;
+        var leafIx1 = 0;
+        var treeIx1 = 0;
         for (;;)
         {
-            T key = leaf1.GetKey (leafIx1);
-            int treeIx2 = oBag.FindEdgeForIndex (key, out Leaf leaf2, out int leafIx2, leftEdge:false);
+            var key = leaf1.GetKey (leafIx1);
+            var treeIx2 = oBag.FindEdgeForIndex (key, out var leaf2, out var leafIx2, leftEdge:false);
             if (treeIx2 - treeIx1 > GetCount (key))
                 return false;
             if (leafIx2 < leaf2.KeyCount)
@@ -348,7 +350,7 @@ internal
     /// </para>
     /// </remarks>
     public int IndexOf (T item)
-        => FindEdgeForIndex (item, out Leaf _, out int _, leftEdge:true);
+        => FindEdgeForIndex (item, out var _, out var _, leftEdge:true);
 
     /// <summary>Removes all occurrences of the supplied item from the bag.</summary>
     /// <param name="item">The item to remove.</param>
@@ -487,7 +489,7 @@ internal
         if (other == null)
             throw new ArgumentNullException (nameof (other));
 
-        int result = 0;
+        var result = 0;
         if (Count > 0)
         {
             var oBag = other as RankedBag<T> ?? new RankedBag<T> (other, Comparer);
@@ -499,12 +501,12 @@ internal
                 return result;
             }
 
-            T key2 = leftmostLeaf.Key0;
-            for (int treeIx1 = 0;;)
+            var key2 = leftmostLeaf.Key0;
+            for (var treeIx1 = 0;;)
             {
-                T key1 = key2;
-                int treeIx2 = FindEdgeForIndex (key1, out Leaf leaf2, out int leafIx2, leftEdge:false);
-                int toDelete = (treeIx2 - treeIx1) - oBag.GetCount (key1);
+                var key1 = key2;
+                var treeIx2 = FindEdgeForIndex (key1, out var leaf2, out var leafIx2, leftEdge:false);
+                var toDelete = (treeIx2 - treeIx1) - oBag.GetCount (key1);
 
                 if (leafIx2 < leaf2.KeyCount)
                     key2 = leaf2.GetKey (leafIx2);
@@ -515,7 +517,7 @@ internal
                         key2 = leaf2.Key0;
                 }
 
-                int deleted = Remove2 (key1, toDelete);
+                var deleted = Remove2 (key1, toDelete);
                 result += deleted;
                 if (leaf2 == null)
                     break;
@@ -563,11 +565,11 @@ internal
     /// otherwise it will be loaded with the default value for its type.
     /// </param>
     /// <returns><b>true</b> if <em>getItem</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGet (T getItem, out T item)
+    public bool TryGet (T getItem, out T? item)
     {
-        if (FindEdgeLeft (getItem, out Leaf leaf, out int index))
+        if (FindEdgeLeft (getItem, out var leaf, out var index))
         {
-            item = index >= leaf.KeyCount ? leaf.rightLeaf.Key0 : leaf.GetKey (index);
+            item = index >= leaf.KeyCount ? leaf.rightLeaf!.Key0 : leaf.GetKey (index);
             return true;
         }
 
@@ -579,9 +581,9 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item greater than <em>getItem</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGetGreaterThan (T getItem, out T item)
+    public bool TryGetGreaterThan (T getItem, out T? item)
     {
-        TryGetGT (getItem, out Leaf leaf, out int index);
+        TryGetGT (getItem, out var leaf, out var index);
         if (leaf == null)
         { item = default; return false; }
         else
@@ -592,9 +594,9 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item greater than or equal to <em>getItem</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetGreaterThanOrEqual (T getItem, out T item)
+    public bool TryGetGreaterThanOrEqual (T getItem, out T? item)
     {
-        TryGetGE (getItem, out Leaf leaf, out int index);
+        TryGetGE (getItem, out var leaf, out var index);
         if (leaf == null)
         { item = default; return false; }
         else
@@ -605,9 +607,9 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item less than <em>item</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetLessThan (T getItem, out T item)
+    public bool TryGetLessThan (T getItem, out T? item)
     {
-        TryGetLT (getItem, out Leaf leaf, out int index);
+        TryGetLT (getItem, out var leaf, out var index);
         if (leaf == null)
         { item = default; return false; }
         else
@@ -618,9 +620,9 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item less than or equal to <em>item</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetLessThanOrEqual (T getItem, out T item)
+    public bool TryGetLessThanOrEqual (T getItem, out T? item)
     {
-        TryGetLE (getItem, out Leaf leaf, out int index);
+        TryGetLE (getItem, out var leaf, out var index);
         if (leaf == null)
         { item = default; return false; }
         else
@@ -631,7 +633,7 @@ internal
 
     #region ISerializable implementation and support
 
-    private SerializationInfo serializationInfo;
+    private SerializationInfo? serializationInfo;
 
     /// <summary>Initializes a new bag instance that contains serialized data.</summary>
     /// <param name="info">The object that contains the information required to serialize the bag.</param>
@@ -661,7 +663,7 @@ internal
     /// <param name="sender">The source of the deserialization event.</param>
     /// <exception cref="ArgumentNullException">When <em>sender</em> is <b>null</b>.</exception>
     /// <exception cref="SerializationException">When the associated <em>SerializationInfo</em> is invalid.</exception>
-    protected virtual void OnDeserialization (object sender)
+    protected virtual void OnDeserialization (object? sender)
     {
         if (keyComparer != null)
             return;  // Owner did the fixups.
@@ -669,15 +671,15 @@ internal
         if (serializationInfo == null)
             throw new SerializationException ("Missing information.");
 
-        keyComparer = (IComparer<T>) serializationInfo.GetValue ("Comparer", typeof (IComparer<T>));
-        int storedCount = serializationInfo.GetInt32 ("Count");
+        keyComparer = (IComparer<T>) serializationInfo.GetValue ("Comparer", typeof (IComparer<T>))!;
+        var storedCount = serializationInfo.GetInt32 ("Count");
         stage = serializationInfo.GetInt32 ("Stage");
 
-        var items = (T[]) serializationInfo.GetValue ("Items", typeof (T[]));
+        var items = (T[]?) serializationInfo.GetValue ("Items", typeof (T[]));
         if (items == null)
             throw new SerializationException ("Missing Items.");
 
-        for (int ix = 0; ix < items.Length; ++ix)
+        for (var ix = 0; ix < items.Length; ++ix)
             Add (items[ix]);
 
         if (storedCount != Count)
@@ -697,7 +699,7 @@ internal
     /// <param name="sender">The source of the deserialization event.</param>
     /// <exception cref="ArgumentNullException">When <em>sender</em> is <b>null</b>.</exception>
     /// <exception cref="SerializationException">When the associated <em>SerializationInfo</em> is invalid.</exception>
-    void IDeserializationCallback.OnDeserialization (Object sender)
+    void IDeserializationCallback.OnDeserialization (object? sender)
         => OnDeserialization (sender);
 
     #endregion
@@ -714,7 +716,7 @@ internal
         if (index < 0 || index >= Count)
             throw new ArgumentOutOfRangeException (nameof (index), "Argument was out of the range of valid values.");
 
-        var leaf = (Leaf) Find (index, out int leafIndex);
+        var leaf = (Leaf) Find (index, out var leafIndex);
         return leaf.GetKey (leafIndex);
     }
 
@@ -722,12 +724,12 @@ internal
     /// <param name="index">The zero-based index of the item to get.</param>
     /// <returns>The item at <em>index</em>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    public T ElementAtOrDefault (int index)
+    public T? ElementAtOrDefault (int index)
     {
         if (index < 0 || index >= Count)
             return default;
 
-        var leaf = (Leaf) Find (index, out int leafIndex);
+        var leaf = (Leaf) Find (index, out var leafIndex);
         return leaf.GetKey (leafIndex);
     }
 
@@ -773,7 +775,7 @@ internal
     /// </remarks>
     public IEnumerable<T> Distinct()
     {
-        foreach (T item in Distinct2())
+        foreach (var item in Distinct2())
             yield return item;
     }
 
@@ -797,15 +799,15 @@ internal
     /// <exception cref="InvalidOperationException">When the bag was modified after the enumerator was created.</exception>
     public IEnumerable<T> ElementsBetween (T lower, T upper)
     {
-        int stageFreeze = stage;
+        var stageFreeze = stage;
 
-        FindEdgeLeft (lower, out Leaf leaf, out int ix);
+        FindEdgeLeft (lower, out var leaf, out var ix);
         for (;;)
         {
             if (ix < leaf.KeyCount)
             {
-                T key = leaf.GetKey (ix);
-                if (Comparer.Compare (key, upper) > 0)
+                var key = leaf.GetKey (ix);
+                if (Comparer?.Compare (key, upper) > 0)
                     yield break;
 
                 yield return key;
@@ -837,9 +839,9 @@ internal
     /// <exception cref="InvalidOperationException">When the bag was modified after the enumerator was created.</exception>
     public IEnumerable<T> ElementsFrom (T lower)
     {
-        int stageFreeze = stage;
+        var stageFreeze = stage;
 
-        FindEdgeLeft (lower, out Leaf leaf, out int ix);
+        FindEdgeLeft (lower, out var leaf, out var ix);
         for (;;)
         {
             if (ix < leaf.KeyCount)
@@ -850,7 +852,7 @@ internal
                 continue;
             }
 
-            leaf = (Leaf) leaf.rightLeaf;
+            leaf = leaf.rightLeaf;
             if (leaf == null)
                 yield break;
 
@@ -883,18 +885,18 @@ internal
         if (upperIndex < 0 || upperIndex >= Count)
             throw new ArgumentOutOfRangeException (nameof (upperIndex), "Argument was out of the range of valid values.");
 
-        int toGo = upperIndex - lowerIndex;
+        var toGo = upperIndex - lowerIndex;
         if (toGo < 0)
             throw new ArgumentException ("Arguments were out of the range of valid values.");
 
-        int stageFreeze = stage;
-        var leaf = (Leaf) Find (lowerIndex, out int index);
+        var stageFreeze = stage;
+        var leaf = (Leaf) Find (lowerIndex, out var index);
         do
         {
             if (index >= leaf.KeyCount)
             { index = 0; leaf = leaf.rightLeaf; }
 
-            yield return leaf.GetKey (index);
+            yield return leaf!.GetKey (index);
             StageCheck (stageFreeze);
             ++index;
         }
@@ -942,13 +944,13 @@ internal
 
         /// <summary>Gets the item at the current position.</summary>
         /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
-        object IEnumerator.Current
+        object? IEnumerator.Current
         {
             get
             {
                 if (etor.NotActive)
                     throw new InvalidOperationException ("Enumerator is not active.");
-                return (object) etor.CurrentKey;
+                return etor.CurrentKey;
             }
         }
 

@@ -64,28 +64,42 @@ namespace Kaos.Test.Collections
 #endif
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsq_ElementAt1_ArgumentOutOfRange()
         {
-            Setup();
-            setI.Add (4);
+            try
+            {
+                Setup();
+                setI.Add(4);
 #if TEST_BCL
-            int zz = Enumerable.ElementAt (setI, -1);
+                int zz = Enumerable.ElementAt (setI, -1);
 #else
-            int zz = setI.ElementAt (-1);
+                int zz = setI.ElementAt(-1);
 #endif
+                Assert.Fail ("Expected ArgumentOutOfRangeException");
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Console.WriteLine("OK");
+            }
         }
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRsq_ElementAt2_ArgumentOutOfRange()
         {
-            Setup();
+            try
+            {
+                Setup();
 #if TEST_BCL
-            int zz = Enumerable.ElementAt (setI, 0);
+                int zz = Enumerable.ElementAt (setI, 0);
 #else
-            int zz = setI.ElementAt (0);
+                int zz = setI.ElementAt(0);
 #endif
+                Assert.Fail("Expected exception not thrown.");
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                Console.WriteLine("OK");
+            }
         }
 
         [Test]
@@ -136,27 +150,41 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRsq_First_InvalidOperation()
         {
-            Setup();
+            try
+            {
+                Setup();
 #if TEST_BCL
-            var zz = Enumerable.First (setI);
+                var zz = Enumerable.First (setI);
 #else
-            var zz = setI.First();
+                var zz = setI.First();
 #endif
+                Assert.Fail("Expected exception not thrown.");
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("OK");
+            }
         }
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRsq_Last_InvalidOperation()
         {
-            Setup();
+            try
+            {
+                Setup();
 #if TEST_BCL
-            var zz = Enumerable.Last (setI);
+                var zz = Enumerable.Last (setI);
 #else
-            var zz = setI.Last();
+                var zz = setI.Last();
 #endif
+                Assert.Fail("Expected exception not thrown.");
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("OK");
+            }
         }
 
         [Test]

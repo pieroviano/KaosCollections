@@ -91,7 +91,7 @@ internal
         if (map == null)
             throw new ArgumentNullException (nameof (map));
 
-        foreach (KeyValuePair<TKey,TValue> pair in map)
+        foreach (var pair in map)
             Add (pair.Key, pair.Value);
     }
 
@@ -228,7 +228,7 @@ internal
         if (key == null)
             throw new ArgumentNullException (nameof (key));
 
-        var _ = (PairLeaf<TValue>) Find (key, out int index);
+        var _ = (PairLeaf<TValue>) Find (key, out var index);
         return index >= 0;
     }
 
@@ -237,7 +237,7 @@ internal
     /// <returns><b>true</b> if <em>keyValuePair</em> is contained in the map; otherwise <b>false</b>.</returns>
     bool ICollection<KeyValuePair<TKey,TValue>>.Contains (KeyValuePair<TKey,TValue> keyValuePair)
     {
-        if (FindEdgeLeft (keyValuePair.Key, out Leaf leaf, out int index))
+        if (FindEdgeLeft (keyValuePair.Key, out var leaf, out var index))
         {
             PairLeaf<TValue> pairLeaf;
             if (index < leaf.KeyCount)
@@ -290,7 +290,7 @@ internal
             throw new ArgumentException ("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
 
         for (var leaf = (PairLeaf<TValue>) leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>) leaf.rightLeaf)
-        for (int leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
+        for (var leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
             array[index++] = new KeyValuePair<TKey,TValue> (leaf.GetKey (leafIndex), leaf.GetValue (leafIndex));
     }
 
@@ -322,7 +322,7 @@ internal
             throw new ArgumentException ("Target array type is not compatible with the type of items in the collection.", nameof (array));
 
         for (var leaf = (PairLeaf<TValue>) leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>) leaf.rightLeaf)
-        for (int leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
+        for (var leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
         {
             array.SetValue (new KeyValuePair<TKey,TValue>(leaf.GetKey (leafIndex), leaf.GetValue (leafIndex)), index);
             ++index;
@@ -339,7 +339,7 @@ internal
         if (index < 0 || index >= Count)
             throw new ArgumentOutOfRangeException (nameof (index), "Argument is out of the range of valid values.");
 
-        var leaf = (PairLeaf<TValue>) Find (index, out int leafIndex);
+        var leaf = (PairLeaf<TValue>) Find (index, out var leafIndex);
         return new KeyValuePair<TKey,TValue> (leaf.GetKey (leafIndex), leaf.GetValue (leafIndex));
     }
 
@@ -352,7 +352,7 @@ internal
         if (index < 0 || index >= Count)
             return new KeyValuePair<TKey,TValue> (default, default);
 
-        var leaf = (PairLeaf<TValue>) Find (index, out int leafIndex);
+        var leaf = (PairLeaf<TValue>) Find (index, out var leafIndex);
         return new KeyValuePair<TKey,TValue> (leaf.GetKey (leafIndex), leaf.GetValue (index));
     }
 
@@ -376,7 +376,7 @@ internal
         if (key == null)
             throw new ArgumentNullException (nameof (key));
 
-        return FindEdgeForIndex (key, out Leaf _, out int _, leftEdge:true);
+        return FindEdgeForIndex (key, out var _, out var _, leftEdge:true);
     }
 
     /// <summary>Gets the index of the first element with the supplied value.</summary>
@@ -385,7 +385,7 @@ internal
     /// <remarks>This is a O(<em>n</em>) operation.</remarks>
     public int IndexOfValue (TValue value)
     {
-        int result = 0;
+        var result = 0;
         for (var leaf = (PairLeaf<TValue>) leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>) leaf.rightLeaf)
         {
             var ix = leaf.IndexOfValue (value);
@@ -453,7 +453,7 @@ internal
 
         int leafLoss = 0, treeLoss = 0;
         var leaf = (PairLeaf<TValue>) path.TopNode;
-        int ix = path.TopIndex;
+        var ix = path.TopIndex;
         if (ix >= leaf.KeyCount)
         { ix = 0; leaf = (PairLeaf<TValue>) path.TraverseRight(); }
 
@@ -624,7 +624,7 @@ internal
     /// <returns><b>true</b> if element with key greater than <em>getKey</em> is found; otherwise <b>false</b>.</returns>
     public bool TryGetGreaterThan (TKey getKey, out KeyValuePair<TKey,TValue> keyValuePair)
     {
-        TryGetGT (getKey, out Leaf leaf, out int index);
+        TryGetGT (getKey, out var leaf, out var index);
         if (leaf == null)
         {
             keyValuePair = new KeyValuePair<TKey,TValue> (default, default);
@@ -641,7 +641,7 @@ internal
     /// <returns><b>true</b> if element with key greater than or equal to <em>getKey</em> is found; otherwise <b>false</b>.</returns>
     public bool TryGetGreaterThanOrEqual (TKey getKey, out KeyValuePair<TKey,TValue> keyValuePair)
     {
-        TryGetGE (getKey, out Leaf leaf, out int index);
+        TryGetGE (getKey, out var leaf, out var index);
         if (leaf == null)
         {
             keyValuePair = new KeyValuePair<TKey,TValue> (default, default);
@@ -658,7 +658,7 @@ internal
     /// <returns><b>true</b> if element with key less than or equal to <em>getKey</em> is found; otherwise <b>false</b>.</returns>
     public bool TryGetLessThan (TKey getKey, out KeyValuePair<TKey,TValue> keyValuePair)
     {
-        TryGetLT (getKey, out Leaf leaf, out int index);
+        TryGetLT (getKey, out var leaf, out var index);
         if (leaf == null)
         {
             keyValuePair = new KeyValuePair<TKey,TValue> (default, default);
@@ -675,7 +675,7 @@ internal
     /// <returns><b>true</b> if element with key less than or equal to <em>getKey</em> is found; otherwise <b>false</b>.</returns>
     public bool TryGetLessThanOrEqual (TKey getKey, out KeyValuePair<TKey,TValue> keyValuePair)
     {
-        TryGetLE (getKey, out Leaf leaf, out int index);
+        TryGetLE (getKey, out var leaf, out var index);
         if (leaf == null)
         {
             keyValuePair = new KeyValuePair<TKey,TValue> (default, default);
@@ -733,7 +733,7 @@ internal
             throw new SerializationException ("Missing information.");
 
         keyComparer = (IComparer<TKey>) serializationInfo.GetValue ("Comparer", typeof (IComparer<TKey>));
-        int storedCount = serializationInfo.GetInt32 ("Count");
+        var storedCount = serializationInfo.GetInt32 ("Count");
         stage = serializationInfo.GetInt32 ("Stage");
 
         var keys = (TKey[]) serializationInfo.GetValue ("Keys", typeof (TKey[]));
@@ -747,7 +747,7 @@ internal
         if (keys.Length != values.Length)
             throw new SerializationException ("Mismatched key/value count.");
 
-        for (int ix = 0; ix < keys.Length; ++ix)
+        for (var ix = 0; ix < keys.Length; ++ix)
             Add (keys[ix], values[ix]);
 
         if (storedCount != keys.Length)
@@ -791,8 +791,8 @@ internal
     /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
     public IEnumerable<KeyValuePair<TKey,TValue>> ElementsBetween (TKey lower, TKey upper)
     {
-        int stageFreeze = stage;
-        FindEdgeLeft (lower, out Leaf leaf, out int index);
+        var stageFreeze = stage;
+        FindEdgeLeft (lower, out var leaf, out var index);
         var pairLeaf = (PairLeaf<TValue>) leaf;
 
         for (;;)
@@ -832,8 +832,8 @@ internal
     public IEnumerable<KeyValuePair<TKey,TValue>> ElementsFrom (TKey lower)
     {
 
-        int stageFreeze = stage;
-        FindEdgeLeft (lower, out Leaf leaf, out int index);
+        var stageFreeze = stage;
+        FindEdgeLeft (lower, out var leaf, out var index);
         var pairLeaf = (PairLeaf<TValue>) leaf;
 
         for (;;)
@@ -879,12 +879,12 @@ internal
         if (upperIndex < 0 || upperIndex >= Count)
             throw new ArgumentOutOfRangeException (nameof (upperIndex), "Argument was out of the range of valid values.");
 
-        int toGo = upperIndex - lowerIndex;
+        var toGo = upperIndex - lowerIndex;
         if (toGo < 0)
             throw new ArgumentException ("Arguments were out of the range of valid values.");
 
-        int stageFreeze = stage;
-        var leaf = (PairLeaf<TValue>) Find (lowerIndex, out int index);
+        var stageFreeze = stage;
+        var leaf = (PairLeaf<TValue>) Find (lowerIndex, out var index);
         do
         {
             if (index >= leaf.KeyCount)
@@ -918,7 +918,7 @@ internal
         if (Count == 0)
             throw new InvalidOperationException ("Sequence contains no elements.");
 
-        int ix = rightmostLeaf.KeyCount - 1;
+        var ix = rightmostLeaf.KeyCount - 1;
         return new KeyValuePair<TKey,TValue> (rightmostLeaf.GetKey (ix), ((PairLeaf<TValue>) rightmostLeaf).GetValue (ix));
     }
 

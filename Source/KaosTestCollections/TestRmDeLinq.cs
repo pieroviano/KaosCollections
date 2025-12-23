@@ -19,28 +19,32 @@ namespace Kaos.Test.Collections
         #region Test methods (LINQ emulation)
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmq_ElementAt1_ArgumentOutOfRange()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.ElementAt (rm, -1);
-#else
-            var zz = rm.ElementAt (-1);
-#endif
-        }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.ElementAt (rm, -1);
+                #else
+                var zz = rm.ElementAt (-1);
+                #endif
+            });
+}
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmq_ElementAt2_ArgumentOutOfRange()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.ElementAt (rm, 0);
-#else
-            var zz = rm.ElementAt (0);
-#endif
-        }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.ElementAt (rm, 0);
+                #else
+                var zz = rm.ElementAt (0);
+                #endif
+            });
+}
 
         [Test]
         public void UnitRmq_ElementAt()
@@ -99,29 +103,33 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmq_First_InvalidOperation()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.First (rm);
-#else
-            var zz = rm.First();
-#endif
-        }
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.First (rm);
+                #else
+                var zz = rm.First();
+                #endif
+            });
+}
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmq_Last_InvalidOperation()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.Last (rm);
-#else
-            var zz = rm.Last();
-#endif
-        }
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.Last (rm);
+                #else
+                var zz = rm.Last();
+                #endif
+            });
+}
 
         [Test]
         public void UnitRmq_FirstLast()
@@ -328,21 +336,22 @@ namespace Kaos.Test.Collections
 
         [Test]
 #if ! TEST_BCL
-        [ExpectedException (typeof (InvalidOperationException))]
 #endif
         public void CrashRmq_ReverseHotUpdate()
         {
-            var rm = new RankedMap<string,int> { {"aa",1}, {"bb",2}, {"cc",3}, {"dd",4} };
-            int n = 0;
-
-#if TEST_BCL
-            foreach (var key in Enumerable.Reverse (rm))
-#else
-            foreach (var kv in rm.Reverse())
-#endif
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<string,int> { {"aa",1}, {"bb",2}, {"cc",3}, {"dd",4} };
+                int n = 0;
+                                #if TEST_BCL
+                foreach (var key in Enumerable.Reverse (rm))
+                #else
+                foreach (var kv in rm.Reverse())
+                #endif
                 if (++n == 2)
-                    rm.Clear();
-        }
+                rm.Clear();
+            });
+}
 
         [Test]
         public void UnitRmq_Reverse()
@@ -401,16 +410,18 @@ namespace Kaos.Test.Collections
         #region Test Keys methods (LINQ emulation)
 
         [Test]
-        [ExpectedException (typeof (ArgumentNullException))]
         public void CrashRmkq_Contains_ArgumentNull()
         {
-            var rm = new RankedMap<string,int> { {"beta",2} };
-#if TEST_BCL
-            var zz = Enumerable.Contains (rm.Keys, null);
-#else
-            var zz = rm.Keys.Contains (null);
-#endif
-        }
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var rm = new RankedMap<string,int> { {"beta",2} };
+                #if TEST_BCL
+                var zz = Enumerable.Contains (rm.Keys, null);
+                #else
+                var zz = rm.Keys.Contains (null);
+                #endif
+            });
+}
 
         [Test]
         public void UnitRmkq_Contains()
@@ -427,28 +438,32 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmkq_ElementAt_ArgumentOutOfRange1()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.ElementAt (rm.Keys, -1);
-#else
-            var zz = rm.Keys.ElementAt (-1);
-#endif
-        }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.ElementAt (rm.Keys, -1);
+                #else
+                var zz = rm.Keys.ElementAt (-1);
+                #endif
+            });
+}
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmkq_ElementAt_ArgumentOutOfRange2()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.ElementAt (rm.Keys, 0);
-#else
-            var zz = rm.Keys.ElementAt (0);
-#endif
-        }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.ElementAt (rm.Keys, 0);
+                #else
+                var zz = rm.Keys.ElementAt (0);
+                #endif
+            });
+}
 
         [Test]
         public void UnitRmkq_ElementAt()
@@ -489,17 +504,19 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmkq_First()
         {
-            var rm = new RankedMap<int,int>();
-            var keys = rm.Keys;
-#if TEST_BCL
-            var zz = Enumerable.First (rm.Keys);
-#else
-            int zz = keys.First();
-#endif
-        }
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                var keys = rm.Keys;
+                #if TEST_BCL
+                var zz = Enumerable.First (rm.Keys);
+                #else
+                int zz = keys.First();
+                #endif
+            });
+}
 
         [Test]
         public void UnitRmkq_First()
@@ -519,16 +536,18 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmkq_Last_InvalidOperation()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.Last (rm.Keys);
-#else
-            var zz = rm.Keys.Last();
-#endif
-        }
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.Last (rm.Keys);
+                #else
+                var zz = rm.Keys.Last();
+                #endif
+            });
+}
 
         [Test]
         public void UnitRmkq_Last()
@@ -698,20 +717,21 @@ namespace Kaos.Test.Collections
         #region Test Keys enumeration (LINQ emulation)
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmkq_DistinctHotUpdate()
         {
-            var rm = new RankedMap<string,int> { {"aa",1}, {"bb",2}, {"cc",3} };
-            int n = 0;
-
-#if TEST_BCL
-            foreach (var key in Enumerable.Distinct (rm.Keys))
-#else
-            foreach (var kv in rm.Keys.Distinct())
-#endif
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<string,int> { {"aa",1}, {"bb",2}, {"cc",3} };
+                int n = 0;
+                                #if TEST_BCL
+                foreach (var key in Enumerable.Distinct (rm.Keys))
+                #else
+                foreach (var kv in rm.Keys.Distinct())
+                #endif
                 if (++n == 2)
-                    rm.Remove ("aa");
-        }
+                rm.Remove ("aa");
+            });
+}
 
         [Test]
         public void UnitRmkq_Distinct()
@@ -738,21 +758,22 @@ namespace Kaos.Test.Collections
 
         [Test]
 #if ! TEST_BCL
-        [ExpectedException (typeof (InvalidOperationException))]
 #endif
         public void CrashRmkq_ReverseHotUpdate()
         {
-            var rm = new RankedMap<int,int> { Capacity=6 };
-            for (int ii = 9; ii > 0; --ii) rm.Add (ii, -ii);
-
-#if TEST_BCL
-            foreach (int k1 in Enumerable.Reverse (rm.Keys))
-#else
-            foreach (int k1 in rm.Keys.Reverse())
-#endif
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<int,int> { Capacity=6 };
+                for (int ii = 9; ii > 0; --ii) rm.Add (ii, -ii);
+                                #if TEST_BCL
+                foreach (int k1 in Enumerable.Reverse (rm.Keys))
+                #else
+                foreach (int k1 in rm.Keys.Reverse())
+                #endif
                 if (k1 == 4)
-                    rm.Clear();
-        }
+                rm.Clear();
+            });
+}
 
         [Test]
         public void UnitRmkq_Reverse()
@@ -815,28 +836,32 @@ namespace Kaos.Test.Collections
         #region Test Values methods (LINQ emulation)
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmvq_ElementAt_ArgumentOutOfRange1()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.ElementAt (rm.Values, -1);
-#else
-            var zz = rm.Values.ElementAt (-1);
-#endif
-        }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.ElementAt (rm.Values, -1);
+                #else
+                var zz = rm.Values.ElementAt (-1);
+                #endif
+            });
+}
 
         [Test]
-        [ExpectedException (typeof (ArgumentOutOfRangeException))]
         public void CrashRmvq_ElementAt_ArgumentOutOfRange2()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.ElementAt (rm.Values, 0);
-#else
-            var zz = rm.Values.ElementAt (0);
-#endif
-        }
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.ElementAt (rm.Values, 0);
+                #else
+                var zz = rm.Values.ElementAt (0);
+                #endif
+            });
+}
 
         [Test]
         public void UnitRmvq_ElementAt()
@@ -877,16 +902,18 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmvq_First()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.First (rm.Values);
-#else
-            var zz = rm.Values.First();
-#endif
-        }
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.First (rm.Values);
+                #else
+                var zz = rm.Values.First();
+                #endif
+            });
+}
 
         [Test]
         public void UnitRmvq_First()
@@ -901,16 +928,18 @@ namespace Kaos.Test.Collections
         }
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
         public void CrashRmvq_Last()
         {
-            var rm = new RankedMap<int,int>();
-#if TEST_BCL
-            var zz = Enumerable.Last (rm.Values);
-#else
-            var zz = rm.Values.Last();
-#endif
-        }
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<int,int>();
+                #if TEST_BCL
+                var zz = Enumerable.Last (rm.Values);
+                #else
+                var zz = rm.Values.Last();
+                #endif
+            });
+}
 
         [Test]
         public void UnitRmvq_Last()
@@ -1086,21 +1115,22 @@ namespace Kaos.Test.Collections
 
         [Test]
 #if ! TEST_BCL
-        [ExpectedException (typeof (InvalidOperationException))]
 #endif
         public void CrashRmvq_ReverseHotUpdate()
         {
-            var rm = new RankedMap<int,int> { Capacity=7 };
-            for (int ii = 9; ii > 0; --ii) rm.Add (ii, -ii);
-
-#if TEST_BCL
-            foreach (int v1 in Enumerable.Reverse (rm.Values))
-#else
-            foreach (int v1 in rm.Values.Reverse())
-#endif
+            Assert.Throws<InvalidOperationException>(() =>
+            {
+                var rm = new RankedMap<int,int> { Capacity=7 };
+                for (int ii = 9; ii > 0; --ii) rm.Add (ii, -ii);
+                                #if TEST_BCL
+                foreach (int v1 in Enumerable.Reverse (rm.Values))
+                #else
+                foreach (int v1 in rm.Values.Reverse())
+                #endif
                 if (v1 == -4)
-                    rm.Clear();
-        }
+                rm.Clear();
+            });
+}
 
         [Test]
         public void UnitRmvq_Reverse()

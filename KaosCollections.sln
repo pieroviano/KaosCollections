@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29215.179
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11217.181 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bench", "Bench", "{F9AEB968-9A56-4192-BFF3-B4BEFEEE9FAE}"
 EndProject
@@ -103,50 +103,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCore", "TestCore\TestCo
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "KaosTestCollections", "Source\KaosTestCollections\KaosTestCollections.shproj", "{72E272A9-12E2-41A1-840C-60038ECD5D3E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BB03CDB9-95D8-4904-9045-184ADAF8B59A}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.Props = Directory.Build.Props
+		Directory.Nuget.Props = Directory.Nuget.Props
+	EndProjectSection
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Source\KaosCollections\KaosCollections.projitems*{06f60cff-cf89-4c69-aa76-33b265000db4}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{0775b280-ddd4-4d2b-8383-e6e5e7167c55}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{1833a35b-7f4d-4b8c-aec5-0f6fb8946325}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{2083724c-9a9b-4f95-8aa2-c43a1246faad}*SharedItemsImports = 5
-		Source\KaosTestCollections\KaosTestCollections.projitems*{24f93eb8-e22a-4d61-8f49-c4467812289d}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{28fb4e26-9a24-40ad-b189-efe9ccab460d}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{308ea0a7-405b-4ffa-acb3-1ee2c2467c3c}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{333afe6c-cf9b-45f0-b4c3-74af2c0e65b2}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{3826066b-9c75-4101-b264-2cb5eca7e258}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{385083cf-7aa6-4c60-8e22-ba1ec689c4ed}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{3e4793aa-0f66-422a-8c54-9d141b9d0fd3}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{40823d4f-4ab8-4bf7-a9a2-4cce6f8cb46e}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{4565c87c-65ab-4e69-8285-fb36fa2f5558}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{476a91d1-5cf5-4673-9d7d-1354fce38a72}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{4912c223-77b8-428b-8b69-b69d7645b08c}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{4fae4a89-def1-4cf3-9976-d52fe303ed7d}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{542ca148-9046-4d3e-a0d3-f10e58951630}*SharedItemsImports = 5
-		Source\KaosTestCollections\KaosTestCollections.projitems*{72e272a9-12e2-41a1-840c-60038ecd5d3e}*SharedItemsImports = 13
-		Source\KaosCollections\KaosCollections.projitems*{7a3a42ff-ec4d-49a7-a70e-8666cdabf379}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{7af8f9b9-eca1-4402-9c74-0aeef370e072}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{8ab42ed3-9510-4422-b756-9d7c7f80df8a}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{8d1a7aef-73e7-4f1a-8656-e944a19dc94f}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{8ff5a924-f981-477b-ad0c-52ed16dc1fe6}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{95d44882-0087-4401-a631-a57adccbfda5}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{96762a0a-d54c-45fe-a20c-1521c35d0624}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{9c399188-73f9-4a6d-abad-7241c2f1e197}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{a170e1bc-f876-49b8-a946-2b5481a43b5d}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{a1c7a6db-93f8-4c7d-baab-6d1965971b32}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{a24cc59d-13b5-4bef-a994-ab63c9ad096d}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{a3061480-4b13-42bf-9a39-b3117c11e643}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{aa31cd1f-2f05-45a6-a244-d0da34342f77}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{ab4754db-55bb-4474-8de7-2ea489a7f547}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{d1c95835-c179-4f85-ae82-5da75d6de319}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{d44b60e8-0c5a-42dd-87b7-1125e37f4749}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{d548bad1-2deb-4e61-86cc-599ec896043b}*SharedItemsImports = 13
-		Source\KaosCollections\KaosCollections.projitems*{d5da9f3e-f99b-4f06-86fe-7d0fdac44a06}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{ef8631da-9b03-4240-9a02-aaa48005416e}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{f1cd6891-a2a0-4443-9960-27e2a24d87f1}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{f87ef1a4-aaf7-4c59-a93b-1478fb557bb7}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{f8feb1f9-79ff-4cdb-86ca-9f355e58843b}*SharedItemsImports = 5
-		Source\KaosCollections\KaosCollections.projitems*{fa841874-91d9-4802-8242-15a9756fb776}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -367,5 +330,48 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {201DA9DF-651F-47A0-B578-167533C3D874}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Source\KaosCollections\KaosCollections.projitems*{06f60cff-cf89-4c69-aa76-33b265000db4}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{0775b280-ddd4-4d2b-8383-e6e5e7167c55}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{1833a35b-7f4d-4b8c-aec5-0f6fb8946325}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{2083724c-9a9b-4f95-8aa2-c43a1246faad}*SharedItemsImports = 5
+		Source\KaosTestCollections\KaosTestCollections.projitems*{24f93eb8-e22a-4d61-8f49-c4467812289d}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{28fb4e26-9a24-40ad-b189-efe9ccab460d}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{308ea0a7-405b-4ffa-acb3-1ee2c2467c3c}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{333afe6c-cf9b-45f0-b4c3-74af2c0e65b2}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{3826066b-9c75-4101-b264-2cb5eca7e258}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{385083cf-7aa6-4c60-8e22-ba1ec689c4ed}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{3e4793aa-0f66-422a-8c54-9d141b9d0fd3}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{40823d4f-4ab8-4bf7-a9a2-4cce6f8cb46e}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{4565c87c-65ab-4e69-8285-fb36fa2f5558}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{476a91d1-5cf5-4673-9d7d-1354fce38a72}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{4912c223-77b8-428b-8b69-b69d7645b08c}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{4fae4a89-def1-4cf3-9976-d52fe303ed7d}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{542ca148-9046-4d3e-a0d3-f10e58951630}*SharedItemsImports = 5
+		Source\KaosTestCollections\KaosTestCollections.projitems*{72e272a9-12e2-41a1-840c-60038ecd5d3e}*SharedItemsImports = 13
+		Source\KaosCollections\KaosCollections.projitems*{7a3a42ff-ec4d-49a7-a70e-8666cdabf379}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{7af8f9b9-eca1-4402-9c74-0aeef370e072}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{8ab42ed3-9510-4422-b756-9d7c7f80df8a}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{8d1a7aef-73e7-4f1a-8656-e944a19dc94f}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{8ff5a924-f981-477b-ad0c-52ed16dc1fe6}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{95d44882-0087-4401-a631-a57adccbfda5}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{96762a0a-d54c-45fe-a20c-1521c35d0624}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{9c399188-73f9-4a6d-abad-7241c2f1e197}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{a170e1bc-f876-49b8-a946-2b5481a43b5d}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{a1c7a6db-93f8-4c7d-baab-6d1965971b32}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{a24cc59d-13b5-4bef-a994-ab63c9ad096d}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{a3061480-4b13-42bf-9a39-b3117c11e643}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{aa31cd1f-2f05-45a6-a244-d0da34342f77}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{ab4754db-55bb-4474-8de7-2ea489a7f547}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{d1c95835-c179-4f85-ae82-5da75d6de319}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{d44b60e8-0c5a-42dd-87b7-1125e37f4749}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{d548bad1-2deb-4e61-86cc-599ec896043b}*SharedItemsImports = 13
+		Source\KaosCollections\KaosCollections.projitems*{d5da9f3e-f99b-4f06-86fe-7d0fdac44a06}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{ef8631da-9b03-4240-9a02-aaa48005416e}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{f1cd6891-a2a0-4443-9960-27e2a24d87f1}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{f87ef1a4-aaf7-4c59-a93b-1478fb557bb7}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{f8feb1f9-79ff-4cdb-86ca-9f355e58843b}*SharedItemsImports = 5
+		Source\KaosCollections\KaosCollections.projitems*{fa841874-91d9-4802-8242-15a9756fb776}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

@@ -144,7 +144,7 @@ internal
         if (dictionary == null)
             throw new ArgumentNullException (nameof (dictionary));
 
-        foreach (KeyValuePair<TKey,TValue> pair in dictionary)
+        foreach (var pair in dictionary)
             Add (pair.Key, pair.Value);
     }
 
@@ -176,7 +176,7 @@ internal
             if (key == null)
                 throw new ArgumentNullException (nameof (key));
 
-            var leaf = (PairLeaf<TValue>) Find (key, out int index);
+            var leaf = (PairLeaf<TValue>) Find (key, out var index);
             if (index < 0)
                 throw new KeyNotFoundException ("The given key was not present in the dictionary.");
             return leaf.GetValue (index);
@@ -230,7 +230,7 @@ internal
     /// <remarks>The keys given by this collection are sorted according to the
     /// <see cref="Comparer"/> property.</remarks>
     ICollection<TKey> IDictionary<TKey,TValue>.Keys
-        => (ICollection<TKey>) Keys;
+        => Keys;
 
     /// <summary>Gets a <see cref="RankedDictionary{TKey,TValue}.KeyCollection"/> containing the keys in the dictionary.</summary>
     IEnumerable<TKey> IReadOnlyDictionary<TKey,TValue>.Keys
@@ -261,7 +261,7 @@ internal
     /// <summary>Gets only the collection of values from this key/value pair collection.</summary>
     /// <remarks>The values given by this collection are sorted in the same
     /// order as their respective keys in the <see cref="Keys"/> collection.</remarks>
-    ICollection<TValue> IDictionary<TKey,TValue>.Values => (ICollection<TValue>) Values;
+    ICollection<TValue> IDictionary<TKey,TValue>.Values => Values;
 
     /// <summary>Gets the maximum key in the dictionary per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
@@ -344,7 +344,7 @@ internal
         if (key == null)
             throw new ArgumentNullException (nameof (key));
 
-        var _ = (PairLeaf<TValue>) Find (key, out int index);
+        var _ = (PairLeaf<TValue>) Find (key, out var index);
         return index >= 0;
     }
 
@@ -360,7 +360,7 @@ internal
     /// <returns><b>true</b> if <em>keyValuePair</em> is contained in the collection; otherwise <b>false</b>.</returns>
     bool ICollection<KeyValuePair<TKey,TValue>>.Contains (KeyValuePair<TKey,TValue> keyValuePair)
     {
-        var leaf = (PairLeaf<TValue>) Find (keyValuePair.Key, out int index);
+        var leaf = (PairLeaf<TValue>) Find (keyValuePair.Key, out var index);
         if (index < 0)
             return false;
         return EqualityComparer<TValue>.Default.Equals (leaf.GetValue (index), keyValuePair.Value);
@@ -384,7 +384,7 @@ internal
             throw new ArgumentException ("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
 
         for (var leaf = (PairLeaf<TValue>) leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>) leaf.rightLeaf)
-        for (int leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
+        for (var leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
             array[index++] = new KeyValuePair<TKey,TValue> (leaf.GetKey (leafIndex), leaf.GetValue (leafIndex));
     }
 
@@ -481,7 +481,7 @@ internal
         if (key == null)
             throw new ArgumentNullException (nameof (key));
 
-        var leaf = (PairLeaf<TValue>) Find (key, out int index);
+        var leaf = (PairLeaf<TValue>) Find (key, out var index);
         if (index >= 0)
         {
             value = leaf.GetValue (index);
@@ -509,7 +509,7 @@ internal
 
             if (key is TKey)
             {
-                var leaf = (PairLeaf<TValue>) Find ((TKey) key, out int index);
+                var leaf = (PairLeaf<TValue>) Find ((TKey) key, out var index);
                 if (index >= 0)
                     return leaf.GetValue (index);
             }
@@ -558,11 +558,11 @@ internal
 
     /// <summary>Gets an <see cref="ICollection"/> containing the keys of the dictionary.</summary>
     ICollection IDictionary.Keys
-        => (ICollection) Keys;
+        => Keys;
 
     /// <summary>Gets an <see cref="ICollection"/> containing the values of the dictionary.</summary>
     ICollection IDictionary.Values
-        => (ICollection) Values;
+        => Values;
 
     #endregion
 
@@ -601,7 +601,7 @@ internal
         if (! (key is TKey))
             return false;
 
-        Leaf _ = Find ((TKey) key, out int ix);
+        var _ = Find ((TKey) key, out var ix);
         return ix >= 0;
     }
 
@@ -633,7 +633,7 @@ internal
             throw new ArgumentException ("Target array type is not compatible with the type of items in the collection.", nameof (array));
 
         for (var leaf = (PairLeaf<TValue>) leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>) leaf.rightLeaf)
-        for (int leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
+        for (var leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
         {
             array.SetValue (new KeyValuePair<TKey,TValue>(leaf.GetKey (leafIndex), leaf.GetValue (leafIndex)), index);
             ++index;
@@ -707,7 +707,7 @@ internal
             throw new SerializationException ("Missing information.");
 
         keyComparer = (IComparer<TKey>) serializationInfo.GetValue ("Comparer", typeof (IComparer<TKey>));
-        int storedCount = serializationInfo.GetInt32 ("Count");
+        var storedCount = serializationInfo.GetInt32 ("Count");
         stage = serializationInfo.GetInt32 ("Stage");
 
         var keys = (TKey[]) serializationInfo.GetValue ("Keys", typeof (TKey[]));
@@ -721,7 +721,7 @@ internal
         if (keys.Length != values.Length)
             throw new SerializationException ("Mismatched key/value count.");
 
-        for (int ix = 0; ix < keys.Length; ++ix)
+        for (var ix = 0; ix < keys.Length; ++ix)
             Add (keys[ix], values[ix]);
 
         if (storedCount != keys.Length)
@@ -769,8 +769,8 @@ internal
     /// <exception cref="InvalidOperationException">When the dictionary was modified after the enumerator was created.</exception>
     public IEnumerable<KeyValuePair<TKey,TValue>> ElementsBetween (TKey lower, TKey upper)
     {
-        int stageFreeze = stage;
-        var leaf = (PairLeaf<TValue>) Find (lower, out int index);
+        var stageFreeze = stage;
+        var leaf = (PairLeaf<TValue>) Find (lower, out var index);
 
         // When the supplied start key is not found, start with the next highest key.
         if (index < 0)
@@ -812,8 +812,8 @@ internal
     /// <exception cref="ArgumentNullException">When <em>key</em> is <b>null</b>.</exception>
     public IEnumerable<KeyValuePair<TKey,TValue>> ElementsFrom (TKey lower)
     {
-        int stageFreeze = stage;
-        var leaf = (PairLeaf<TValue>) Find (lower, out int index);
+        var stageFreeze = stage;
+        var leaf = (PairLeaf<TValue>) Find (lower, out var index);
 
         if (index < 0)
             index = ~index;
@@ -861,12 +861,12 @@ internal
         if (upperIndex < 0 || upperIndex >= Count)
             throw new ArgumentOutOfRangeException (nameof (upperIndex), "Argument was out of the range of valid values.");
 
-        int toGo = upperIndex - lowerIndex;
+        var toGo = upperIndex - lowerIndex;
         if (toGo < 0)
             throw new ArgumentException ("Arguments were out of the range of valid values.");
 
-        int stageFreeze = stage;
-        var leaf = (PairLeaf<TValue>) Find (lowerIndex, out int index);
+        var stageFreeze = stage;
+        var leaf = (PairLeaf<TValue>) Find (lowerIndex, out var index);
         do
         {
             if (index >= leaf.KeyCount)
@@ -898,7 +898,7 @@ internal
         if (key == null)
             throw new ArgumentNullException (nameof (key));
 
-        return FindEdgeForIndex (key, out Leaf _, out int _, leftEdge:true);
+        return FindEdgeForIndex (key, out var _, out var _, leftEdge:true);
     }
 
     /// <summary>Gets the index of the first element with the supplied value.</summary>
@@ -916,7 +916,7 @@ internal
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
     public int RemoveAll (IEnumerable<TKey> other)
     {
-        int result = 0;
+        var result = 0;
         if (other == null)
             throw new ArgumentNullException (nameof (other));
 
@@ -928,7 +928,7 @@ internal
                 Clear();
             }
             else
-                foreach (TKey key in other)
+                foreach (var key in other)
                     if (Remove (key))
                         ++result;
         return result;
@@ -960,7 +960,7 @@ internal
     /// <returns><b>true</b> if element with key greater than <em>getKey</em> is found; otherwise <b>false</b>.</returns>
     public bool TryGetGreaterThan (TKey getKey, out KeyValuePair<TKey,TValue> keyValuePair)
     {
-        TryGetGT (getKey, out Leaf leaf, out int index);
+        TryGetGT (getKey, out var leaf, out var index);
         if (leaf == null)
         {
             keyValuePair = new KeyValuePair<TKey,TValue> (default, default);
@@ -977,7 +977,7 @@ internal
     /// <returns><b>true</b> if element with key greater than or equal to <em>getKey</em> is found; otherwise <b>false</b>.</returns>
     public bool TryGetGreaterThanOrEqual (TKey getKey, out KeyValuePair<TKey,TValue> keyValuePair)
     {
-        TryGetGE (getKey, out Leaf leaf, out int index);
+        TryGetGE (getKey, out var leaf, out var index);
         if (leaf == null)
         {
             keyValuePair = new KeyValuePair<TKey,TValue> (default, default);
@@ -994,7 +994,7 @@ internal
     /// <returns><b>true</b> if element with key less than or equal to <em>getKey</em> is found; otherwise <b>false</b>.</returns>
     public bool TryGetLessThan (TKey getKey, out KeyValuePair<TKey,TValue> keyValuePair)
     {
-        TryGetLT (getKey, out Leaf leaf, out int index);
+        TryGetLT (getKey, out var leaf, out var index);
         if (leaf == null)
         {
             keyValuePair = new KeyValuePair<TKey,TValue> (default, default);
@@ -1011,7 +1011,7 @@ internal
     /// <returns><b>true</b> if element with key less than or equal to <em>getKey</em> is found; otherwise <b>false</b>.</returns>
     public bool TryGetLessThanOrEqual (TKey getKey, out KeyValuePair<TKey,TValue> keyValuePair)
     {
-        TryGetLE (getKey, out Leaf leaf, out int index);
+        TryGetLE (getKey, out var leaf, out var index);
         if (leaf == null)
         {
             keyValuePair = new KeyValuePair<TKey,TValue> (default, default);
@@ -1039,7 +1039,7 @@ internal
     /// </remarks>
     public bool TryGetValueAndIndex (TKey key, out TValue value, out int index)
     {
-        index = FindEdgeForIndex (key, out Leaf leaf, out int leafIx, leftEdge:true);
+        index = FindEdgeForIndex (key, out var leaf, out var leafIx, leftEdge:true);
         if (index < 0)
         {
             value = default;
@@ -1070,7 +1070,7 @@ internal
         if (index < 0 || index >= Count)
             throw new ArgumentOutOfRangeException (nameof (index), "Argument is out of the range of valid values.");
 
-        var leaf = (PairLeaf<TValue>) Find (index, out int leafIndex);
+        var leaf = (PairLeaf<TValue>) Find (index, out var leafIndex);
         return new KeyValuePair<TKey,TValue> (leaf.GetKey (leafIndex), leaf.GetValue (leafIndex));
     }
 
@@ -1083,7 +1083,7 @@ internal
         if (index < 0 || index >= Count)
             return new KeyValuePair<TKey,TValue> (default, default);
 
-        var leaf = (PairLeaf<TValue>) Find (index, out int leafIndex);
+        var leaf = (PairLeaf<TValue>) Find (index, out var leafIndex);
         return new KeyValuePair<TKey,TValue> (leaf.GetKey (leafIndex), leaf.GetValue (index));
     }
 
@@ -1108,7 +1108,7 @@ internal
         if (Count == 0)
             throw new InvalidOperationException ("Sequence contains no elements.");
 
-        int ix = rightmostLeaf.KeyCount - 1;
+        var ix = rightmostLeaf.KeyCount - 1;
         return new KeyValuePair<TKey,TValue> (rightmostLeaf.GetKey (ix), ((PairLeaf<TValue>) rightmostLeaf).GetValue (ix));
     }
 
@@ -1202,7 +1202,7 @@ internal
             {
                 if (etor.NotActive)
                     throw new InvalidOperationException ("Enumerator is not active.");
-                return (object) etor.CurrentPair.Key;
+                return etor.CurrentPair.Key;
             }
         }
 
@@ -1214,7 +1214,7 @@ internal
             {
                 if (etor.NotActive)
                     throw new InvalidOperationException ("Enumerator is not active.");
-                return (object) etor.CurrentPair.Value;
+                return etor.CurrentPair.Value;
             }
         }
 

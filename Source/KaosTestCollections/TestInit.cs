@@ -19,16 +19,16 @@ namespace Kaos.Test.Collections
     public class TS0
     {
         public int K0 { get; set; }
-        public TS0 (int k0) { this.K0 = k0; }
+        public TS0(int k0) { this.K0 = k0; }
     }
 
     public class TS1 : IComparable<TS1>, IComparable
     {
         public int K1 { get; private set; }
-        public TS1 (int k1) { this.K1 = k1; }
+        public TS1(int k1) { this.K1 = k1; }
 
-        public int CompareTo (TS1 other) { return this.K1 - other.K1; }
-        public int CompareTo (object ob) { return this.K1 - ((TS1)ob).K1; }
+        public int CompareTo(TS1 other) { return this.K1 - other.K1; }
+        public int CompareTo(object ob) { return this.K1 - ((TS1)ob).K1; }
     }
 
     public class Person
@@ -37,26 +37,25 @@ namespace Kaos.Test.Collections
         { "Walter", "Bob", "Trent", "Chuck", "Alice" , "Maynard", "Frank", "Sybil", "Eve" };
 
         public string Name { get; private set; }
-        public Person (string name) { Name = name; }
+        public Person(string name) { Name = name; }
         public override string ToString() { return Name; }
     }
 
     public class PersonComparer : System.Collections.Generic.Comparer<Person>
     {
-        public override int Compare (Person x, Person y)
-        { return x==null? (y==null? 0 : -1) : (y==null? 1 : String.Compare (x.Name, y.Name)); }
+        public override int Compare(Person x, Person y)
+        { return x == null ? (y == null ? 0 : -1) : (y == null ? 1 : String.Compare(x.Name, y.Name)); }
     }
 
-    [TestFixture]
     public partial class TestBtree
     {
-        public static bool IsAlways (int arg) => true;
-        public static bool IsEven (int arg) => arg % 2 == 0;
-        public static bool IsPairAlways (KeyValuePair<int,int> kv) => true;
-        public static bool IsPairEven (KeyValuePair<int,int> kv) => kv.Value % 2 == 0;
-        public static bool IsPairLeN100 (KeyValuePair<int,int> kv) => kv.Value <= -100;
+        public static bool IsAlways(int arg) => true;
+        public static bool IsEven(int arg) => arg % 2 == 0;
+        public static bool IsPairAlways(KeyValuePair<int, int> kv) => true;
+        public static bool IsPairEven(KeyValuePair<int, int> kv) => kv.Value % 2 == 0;
+        public static bool IsPairLeN100(KeyValuePair<int, int> kv) => kv.Value <= -100;
 
-        #if TEST_BCL
+#if TEST_BCL
         public SortedDictionary<int,int> dary1;
         public SortedDictionary<string,int> dary2;
         public SortedDictionary<string,int?> dary3;
@@ -67,23 +66,23 @@ namespace Kaos.Test.Collections
         public SortedSet<TS1> setTS1;
         public SortedSet<Person> personSet;
 #else
-        public RankedDictionary<int,int> dary1;
-        public RankedDictionary<string,int> dary2;
-        public RankedDictionary<string,int?> dary3;
-        public RankedDictionary<int,string> dary4;
-        public RankedDictionary<string,int> dary5;
+        public RankedDictionary<int, int> dary1;
+        public RankedDictionary<string, int> dary2;
+        public RankedDictionary<string, int?> dary3;
+        public RankedDictionary<int, string> dary4;
+        public RankedDictionary<string, int> dary5;
         public RankedSet<int> setI;
         public RankedSet<string> setS;
         public RankedSet<TS1> setTS1;
         public RankedSet<Person> personSet;
 #endif
-        ICollection<KeyValuePair<string,int>> genCol2;
+        ICollection<KeyValuePair<string, int>> genCol2;
         public ICollection<string> genKeys2;
         public ICollection<int> genValues2;
 
         public System.Collections.IDictionary objCol1, objCol2, objCol3, objCol4;
 
-        public KeyValuePair<string,int>[] greek = new KeyValuePair<string,int>[]
+        public KeyValuePair<string, int>[] greek = new KeyValuePair<string, int>[]
         {
             new KeyValuePair<string,int> ("alpha", 1),
             new KeyValuePair<string,int> ("beta", 2),
@@ -102,9 +101,9 @@ namespace Kaos.Test.Collections
         public static int[] iVals3 = new int[] { 13, 22, 51, 22, 33 };
         static int[] iVals4 = new int[] { 14, 15, 19 };
 
-        public void Setup() { Setup (5); }
+        public void Setup() { Setup(5); }
 
-        public void Setup (int order)
+        public void Setup(int order)
         {
 #if TEST_BCL
             dary1 = new SortedDictionary<int,int>();
@@ -117,15 +116,15 @@ namespace Kaos.Test.Collections
             setTS1 = new SortedSet<TS1>();
             personSet = new SortedSet<Person> (new PersonComparer());
 #else
-            dary1 = new RankedDictionary<int,int>();
-            dary2 = new RankedDictionary<string,int>();
-            dary3 = new RankedDictionary<string,int?>();
-            dary4 = new RankedDictionary<int,string>();
-            dary5 = new RankedDictionary<string,int> (StringComparer.InvariantCultureIgnoreCase);
+            dary1 = new RankedDictionary<int, int>();
+            dary2 = new RankedDictionary<string, int>();
+            dary3 = new RankedDictionary<string, int?>();
+            dary4 = new RankedDictionary<int, string>();
+            dary5 = new RankedDictionary<string, int>(StringComparer.InvariantCultureIgnoreCase);
             setI = new RankedSet<int>();
             setS = new RankedSet<string>();
             setTS1 = new RankedSet<TS1>();
-            personSet = new RankedSet<Person> (new PersonComparer());
+            personSet = new RankedSet<Person>(new PersonComparer());
             dary1.Capacity = order;
             dary2.Capacity = order;
             dary3.Capacity = order;
@@ -139,13 +138,13 @@ namespace Kaos.Test.Collections
             Type treeType = dary1.GetType();
 
             // For testing explicit implementations.
-            genCol2 = (ICollection<KeyValuePair<string,int>>) dary2;
-            genKeys2 = (ICollection<string>) dary2.Keys;
-            genValues2 = (ICollection<int>) dary2.Values;
-            objCol1 = (System.Collections.IDictionary) dary1;
-            objCol2 = (System.Collections.IDictionary) dary2;
-            objCol3 = (System.Collections.IDictionary) dary3;
-            objCol4 = (System.Collections.IDictionary) dary4;
+            genCol2 = dary2;
+            genKeys2 = dary2.Keys;
+            genValues2 = dary2.Values;
+            objCol1 = dary1;
+            objCol2 = dary2;
+            objCol3 = dary3;
+            objCol4 = dary4;
         }
     }
 }

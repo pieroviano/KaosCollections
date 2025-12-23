@@ -45,7 +45,7 @@ internal class IEnumerableDebugView<T>
         get
         {
             ((System.Collections.IEnumerator) target).Reset();
-            foreach (T item in target)
+            foreach (var item in target)
                 yield return item;
         }
     }
