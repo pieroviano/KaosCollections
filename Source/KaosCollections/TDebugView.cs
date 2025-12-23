@@ -16,16 +16,16 @@ internal class ICollectionDebugView<T>
 {
     private readonly ICollection<T> target;
 
-    public ICollectionDebugView (ICollection<T> collection)
-        => this.target = collection ?? throw new ArgumentNullException (nameof (collection));
+    public ICollectionDebugView(ICollection<T> collection)
+        => this.target = collection ?? throw new ArgumentNullException(nameof(collection));
 
-    [DebuggerBrowsable (DebuggerBrowsableState.RootHidden)]
+    [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
     public T[] Items
     {
         get
         {
             var items = new T[target.Count];
-            target.CopyTo (items, 0);
+            target.CopyTo(items, 0);
             return items;
         }
     }
@@ -33,18 +33,18 @@ internal class ICollectionDebugView<T>
 
 internal class IEnumerableDebugView<T>
 {
-    [DebuggerBrowsable (DebuggerBrowsableState.Never)]
+    [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private readonly IEnumerable<T> target;
 
-    public IEnumerableDebugView (IEnumerable<T> enumerable)
-        => this.target = enumerable ?? throw new ArgumentNullException (nameof (enumerable));
+    public IEnumerableDebugView(IEnumerable<T> enumerable)
+        => this.target = enumerable ?? throw new ArgumentNullException(nameof(enumerable));
 
-    [DebuggerBrowsable (DebuggerBrowsableState.RootHidden)]
+    [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
     public IEnumerable<T> Items
     {
         get
         {
-            ((System.Collections.IEnumerator) target).Reset();
+            ((System.Collections.IEnumerator)target).Reset();
             foreach (var item in target)
                 yield return item;
         }

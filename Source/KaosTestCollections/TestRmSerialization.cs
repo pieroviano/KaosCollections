@@ -14,29 +14,29 @@ using Kaos.Collections;
 namespace Kaos.Test.Collections
 {
     [Serializable]
-    public class PlayerMap : RankedMap<Player,int>
+    public class PlayerMap : RankedMap<Player, int>
     {
-        public PlayerMap() : base (new PlayerComparer())
+        public PlayerMap() : base(new PlayerComparer())
         { }
 
-        public PlayerMap (SerializationInfo info, StreamingContext context) : base (info, context)
+        public PlayerMap(SerializationInfo info, StreamingContext context) : base(info, context)
         { }
     }
 
     [Serializable]
-    public class BadPlayerMap : RankedMap<Player,int>, IDeserializationCallback
+    public class BadPlayerMap : RankedMap<Player, int>, IDeserializationCallback
     {
-        public BadPlayerMap() : base (new PlayerComparer())
+        public BadPlayerMap() : base(new PlayerComparer())
         { }
 
-        public BadPlayerMap (SerializationInfo info, StreamingContext context) : base (info, context)
+        public BadPlayerMap(SerializationInfo info, StreamingContext context) : base(info, context)
         { }
 
-        void IDeserializationCallback.OnDeserialization (Object sender)
+        void IDeserializationCallback.OnDeserialization(Object sender)
         {
             // This double call is for coverage purposes only.
-            OnDeserialization (sender);
-            OnDeserialization (sender);
+            OnDeserialization(sender);
+            OnDeserialization(sender);
         }
     }
 
@@ -50,7 +50,7 @@ namespace Kaos.Test.Collections
             {
                 var map = new PlayerMap();
 #pragma warning disable SYSLIB0050
-                ((ISerializable) map).GetObjectData (null!, new StreamingContext());
+                ((ISerializable)map).GetObjectData(null!, new StreamingContext());
 #pragma warning restore SYSLIB0050
             });
         }
@@ -60,8 +60,8 @@ namespace Kaos.Test.Collections
         {
             Assert.Throws<SerializationException>(() =>
             {
-                var map = new PlayerMap (null, new StreamingContext());
-                ((IDeserializationCallback) map).OnDeserialization (null);
+                var map = new PlayerMap(null, new StreamingContext());
+                ((IDeserializationCallback)map).OnDeserialization(null);
             });
         }
 
@@ -72,8 +72,8 @@ namespace Kaos.Test.Collections
             {
                 string fileName = @"Targets\MapBadCount.bin";
                 IFormatter formatter = new BinaryFormatter();
-                using (var fs = new FileStream (fileName, FileMode.Open))
-                { var map = (PlayerMap) formatter.Deserialize (fs); }
+                using (var fs = new FileStream(fileName, FileMode.Open))
+                { var map = (PlayerMap)formatter.Deserialize(fs); }
             });
         }
 
@@ -84,8 +84,8 @@ namespace Kaos.Test.Collections
             {
                 string fileName = @"Targets\MapMismatchKV.bin";
                 IFormatter formatter = new BinaryFormatter();
-                using (var fs = new FileStream (fileName, FileMode.Open))
-                { var map = (PlayerMap) formatter.Deserialize (fs); }
+                using (var fs = new FileStream(fileName, FileMode.Open))
+                { var map = (PlayerMap)formatter.Deserialize(fs); }
             });
         }
 
@@ -96,8 +96,8 @@ namespace Kaos.Test.Collections
             {
                 string fileName = @"Targets\MapMissingKeys.bin";
                 IFormatter formatter = new BinaryFormatter();
-                using (var fs = new FileStream (fileName, FileMode.Open))
-                { var map = (PlayerMap) formatter.Deserialize (fs); }
+                using (var fs = new FileStream(fileName, FileMode.Open))
+                { var map = (PlayerMap)formatter.Deserialize(fs); }
             });
         }
 
@@ -108,8 +108,8 @@ namespace Kaos.Test.Collections
             {
                 string fileName = @"Targets\MapMissingValues.bin";
                 IFormatter formatter = new BinaryFormatter();
-                using (var fs = new FileStream (fileName, FileMode.Open))
-                { var map = (PlayerMap) formatter.Deserialize (fs); }
+                using (var fs = new FileStream(fileName, FileMode.Open))
+                { var map = (PlayerMap)formatter.Deserialize(fs); }
             });
         }
 
@@ -119,22 +119,22 @@ namespace Kaos.Test.Collections
         {
             string fileName = "MapScores.bin";
             var map1 = new PlayerMap();
-            map1.Add (new Player ("GG", "Floyd"), 11);
-            map1.Add (new Player (null, "Betty"), 22);
-            map1.Add (new Player (null, "Alvin"), 33);
-            map1.Add (new Player ("GG", "Chuck"), 44);
-            map1.Add (new Player ("A1", "Ziggy"), 55);
-            map1.Add (new Player ("GG", null), 66);
+            map1.Add(new Player("GG", "Floyd"), 11);
+            map1.Add(new Player(null, "Betty"), 22);
+            map1.Add(new Player(null, "Alvin"), 33);
+            map1.Add(new Player("GG", "Chuck"), 44);
+            map1.Add(new Player("A1", "Ziggy"), 55);
+            map1.Add(new Player("GG", null), 66);
 
             IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Create))
-            { formatter.Serialize (fs, map1); }
+            using (var fs = new FileStream(fileName, FileMode.Create))
+            { formatter.Serialize(fs, map1); }
 
             PlayerMap map2 = null;
-            using (var fs = new FileStream (fileName, FileMode.Open))
-            { map2 = (PlayerMap) formatter.Deserialize (fs); }
+            using (var fs = new FileStream(fileName, FileMode.Open))
+            { map2 = (PlayerMap)formatter.Deserialize(fs); }
 
-            Assert.AreEqual (6, map2.Count);
+            Assert.AreEqual(6, map2.Count);
         }
 
 
@@ -143,17 +143,17 @@ namespace Kaos.Test.Collections
         {
             string fileName = "BadMapScores.bin";
             var map1 = new BadPlayerMap();
-            map1.Add (new Player ("VV", "Vicky"), 11);
+            map1.Add(new Player("VV", "Vicky"), 11);
 
             IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Create))
-            { formatter.Serialize (fs, map1); }
+            using (var fs = new FileStream(fileName, FileMode.Create))
+            { formatter.Serialize(fs, map1); }
 
             BadPlayerMap map2 = null;
-            using (var fs = new FileStream (fileName, FileMode.Open))
-            { map2 = (BadPlayerMap) formatter.Deserialize (fs); }
+            using (var fs = new FileStream(fileName, FileMode.Open))
+            { map2 = (BadPlayerMap)formatter.Deserialize(fs); }
 
-            Assert.AreEqual (1, map2.Count);
+            Assert.AreEqual(1, map2.Count);
         }
     }
 }

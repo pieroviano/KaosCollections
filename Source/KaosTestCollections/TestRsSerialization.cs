@@ -21,8 +21,8 @@ namespace Kaos.Test.Collections
     [Serializable]
     public class StudentComparer : System.Collections.Generic.Comparer<Student>
     {
-        public override int Compare (Student x, Student y)
-        { return x==null ? (y==null ? 0 : -1) : (y==null ? 1 : String.Compare (x.Name, y.Name)); }
+        public override int Compare(Student x, Student y)
+        { return x == null ? (y == null ? 0 : -1) : (y == null ? 1 : String.Compare(x.Name, y.Name)); }
     }
 
     [Serializable]
@@ -30,14 +30,14 @@ namespace Kaos.Test.Collections
     {
         public string Name { get; private set; }
 
-        public Student (string name)
-        { this.Name = name;  }
+        public Student(string name)
+        { this.Name = name; }
 
-        protected Student (SerializationInfo info, StreamingContext context)
-        { this.Name = (string) info.GetValue ("Name", typeof (string)); }
+        protected Student(SerializationInfo info, StreamingContext context)
+        { this.Name = (string)info.GetValue("Name", typeof(string)); }
 
-        public virtual void GetObjectData (SerializationInfo info, StreamingContext context)
-        { info.AddValue ("Name", Name, typeof (string)); }
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        { info.AddValue("Name", Name, typeof(string)); }
     }
 
     [Serializable]
@@ -47,10 +47,10 @@ namespace Kaos.Test.Collections
     public class StudentSet : RankedSet<Student>
 #endif
     {
-        public StudentSet() : base (new StudentComparer())
+        public StudentSet() : base(new StudentComparer())
         { }
 
-        public StudentSet (SerializationInfo info, StreamingContext context) : base (info, context)
+        public StudentSet(SerializationInfo info, StreamingContext context) : base(info, context)
         { }
     }
 
@@ -62,17 +62,17 @@ namespace Kaos.Test.Collections
     public class BadStudentSet : RankedSet<Student>, IDeserializationCallback
 #endif
     {
-        public BadStudentSet() : base (new StudentComparer())
+        public BadStudentSet() : base(new StudentComparer())
         { }
 
-        public BadStudentSet (SerializationInfo info, StreamingContext context) : base (info, context)
+        public BadStudentSet(SerializationInfo info, StreamingContext context) : base(info, context)
         { }
 
-        void IDeserializationCallback.OnDeserialization (Object sender)
+        void IDeserializationCallback.OnDeserialization(Object sender)
         {
             // This double call is for coverage purposes only.
-            OnDeserialization (sender);
-            OnDeserialization (sender);
+            OnDeserialization(sender);
+            OnDeserialization(sender);
         }
     }
 
@@ -150,18 +150,18 @@ namespace Kaos.Test.Collections
         {
             string fileName = "SetOfStudents.bin";
             var set1 = new StudentSet();
-            set1.Add (new Student ("Floyd"));
-            set1.Add (new Student ("Irene"));
+            set1.Add(new Student("Floyd"));
+            set1.Add(new Student("Irene"));
 
             IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Create))
-            { formatter.Serialize (fs, set1); }
+            using (var fs = new FileStream(fileName, FileMode.Create))
+            { formatter.Serialize(fs, set1); }
 
             var set2 = new StudentSet();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-            { set2 = (StudentSet) formatter.Deserialize (fs); }
+            using (var fs = new FileStream(fileName, FileMode.Open))
+            { set2 = (StudentSet)formatter.Deserialize(fs); }
 
-            Assert.AreEqual (2, set2.Count);
+            Assert.AreEqual(2, set2.Count);
         }
 
 
@@ -170,17 +170,17 @@ namespace Kaos.Test.Collections
         {
             string fileName = "SetOfBadStudents.bin";
             var set1 = new BadStudentSet();
-            set1.Add (new Student ("Orville"));
+            set1.Add(new Student("Orville"));
 
             IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream (fileName, FileMode.Create))
-            { formatter.Serialize (fs, set1); }
+            using (var fs = new FileStream(fileName, FileMode.Create))
+            { formatter.Serialize(fs, set1); }
 
             var set2 = new BadStudentSet();
-            using (var fs = new FileStream (fileName, FileMode.Open))
-            { set2 = (BadStudentSet) formatter.Deserialize (fs); }
+            using (var fs = new FileStream(fileName, FileMode.Open))
+            { set2 = (BadStudentSet)formatter.Deserialize(fs); }
 
-            Assert.AreEqual (1, set2.Count);
+            Assert.AreEqual(1, set2.Count);
         }
     }
 }

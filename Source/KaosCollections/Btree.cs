@@ -597,7 +597,7 @@ internal
                         path2.SetPivot(leaf2.Key0);
                     }
 
-                    deltaW1 = ix1 - leaf1?.KeyCount??0;
+                    deltaW1 = ix1 - leaf1?.KeyCount ?? 0;
                     leaf2.leftLeaf = leaf1;
                     leaf1?.RemoveRange(ix1, leaf1.KeyCount - ix1);
                 }
@@ -1302,207 +1302,207 @@ internal
     #region Debug methods
 
 #if DEBUG
-        // Telemetry counters:
-        /// <summary>Maximum number of keys that the existing branches can hold.</summary>
-        public int BranchSlotCount { get; private set; }
-        /// <summary>Number of keys contained in the branches.</summary>
-        public int BranchSlotsUsed { get; private set; }
-        /// <summary>Maximum number of keys that the existing leaves can hold.</summary>
-        public int LeafSlotCount { get; private set; }
-        /// <summary>Number of keys contained in the leaves.</summary>
-        public int LeafSlotsUsed { get; private set; }
+    // Telemetry counters:
+    /// <summary>Maximum number of keys that the existing branches can hold.</summary>
+    public int BranchSlotCount { get; private set; }
+    /// <summary>Number of keys contained in the branches.</summary>
+    public int BranchSlotsUsed { get; private set; }
+    /// <summary>Maximum number of keys that the existing leaves can hold.</summary>
+    public int LeafSlotCount { get; private set; }
+    /// <summary>Number of keys contained in the leaves.</summary>
+    public int LeafSlotsUsed { get; private set; }
 
-        /// <summary>Perform diagnostics check for data structure sanity errors.</summary>
-        /// <remarks>
-        /// Since this is an in-memory managed structure, any errors would indicate a bug.
-        /// Also performs space complexity diagnostics to ensure that all non-rightmost nodes maintain 50% fill.
-        /// </remarks>
-        public void SanityCheck()
-        {
-            BranchSlotCount = 0;
-            BranchSlotsUsed = 0;
-            LeafSlotCount = 0;
-            LeafSlotsUsed = 0;
+    /// <summary>Perform diagnostics check for data structure sanity errors.</summary>
+    /// <remarks>
+    /// Since this is an in-memory managed structure, any errors would indicate a bug.
+    /// Also performs space complexity diagnostics to ensure that all non-rightmost nodes maintain 50% fill.
+    /// </remarks>
+    public void SanityCheck()
+    {
+        BranchSlotCount = 0;
+        BranchSlotsUsed = 0;
+        LeafSlotCount = 0;
+        LeafSlotsUsed = 0;
 
-            Leaf? lastLeaf;
-            if (root is Branch branch)
-                lastLeaf = CheckBranch (branch, 1, GetHeight(), true, default, null);
+        Leaf? lastLeaf;
+        if (root is Branch branch)
+            lastLeaf = CheckBranch(branch, 1, GetHeight(), true, default, null);
+        else
+            lastLeaf = CheckLeaf((Leaf)root, default, null);
+
+        root.SanityCheck();
+
+        if (lastLeaf?.rightLeaf != null)
+            throw new InvalidOperationException("Last leaf has invalid RightLeaf");
+
+        if (root.Weight != LeafSlotsUsed)
+            throw new InvalidOperationException("Mismatched Count=" + root.Weight + ", expected=" + LeafSlotsUsed);
+
+        if (leftmostLeaf.leftLeaf != null)
+            throw new InvalidOperationException("leftmostLeaf has a left leaf");
+
+        if (rightmostLeaf.rightLeaf != null)
+            throw new InvalidOperationException("rightmostLeaf has a right leaf");
+    }
+
+    /// <summary>Gets maximum number of children of a branch.</summary>
+    /// <returns>Maximum number of children of a branch.</returns>
+    public int GetOrder()
+     => maxKeyCount + 1;
+
+    /// <summary>Gets the number of levels in the tree.</summary>
+    /// <returns>Number of levels in the tree.</returns>
+    public int GetHeight()
+    {
+        Node node = root;
+        for (int level = 1; ; ++level)
+            if (node is Branch branch)
+                node = branch.Child0;
             else
-                lastLeaf = CheckLeaf ((Leaf) root, default, null);
+                return level;
+    }
 
-            root.SanityCheck();
+    private Leaf? CheckBranch
+    (
+        Branch branch,
+        int level, int height,
+        bool isRightmost,
+        T? anchor,  // ignored when isRightmost true
+        Leaf? visited
+    )
+    {
+        BranchSlotCount += maxKeyCount;
+        BranchSlotsUsed += branch.KeyCount;
 
-            if (lastLeaf?.rightLeaf != null)
-                throw new InvalidOperationException ("Last leaf has invalid RightLeaf");
+        if (!isRightmost && IsUnderflow(branch.ChildCount))
+            throw new InvalidOperationException("Branch underflow");
 
-            if (root.Weight != LeafSlotsUsed)
-                throw new InvalidOperationException ("Mismatched Count=" + root.Weight + ", expected=" + LeafSlotsUsed);
+        if (branch.ChildCount != branch.KeyCount + 1)
+            throw new InvalidOperationException("Branch mismatched ChildCount, KeyCount");
 
-            if (leftmostLeaf.leftLeaf != null)
-                throw new InvalidOperationException ("leftmostLeaf has a left leaf");
-
-            if (rightmostLeaf.rightLeaf != null)
-                throw new InvalidOperationException ("rightmostLeaf has a right leaf");
-        }
-
-        /// <summary>Gets maximum number of children of a branch.</summary>
-        /// <returns>Maximum number of children of a branch.</returns>
-        public int GetOrder()
-         => maxKeyCount + 1;
-
-        /// <summary>Gets the number of levels in the tree.</summary>
-        /// <returns>Number of levels in the tree.</returns>
-        public int GetHeight()
+        int actualWeight = 0;
+        for (int i = 0; i < branch.ChildCount; ++i)
         {
-            Node node = root;
-            for (int level = 1; ; ++level)
-                if (node is Branch branch)
-                    node = branch.Child0;
-                else
-                    return level;
-        }
+            T? anchor0 = i == 0 ? anchor : branch.GetKey(i - 1);
+            bool isRightmost0 = isRightmost && i == branch.KeyCount;
+            if (i < branch.KeyCount - 1)
+                if (keyComparer?.Compare(branch.GetKey(i), branch.GetKey(i + 1)) > 0)
+                    throw new InvalidOperationException("Branch keys descending");
 
-        private Leaf? CheckBranch
-        (
-            Branch branch,
-            int level, int height,
-            bool isRightmost,
-            T? anchor,  // ignored when isRightmost true
-            Leaf? visited
-        )
-        {
-            BranchSlotCount += maxKeyCount;
-            BranchSlotsUsed += branch.KeyCount;
-
-            if (! isRightmost && IsUnderflow (branch.ChildCount))
-                throw new InvalidOperationException ("Branch underflow");
-
-            if (branch.ChildCount != branch.KeyCount + 1)
-                throw new InvalidOperationException ("Branch mismatched ChildCount, KeyCount");
-
-            int actualWeight = 0;
-            for (int i = 0; i < branch.ChildCount; ++i)
-            {
-                T? anchor0 = i == 0 ? anchor : branch.GetKey (i - 1);
-                bool isRightmost0 = isRightmost && i == branch.KeyCount;
-                if (i < branch.KeyCount - 1)
-                    if (keyComparer?.Compare (branch.GetKey (i), branch.GetKey (i + 1)) > 0)
-                        throw new InvalidOperationException ("Branch keys descending");
-
-                if (level + 1 < height)
-                    visited =
- CheckBranch ((Branch) branch.GetChild (i), level+1, height, isRightmost0, anchor0, visited);
-                else
-                    visited = CheckLeaf ((Leaf) branch.GetChild (i), anchor0, visited);
-
-                branch.GetChild (i).SanityCheck();
-                actualWeight += branch.GetChild (i).Weight;
-            }
-            if (branch.Weight != actualWeight)
-                throw new InvalidOperationException ("Branch mismatched weight");
-
-            return visited;
-        }
-
-        private Leaf CheckLeaf (Leaf leaf, T? anchor, Leaf? visited)
-        {
-            LeafSlotCount += maxKeyCount;
-            LeafSlotsUsed += leaf.KeyCount;
-
-            if (leaf.rightLeaf != null && IsUnderflow (leaf.KeyCount))
-                throw new InvalidOperationException ("Leaf underflow");
-
-            if (anchor != null && ! anchor.Equals (default (T)) && ! anchor.Equals (leaf.Key0))
-                throw new InvalidOperationException ("Leaf has wrong anchor");
-
-            for (int i = 0; i < leaf.KeyCount; ++i)
-                if (i < leaf.KeyCount - 1 && keyComparer != null && keyComparer.Compare (leaf.GetKey (i), leaf.GetKey (i + 1)) > 0)
-                    throw new InvalidOperationException ("Leaf keys descending");
-
-            if (visited == null)
-            {
-                if (anchor != null && ! anchor.Equals (default (T)))
-                    throw new InvalidOperationException ("Inconsistent visited, anchor");
-            }
+            if (level + 1 < height)
+                visited =
+CheckBranch((Branch)branch.GetChild(i), level + 1, height, isRightmost0, anchor0, visited);
             else
-                if (visited.rightLeaf != leaf)
-                    throw new InvalidOperationException ("Leaf has bad RightLeaf");
+                visited = CheckLeaf((Leaf)branch.GetChild(i), anchor0, visited);
 
-            return leaf;
+            branch.GetChild(i).SanityCheck();
+            actualWeight += branch.GetChild(i).Weight;
         }
+        if (branch.Weight != actualWeight)
+            throw new InvalidOperationException("Branch mismatched weight");
 
-        /// <summary>Gets telemetry summary.</summary>
-        /// <returns>Telemetry summary.</returns>
-        public string GetTreeStatsText()
+        return visited;
+    }
+
+    private Leaf CheckLeaf(Leaf leaf, T? anchor, Leaf? visited)
+    {
+        LeafSlotCount += maxKeyCount;
+        LeafSlotsUsed += leaf.KeyCount;
+
+        if (leaf.rightLeaf != null && IsUnderflow(leaf.KeyCount))
+            throw new InvalidOperationException("Leaf underflow");
+
+        if (anchor != null && !anchor.Equals(default(T)) && !anchor.Equals(leaf.Key0))
+            throw new InvalidOperationException("Leaf has wrong anchor");
+
+        for (int i = 0; i < leaf.KeyCount; ++i)
+            if (i < leaf.KeyCount - 1 && keyComparer != null && keyComparer.Compare(leaf.GetKey(i), leaf.GetKey(i + 1)) > 0)
+                throw new InvalidOperationException("Leaf keys descending");
+
+        if (visited == null)
         {
-            SanityCheck();
-            string result = "--- height = " + GetHeight();
-
-            if (BranchSlotCount != 0)
-                result += ", branch fill = " + (int) (BranchSlotsUsed * 100.0 / BranchSlotCount + 0.5) + "%";
-
-            return result + ", leaf fill = " + (int) (LeafSlotsUsed * 100.0 / LeafSlotCount + 0.5) + "%";
+            if (anchor != null && !anchor.Equals(default(T)))
+                throw new InvalidOperationException("Inconsistent visited, anchor");
         }
+        else
+            if (visited.rightLeaf != leaf)
+            throw new InvalidOperationException("Leaf has bad RightLeaf");
 
-        /// <summary>Generates content of tree by level (breadth first).</summary>
-        /// <returns>Text lines where each line is a level of the tree.</returns>
-        public IEnumerable<string> GenerateTreeText (bool showWeight = false)
+        return leaf;
+    }
+
+    /// <summary>Gets telemetry summary.</summary>
+    /// <returns>Telemetry summary.</returns>
+    public string GetTreeStatsText()
+    {
+        SanityCheck();
+        string result = "--- height = " + GetHeight();
+
+        if (BranchSlotCount != 0)
+            result += ", branch fill = " + (int)(BranchSlotsUsed * 100.0 / BranchSlotCount + 0.5) + "%";
+
+        return result + ", leaf fill = " + (int)(LeafSlotsUsed * 100.0 / LeafSlotCount + 0.5) + "%";
+    }
+
+    /// <summary>Generates content of tree by level (breadth first).</summary>
+    /// <returns>Text lines where each line is a level of the tree.</returns>
+    public IEnumerable<string> GenerateTreeText(bool showWeight = false)
+    {
+        int level = 0;
+        Node leftmost;
+        var sb = new StringBuilder();
+
+        for (; ; )
         {
-            int level = 0;
-            Node leftmost;
-            var sb = new StringBuilder();
+            var branchPath = new NodeVector(this, level);
+            leftmost = branchPath.TopNode;
+            if (leftmost is Leaf)
+                break;
 
-            for (;;)
+            var branch = (Branch)leftmost;
+
+            sb.Append('B');
+            sb.Append(level);
+            sb.Append(": ");
+            for (; ; )
             {
-                var branchPath = new NodeVector (this, level);
-                leftmost = branchPath.TopNode;
-                if (leftmost is Leaf)
-                    break;
-
-                var branch = (Branch) leftmost;
-
-                sb.Append ('B');
-                sb.Append (level);
-                sb.Append (": ");
-                for (;;)
+                branch.Append(sb);
+                if (showWeight)
                 {
-                    branch.Append (sb);
-                    if (showWeight)
-                    {
-                        sb.Append (" (");
-                        sb.Append (branch.Weight);
-                        sb.Append (") ");
-                    }
-
-                    branch = (Branch) branchPath.TraverseRight();
-                    if (branch == null)
-                        break;
-
-                    sb.Append (" | ");
+                    sb.Append(" (");
+                    sb.Append(branch.Weight);
+                    sb.Append(") ");
                 }
-                ++level;
-                yield return sb.ToString();
-                sb.Length = 0;
-            }
 
-            var leafPath = new NodeVector (this, level);
-            sb.Append ('L');
-            sb.Append (level);
-            sb.Append (": ");
-            for (var leaf = (Leaf) leftmost;;)
-            {
-                leaf.Append (sb);
-                leaf = (Leaf) leafPath.TraverseRight();
-                if (leaf == null)
+                branch = (Branch)branchPath.TraverseRight();
+                if (branch == null)
                     break;
 
-                if (leafPath.IsLeftmostNode)
-                    sb.Append (" | ");
-                else
-                    sb.Append ('|');
+                sb.Append(" | ");
             }
+            ++level;
             yield return sb.ToString();
+            sb.Length = 0;
         }
+
+        var leafPath = new NodeVector(this, level);
+        sb.Append('L');
+        sb.Append(level);
+        sb.Append(": ");
+        for (var leaf = (Leaf)leftmost; ;)
+        {
+            leaf.Append(sb);
+            leaf = (Leaf)leafPath.TraverseRight();
+            if (leaf == null)
+                break;
+
+            if (leafPath.IsLeftmostNode)
+                sb.Append(" | ");
+            else
+                sb.Append('|');
+        }
+        yield return sb.ToString();
+    }
 
 #endif
 

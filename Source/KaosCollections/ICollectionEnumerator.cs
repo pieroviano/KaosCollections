@@ -13,7 +13,7 @@ namespace System.Collections;
 /// after creation, and subsequent operations may throw an InvalidOperationException. Thread safety and resource
 /// management depend on the specific implementation.</remarks>
 /// <typeparam name="T">The type of elements in the collection to be enumerated.</typeparam>
-public interface ICollectionEnumerator<T>: IEnumerable<T>
+public interface ICollectionEnumerator<T> : IEnumerable<T>
 {
     /// <summary>Gets the item at the current position of the enumerator.</summary>
     T Current { get; }
@@ -35,7 +35,7 @@ public interface ICollectionEnumerator<T>: IEnumerable<T>
     /// <code source="..\Bench\RxExample01\RxExample01.cs" lang="cs" region="RsSkip" />
     /// </example>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    ICollectionEnumerator<T> Skip (int count);
+    ICollectionEnumerator<T> Skip(int count);
 
     /// <summary>
     /// Bypasses items as long as a supplied condition is true and yields the remaining items.
@@ -43,7 +43,7 @@ public interface ICollectionEnumerator<T>: IEnumerable<T>
     /// <param name="predicate">The condition to test for.</param>
     /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    ICollectionEnumerator<T> SkipWhile (Func<T,bool> predicate);
+    ICollectionEnumerator<T> SkipWhile(Func<T, bool> predicate);
 
     /// <summary>
     /// Bypasses items as long as a supplied index-based condition is true and yields the remaining items.
@@ -51,5 +51,5 @@ public interface ICollectionEnumerator<T>: IEnumerable<T>
     /// <param name="predicate">The condition to test for.</param>
     /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    ICollectionEnumerator<T> SkipWhile (Func<T,int,bool> predicate);
+    ICollectionEnumerator<T> SkipWhile(Func<T, int, bool> predicate);
 }

@@ -18,19 +18,19 @@ namespace Kaos.Collections;
 #else
 internal
 #endif
-    partial class RankedMap<TKey,TValue>
+    partial class RankedMap<TKey, TValue>
 {
     /// <summary>
     /// Represents a collection of values of a <see cref="RankedMap{TKey,TValue}"/>.
     /// </summary>
-    [DebuggerTypeProxy (typeof (ICollectionValuesDebugView<,>))]
-    [DebuggerDisplay ("Count = {Count}")]
+    [DebuggerTypeProxy(typeof(ICollectionValuesDebugView<,>))]
+    [DebuggerDisplay("Count = {Count}")]
     public sealed class ValueCollection :
         ICollection<TValue>,
         ICollection,
         IReadOnlyCollection<TValue>
     {
-        private readonly RankedMap<TKey,TValue> tree;
+        private readonly RankedMap<TKey, TValue> tree;
 
         #region Constructors
 
@@ -38,11 +38,11 @@ internal
         /// <param name="map">Map containing these keys.</param>
         /// <remarks>This is a O(1) operation.</remarks>
         /// <exception cref="ArgumentNullException">When <em>map</em> is <b>null</b>.</exception>
-        public ValueCollection (RankedMap<TKey,TValue> map)
+        public ValueCollection(RankedMap<TKey, TValue> map)
         {
             if (map == null)
 #pragma warning disable IDE0016
-                throw new ArgumentNullException (nameof (map));
+                throw new ArgumentNullException(nameof(map));
 #pragma warning restore IDE0016
 
             this.tree = map;
@@ -58,7 +58,7 @@ internal
         /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
         /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or not less than the number of items.</exception>
         public TValue this[int index]
-            => ElementAt (index);
+            => ElementAt(index);
 
         /// <summary>Gets the number of values in the collection.</summary>
         public int Count
@@ -82,7 +82,7 @@ internal
 
         /// <summary>This implementation always throws a <see cref="NotSupportedException" />.</summary>
         /// <param name="value">The object to add.</param>
-        void ICollection<TValue>.Add (TValue value)
+        void ICollection<TValue>.Add(TValue value)
             => throw new NotSupportedException();
 
         /// <summary>This implementation always throws a <see cref="NotSupportedException" />.</summary>
@@ -93,8 +93,8 @@ internal
         /// <param name="value">The value to find.</param>
         /// <returns><b>true</b> if <em>value</em> is found in the map; otherwise <b>false</b>.</returns>
         /// <remarks>This is a O(<em>n</em>) operation.</remarks>
-        bool ICollection<TValue>.Contains (TValue value)
-            => tree.ContainsValue2<TValue> (value) >= 0;
+        bool ICollection<TValue>.Contains(TValue value)
+            => tree.ContainsValue2<TValue>(value) >= 0;
 
         /// <summary>Copies values to a supplied array, starting as the supplied position.</summary>
         /// <param name="array">A one-dimensional array that is the destination of the copy.</param>
@@ -102,20 +102,20 @@ internal
         /// <exception cref="ArgumentNullException">When <em>array</em> is <b>null</b>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero.</exception>
         /// <exception cref="ArgumentException">When not enough space is given for the copy.</exception>
-        public void CopyTo (TValue[] array, int index)
+        public void CopyTo(TValue[] array, int index)
         {
             if (array == null)
-                throw new ArgumentNullException (nameof (array));
+                throw new ArgumentNullException(nameof(array));
 
             if (index < 0)
-                throw new ArgumentOutOfRangeException (nameof (index), index, "Argument was out of the range of valid values.");
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Argument was out of the range of valid values.");
 
             if (Count > array.Length - index)
-                throw new ArgumentException ("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof (array));
+                throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
 
-            for (var leaf = (PairLeaf<TValue>) tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>) leaf.rightLeaf)
+            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>)leaf.rightLeaf)
             {
-                leaf.CopyValuesTo (array, index, leaf.ValueCount);
+                leaf.CopyValuesTo(array, index, leaf.ValueCount);
                 index += leaf.ValueCount;
             }
         }
@@ -126,32 +126,32 @@ internal
         /// <exception cref="ArgumentNullException">When <em>array</em> is <b>null</b>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero.</exception>
         /// <exception cref="ArgumentException">When not enough space is given for the copy.</exception>
-        void ICollection.CopyTo (Array array, int index)
+        void ICollection.CopyTo(Array array, int index)
         {
             if (array == null)
-                throw new ArgumentNullException (nameof (array));
+                throw new ArgumentNullException(nameof(array));
 
             if (array.Rank > 1)
-                throw new ArgumentException ("Multidimension array is not supported on this operation.", nameof (array));
+                throw new ArgumentException("Multidimension array is not supported on this operation.", nameof(array));
 
             if (index < 0)
-                throw new ArgumentOutOfRangeException (nameof (index), index, "Index is less than zero.");
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Index is less than zero.");
 
             if (Count > array.Length - index)
-                throw new ArgumentException ("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof (array));
+                throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
 
-            for (var leaf = (PairLeaf<TValue>) tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>) leaf.rightLeaf)
-            for (var ix = 0; ix < leaf.KeyCount; ++ix)
-            {
-                array.SetValue (leaf.GetValue (ix), index);
-                ++index;
-            }
+            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>)leaf.rightLeaf)
+                for (var ix = 0; ix < leaf.KeyCount; ++ix)
+                {
+                    array.SetValue(leaf.GetValue(ix), index);
+                    ++index;
+                }
         }
 
         /// <summary>This implementation always throws a <see cref="NotSupportedException"/>.</summary>
         /// <param name="value">The value to remove.</param>
         /// <returns><b>true</b> if the object was removed; otherwise <b>false</b>.</returns>
-        bool ICollection<TValue>.Remove (TValue value)
+        bool ICollection<TValue>.Remove(TValue value)
             => throw new NotSupportedException();
 
         #endregion
@@ -163,26 +163,26 @@ internal
         /// <returns>The value at <em>index</em>.</returns>
         /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
         /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or greater than or equal to the number of keys.</exception>
-        public TValue ElementAt (int index)
+        public TValue ElementAt(int index)
         {
             if (index < 0 || index >= Count)
-                throw new ArgumentOutOfRangeException (nameof (index), "Argument is out of the range of valid values.");
+                throw new ArgumentOutOfRangeException(nameof(index), "Argument is out of the range of valid values.");
 
-            var leaf = (PairLeaf<TValue>) tree.Find (index, out var leafIndex);
-            return leaf.GetValue (leafIndex);
+            var leaf = (PairLeaf<TValue>)tree.Find(index, out var leafIndex);
+            return leaf.GetValue(leafIndex);
         }
 
         /// <summary>Gets the value at the supplied index or the default if the index is out of range.</summary>
         /// <param name="index">The zero-based index of the value to get.</param>
         /// <returns>The value at <em>index</em>.</returns>
         /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-        public TValue ElementAtOrDefault (int index)
+        public TValue ElementAtOrDefault(int index)
         {
             if (index < 0 || index >= Count)
                 return default;
 
-            var leaf = (PairLeaf<TValue>) tree.Find (index, out var leafIndex);
-            return leaf.GetValue (leafIndex);
+            var leaf = (PairLeaf<TValue>)tree.Find(index, out var leafIndex);
+            return leaf.GetValue(leafIndex);
         }
 
         /// <summary>Gets the value of the element with the lowest sorted key in the map.</summary>
@@ -192,17 +192,17 @@ internal
         public TValue First()
         {
             if (Count == 0)
-                throw new InvalidOperationException ("Sequence contains no elements.");
+                throw new InvalidOperationException("Sequence contains no elements.");
 
-            return ((PairLeaf<TValue>) tree.leftmostLeaf).GetValue (0);
+            return ((PairLeaf<TValue>)tree.leftmostLeaf).GetValue(0);
         }
 
         /// <summary>Gets the index of the first element with the supplied value.</summary>
         /// <param name="value">The value to find.</param>
         /// <returns>The index of the first occurrence of <em>value</em> if found; otherwise -1.</returns>
         /// <remarks>This is a O(<em>n</em>) operation.</remarks>
-        public int IndexOf (TValue value)
-            => tree.ContainsValue2<TValue> (value);
+        public int IndexOf(TValue value)
+            => tree.ContainsValue2<TValue>(value);
 
         /// <summary>Gets the value of the element with the highest sorted key in the map.</summary>
         /// <returns>The value of the element with the highest sorted key.</returns>
@@ -211,9 +211,9 @@ internal
         public TValue Last()
         {
             if (Count == 0)
-                throw new InvalidOperationException ("Sequence contains no elements.");
+                throw new InvalidOperationException("Sequence contains no elements.");
 
-            return ((PairLeaf<TValue>) tree.rightmostLeaf).GetValue (tree.rightmostLeaf.KeyCount - 1);
+            return ((PairLeaf<TValue>)tree.rightmostLeaf).GetValue(tree.rightmostLeaf.KeyCount - 1);
         }
 
         /// <summary>Bypasses a supplied number of values and yields the remaining values.</summary>
@@ -225,8 +225,8 @@ internal
         /// <code source="..\Bench\RxExample01\RxExample01.cs" lang="cs" region="RmvSkip" />
         /// </example>
         /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-        public Enumerator Skip (int count)
-            => new Enumerator (tree, count);
+        public Enumerator Skip(int count)
+            => new Enumerator(tree, count);
 
         /// <summary>
         /// Bypasses values as long as a supplied condition is true and yields the remaining values.
@@ -234,8 +234,8 @@ internal
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining values after the first value that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-        public Enumerator SkipWhile (Func<TValue,bool> predicate)
-            => new Enumerator (tree, predicate);
+        public Enumerator SkipWhile(Func<TValue, bool> predicate)
+            => new Enumerator(tree, predicate);
 
         /// <summary>
         /// Bypasses values as long as a supplied index-based condition is true and yields the remaining values.
@@ -243,8 +243,8 @@ internal
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining values after the first value that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-        public Enumerator SkipWhile (Func<TValue,int,bool> predicate)
-            => new Enumerator (tree, predicate);
+        public Enumerator SkipWhile(Func<TValue, int, bool> predicate)
+            => new Enumerator(tree, predicate);
 
         #endregion
 
@@ -254,40 +254,40 @@ internal
         /// <returns>An enumerator that reverse iterates thru the map values.</returns>
         /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
         public Enumerator Reverse()
-            => new Enumerator (tree, isReverse:true);
+            => new Enumerator(tree, isReverse: true);
 
         /// <summary>Gets an enumerator that iterates thru the collection.</summary>
         /// <returns>An enumerator for the collection.</returns>
         public Enumerator GetEnumerator()
-            => new Enumerator (tree);
+            => new Enumerator(tree);
 
         /// <summary>Gets an enumerator that iterates thru the collection.</summary>
         /// <returns>An enumerator for the collection.</returns>
         IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator()
-            => new Enumerator (tree);
+            => new Enumerator(tree);
 
         /// <summary>Gets an enumerator that iterates thru the collection.</summary>
         /// <returns>An enumerator for the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
-            => new Enumerator (tree);
+            => new Enumerator(tree);
 
         /// <summary>Enumerates the items of a <see cref="RankedMap{TKey,TValue}.ValueCollection"/> in key sort order.</summary>
-        [DebuggerTypeProxy (typeof (IEnumerableValuesDebugView<,>))]
+        [DebuggerTypeProxy(typeof(IEnumerableValuesDebugView<,>))]
         public struct Enumerator : IEnumerator<TValue>, IEnumerable<TValue>
         {
             private readonly ValueEnumerator<TValue> etor;
 
-            internal Enumerator (RankedMap<TKey,TValue> map, bool isReverse=false)
-                => etor = new ValueEnumerator<TValue> (map, isReverse);
+            internal Enumerator(RankedMap<TKey, TValue> map, bool isReverse = false)
+                => etor = new ValueEnumerator<TValue>(map, isReverse);
 
-            internal Enumerator (RankedMap<TKey,TValue> map, int count)
-                => etor = new ValueEnumerator<TValue> (map, count);
+            internal Enumerator(RankedMap<TKey, TValue> map, int count)
+                => etor = new ValueEnumerator<TValue>(map, count);
 
-            internal Enumerator (RankedMap<TKey,TValue> map, Func<TValue,bool> predicate)
-                => etor = new ValueEnumerator<TValue> (map, predicate);
+            internal Enumerator(RankedMap<TKey, TValue> map, Func<TValue, bool> predicate)
+                => etor = new ValueEnumerator<TValue>(map, predicate);
 
-            internal Enumerator (RankedMap<TKey,TValue> map, Func<TValue,int,bool> predicate)
-                => etor = new ValueEnumerator<TValue> (map, predicate);
+            internal Enumerator(RankedMap<TKey, TValue> map, Func<TValue, int, bool> predicate)
+                => etor = new ValueEnumerator<TValue>(map, predicate);
 
             /// <summary>Gets the value at the current position.</summary>
             /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
@@ -296,7 +296,7 @@ internal
                 get
                 {
                     if (etor.NotActive)
-                        throw new InvalidOperationException ("Enumerator is not active.");
+                        throw new InvalidOperationException("Enumerator is not active.");
                     return etor.CurrentValue;
                 }
             }
@@ -338,9 +338,9 @@ internal
             /// <code source="..\Bench\RxExample01\RxExample01.cs" lang="cs" region="RmvSkip" />
             /// </example>
             /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-            public Enumerator Skip (int count)
+            public Enumerator Skip(int count)
             {
-                etor.Bypass (count);
+                etor.Bypass(count);
                 return this;
             }
 
@@ -350,9 +350,9 @@ internal
             /// <param name="predicate">The condition to test for.</param>
             /// <returns>Remaining values after the first value that does not satisfy the supplied condition.</returns>
             /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-            public Enumerator SkipWhile (Func<TValue,bool> predicate)
+            public Enumerator SkipWhile(Func<TValue, bool> predicate)
             {
-                etor.BypassValue (predicate);
+                etor.BypassValue(predicate);
                 return this;
             }
 
@@ -362,9 +362,9 @@ internal
             /// <param name="predicate">The condition to test for.</param>
             /// <returns>Remaining values after the first value that does not satisfy the supplied condition.</returns>
             /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-            public Enumerator SkipWhile (Func<TValue,int,bool> predicate)
+            public Enumerator SkipWhile(Func<TValue, int, bool> predicate)
             {
-                etor.BypassValue (predicate);
+                etor.BypassValue(predicate);
                 return this;
             }
         }

@@ -10,7 +10,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BinaryFormatterEnable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ExpectedExceptionCompat.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestInit.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestRb.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestRbDeLinq.cs" />

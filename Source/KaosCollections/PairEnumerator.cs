@@ -21,23 +21,23 @@ internal
     /// <exclude />
     private protected class PairEnumerator<V> : BaseEnumerator
     {
-        public KeyValuePair<T,V> CurrentPair { get; private set; }
+        public KeyValuePair<T, V> CurrentPair { get; private set; }
         public bool NonGeneric { get; private set; }
 
-        public KeyValuePair<T,V> CurrentPairOrDefault => NotActive ? default : CurrentPair;
-        public DictionaryEntry CurrentEntry => new DictionaryEntry (CurrentPair.Key, CurrentPair.Value);
+        public KeyValuePair<T, V> CurrentPairOrDefault => NotActive ? default : CurrentPair;
+        public DictionaryEntry CurrentEntry => new DictionaryEntry(CurrentPair.Key, CurrentPair.Value);
 
-        public PairEnumerator (Btree<T> owner, bool isReverse=false, bool nonGeneric=false) : base (owner, isReverse)
+        public PairEnumerator(Btree<T> owner, bool isReverse = false, bool nonGeneric = false) : base(owner, isReverse)
             => this.NonGeneric = nonGeneric;
 
-        public PairEnumerator (Btree<T> owner, int count) : base (owner, count)
+        public PairEnumerator(Btree<T> owner, int count) : base(owner, count)
         { }
 
-        public PairEnumerator (Btree<T> owner, Func<KeyValuePair<T,V>,bool> condition) : this (owner)
-            => Bypass2 (condition, (leaf,ix) => ((PairLeaf<V>) leaf).GetPair (ix));
+        public PairEnumerator(Btree<T> owner, Func<KeyValuePair<T, V>, bool> condition) : this(owner)
+            => Bypass2(condition, (leaf, ix) => ((PairLeaf<V>)leaf).GetPair(ix));
 
-        public PairEnumerator (Btree<T> owner, Func<KeyValuePair<T,V>,int,bool> condition) : this (owner)
-            => Bypass3 (condition, (leaf,ix) => ((PairLeaf<V>) leaf).GetPair (ix));
+        public PairEnumerator(Btree<T> owner, Func<KeyValuePair<T, V>, int, bool> condition) : this(owner)
+            => Bypass3(condition, (leaf, ix) => ((PairLeaf<V>)leaf).GetPair(ix));
 
         public void Initialize()
         {
@@ -48,15 +48,15 @@ internal
         public bool Advance()
         {
             if (AdvanceBase())
-            { CurrentPair = ((PairLeaf<V>) leaf).GetPair (leafIndex); return true; }
+            { CurrentPair = ((PairLeaf<V>)leaf).GetPair(leafIndex); return true; }
             else
             { CurrentPair = default; return false; }
         }
 
-        public void BypassPair (Func<KeyValuePair<T,V>,bool> condition)
-            => Bypass2 (condition, (leaf,ix) => ((PairLeaf<V>) leaf).GetPair (ix));
+        public void BypassPair(Func<KeyValuePair<T, V>, bool> condition)
+            => Bypass2(condition, (leaf, ix) => ((PairLeaf<V>)leaf).GetPair(ix));
 
-        public void BypassPair (Func<KeyValuePair<T,V>,int,bool> condition)
-            => Bypass3 (condition, (leaf,ix) => ((PairLeaf<V>) leaf).GetPair (ix));
+        public void BypassPair(Func<KeyValuePair<T, V>, int, bool> condition)
+            => Bypass3(condition, (leaf, ix) => ((PairLeaf<V>)leaf).GetPair(ix));
     }
 }

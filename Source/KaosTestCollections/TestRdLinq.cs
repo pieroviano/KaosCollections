@@ -19,14 +19,14 @@ namespace Kaos.Test.Collections
 
             var x1 = dary1.Any();
 
-            dary1.Add (1, 10);
-            dary1.Add (3, 30);
-            dary1.Add (2, 20);
+            dary1.Add(1, 10);
+            dary1.Add(3, 30);
+            dary1.Add(2, 20);
 
             var x2 = dary1.Any();
 
-            Assert.IsFalse (x1);
-            Assert.IsTrue (x2);
+            Assert.IsFalse(x1);
+            Assert.IsTrue(x2);
         }
 
 
@@ -34,15 +34,15 @@ namespace Kaos.Test.Collections
         public void UnitRd_LongCount()
         {
             Setup();
-            dary1.Add (3, -33);
-            dary1.Add (1, -11);
-            dary1.Add (2, -22);
+            dary1.Add(3, -33);
+            dary1.Add(1, -11);
+            dary1.Add(2, -22);
 
             var result = dary1.LongCount();
             var type = result.GetType();
 
-            Assert.AreEqual (3, result);
-            Assert.AreEqual ("Int64", type.Name);
+            Assert.AreEqual(3, result);
+            Assert.AreEqual("Int64", type.Name);
         }
     }
 }

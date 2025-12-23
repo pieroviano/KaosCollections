@@ -13,8 +13,8 @@ namespace Kaos.Test.Collections
         public void UnitRd_odIsFixedSize()
         {
             Setup();
-            var od = (IDictionary) dary1;
-            Assert.IsFalse (od.IsFixedSize);
+            var od = (IDictionary)dary1;
+            Assert.IsFalse(od.IsFixedSize);
         }
 
 
@@ -22,8 +22,8 @@ namespace Kaos.Test.Collections
         public void UnitRd_odIsReadonly()
         {
             Setup();
-            var od = (IDictionary) dary1;
-            Assert.IsFalse (od.IsReadOnly);
+            var od = (IDictionary)dary1;
+            Assert.IsFalse(od.IsReadOnly);
         }
 
 
@@ -31,16 +31,16 @@ namespace Kaos.Test.Collections
         public void UnitRd_odIsSynchronized()
         {
             Setup();
-            var od = (IDictionary) dary1;
-            Assert.IsFalse (od.IsSynchronized);
+            var od = (IDictionary)dary1;
+            Assert.IsFalse(od.IsSynchronized);
         }
 
         [Test]
         public void CrashRd_odItemGet_ArgumentNull()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            od.Add ("foo", 10);
+            var od = (IDictionary)dary2;
+            od.Add("foo", 10);
             Assert.Throws<ArgumentNullException>(() => { object zz = od[null!]; });
         }
 
@@ -49,10 +49,10 @@ namespace Kaos.Test.Collections
         public void UnitRd_odItemGetBadKey()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            od.Add ("foo", 10);
+            var od = (IDictionary)dary2;
+            od.Add("foo", 10);
             object zz = od[45];
-            Assert.IsNull (zz);
+            Assert.IsNull(zz);
         }
 
 
@@ -60,8 +60,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odItemSetKey_ArgumentNull()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            od.Add ("foo", 10);
+            var od = (IDictionary)dary2;
+            od.Add("foo", 10);
             Assert.Throws<ArgumentNullException>(() => { od[null!] = "bar"; });
         }
 
@@ -70,8 +70,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odItemSetValue_ArgumentNull()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            od.Add ("foo", 10);
+            var od = (IDictionary)dary2;
+            od.Add("foo", 10);
             Assert.Throws<ArgumentNullException>(() => { od["foo"] = null; });
         }
 
@@ -80,8 +80,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odItemSetBadKey_Argument()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            od.Add ("foo", 10);
+            var od = (IDictionary)dary2;
+            od.Add("foo", 10);
             Assert.Throws<ArgumentException>(() => { od[23] = 45; });
         }
 
@@ -90,8 +90,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odItemSetBadValue_Argument()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            od.Add ("foo", 10);
+            var od = (IDictionary)dary2;
+            od.Add("foo", 10);
             Assert.Throws<ArgumentException>(() => { od["red"] = "blue"; });
         }
 
@@ -100,29 +100,29 @@ namespace Kaos.Test.Collections
         public void UnitRd_odItem()
         {
             Setup();
-            var od2 = (IDictionary) dary2;
-            var od4 = (IDictionary) dary4;
+            var od2 = (IDictionary)dary2;
+            var od4 = (IDictionary)dary4;
 
             object j1 = od2["foo"];
-            Assert.IsNull (j1);
+            Assert.IsNull(j1);
 
-            od2.Add ("foo", 10);
-            od2.Add ("bar", 20);
+            od2.Add("foo", 10);
+            od2.Add("bar", 20);
 
             od2["raz"] = 30;
 
-            Assert.AreEqual (3, od2.Count);
+            Assert.AreEqual(3, od2.Count);
 
             od2["bar"] = 40;
 
-            Assert.AreEqual (3, od2.Count);
+            Assert.AreEqual(3, od2.Count);
 
             object j2 = od2["bar"];
-            Assert.AreEqual (40, (int) j2);
+            Assert.AreEqual(40, (int)j2);
 
             od4[12] = "twelve";
             od4[13] = null;
-            Assert.AreEqual (2, od4.Count);
+            Assert.AreEqual(2, od4.Count);
         }
 
 
@@ -130,8 +130,8 @@ namespace Kaos.Test.Collections
         public void UnitRd_odSyncRoot()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            Assert.IsFalse (od.SyncRoot.GetType().IsValueType);
+            var od = (IDictionary)dary2;
+            Assert.IsFalse(od.SyncRoot.GetType().IsValueType);
         }
 
         #endregion
@@ -142,8 +142,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odAddNullKey_Argument()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            Assert.Throws<ArgumentNullException>(() => { od.Add (null!, 1); });
+            var od = (IDictionary)dary2;
+            Assert.Throws<ArgumentNullException>(() => { od.Add(null!, 1); });
         }
 
 
@@ -151,17 +151,17 @@ namespace Kaos.Test.Collections
         public void CrashRd_odAddBadKey_Argument()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            Assert.Throws<ArgumentException>(() => { od.Add (23, 45); });
-        }   
+            var od = (IDictionary)dary2;
+            Assert.Throws<ArgumentException>(() => { od.Add(23, 45); });
+        }
 
 
         [Test]
         public void CrashRd_odAddBadValue_Argument()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            Assert.Throws<ArgumentException>(() => { od.Add ("razz", "matazz"); });
+            var od = (IDictionary)dary2;
+            Assert.Throws<ArgumentException>(() => { od.Add("razz", "matazz"); });
         }
 
 
@@ -169,11 +169,11 @@ namespace Kaos.Test.Collections
         public void CrashRd_odAddDupl_Argument()
         {
             Setup();
-            var od = (IDictionary) dary2;
+            var od = (IDictionary)dary2;
             Assert.Throws<ArgumentException>(() =>
             {
-                od.Add ("nn", 1);
-                od.Add ("nn", 2);
+                od.Add("nn", 1);
+                od.Add("nn", 2);
             });
         }
 
@@ -182,14 +182,14 @@ namespace Kaos.Test.Collections
         public void UnitRd_odContainsKey()
         {
             Setup();
-            var od = (IDictionary) dary1;
+            var od = (IDictionary)dary1;
 
             foreach (int key in iVals1)
-                od.Add (key, key + 1000);
+                od.Add(key, key + 1000);
 
-            Assert.IsTrue (od.Contains (iVals1[0]));
-            Assert.IsFalse (od.Contains (-1));
-            Assert.IsFalse (od.Contains ("foo"));
+            Assert.IsTrue(od.Contains(iVals1[0]));
+            Assert.IsFalse(od.Contains(-1));
+            Assert.IsFalse(od.Contains("foo"));
         }
 
 
@@ -197,8 +197,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odContainsKey_ArgumentNull()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            Assert.Throws<ArgumentNullException>(() => { bool isOK = objCol2.Contains (null!); });
+            var od = (IDictionary)dary2;
+            Assert.Throws<ArgumentNullException>(() => { bool isOK = objCol2.Contains(null!); });
         }
 
 
@@ -206,9 +206,9 @@ namespace Kaos.Test.Collections
         public void CrashRd_odCopyTo_ArgumentNull()
         {
             Setup();
-            var od = (IDictionary) dary1;
-            var target = new KeyValuePair<int,int>[iVals1.Length];
-            Assert.Throws<ArgumentNullException>(() => { od.CopyTo (null!, -1); });
+            var od = (IDictionary)dary1;
+            var target = new KeyValuePair<int, int>[iVals1.Length];
+            Assert.Throws<ArgumentNullException>(() => { od.CopyTo(null!, -1); });
         }
 
 
@@ -216,9 +216,9 @@ namespace Kaos.Test.Collections
         public void CrashRd_odCopyTo_ArgumentOutOfRange()
         {
             Setup();
-            var od = (IDictionary) dary1;
-            var target = new KeyValuePair<int,int>[iVals1.Length];
-            Assert.Throws<ArgumentOutOfRangeException>(() => { od.CopyTo (target, -1); });
+            var od = (IDictionary)dary1;
+            var target = new KeyValuePair<int, int>[iVals1.Length];
+            Assert.Throws<ArgumentOutOfRangeException>(() => { od.CopyTo(target, -1); });
         }
 
 
@@ -226,9 +226,9 @@ namespace Kaos.Test.Collections
         public void CrashRd_odCopyTo1_Argument()
         {
             Setup();
-            var od = (IDictionary) dary1;
-            var target = new KeyValuePair<int,int>[iVals1.Length,2];
-            Assert.Throws<ArgumentException>(() => { od.CopyTo (target, 0); });
+            var od = (IDictionary)dary1;
+            var target = new KeyValuePair<int, int>[iVals1.Length, 2];
+            Assert.Throws<ArgumentException>(() => { od.CopyTo(target, 0); });
         }
 
 
@@ -236,13 +236,13 @@ namespace Kaos.Test.Collections
         public void CrashRd_odCopyTo2_Argument()
         {
             Setup();
-            var od = (IDictionary) dary1;
+            var od = (IDictionary)dary1;
 
             for (int key = 1; key < 10; ++key)
-                dary1.Add (key, key + 1000);
+                dary1.Add(key, key + 1000);
 
-            var target = new KeyValuePair<int,int>[1];
-            Assert.Throws<ArgumentException>(() => { od.CopyTo (target, 0); });
+            var target = new KeyValuePair<int, int>[1];
+            Assert.Throws<ArgumentException>(() => { od.CopyTo(target, 0); });
         }
 
 
@@ -250,11 +250,11 @@ namespace Kaos.Test.Collections
         public void CrashRd_odCopyToBadType_Argument()
         {
             Setup();
-            var od = (IDictionary) dary1;
-            dary1.Add (42, 420);
+            var od = (IDictionary)dary1;
+            dary1.Add(42, 420);
 
             var target = new string[5];
-            Assert.Throws<ArgumentException>(() => { od.CopyTo (target, 0); });
+            Assert.Throws<ArgumentException>(() => { od.CopyTo(target, 0); });
         }
 
 
@@ -262,16 +262,16 @@ namespace Kaos.Test.Collections
         public void UnitRd_odCopyTo()
         {
             Setup();
-            var od = (IDictionary) dary1;
+            var od = (IDictionary)dary1;
             foreach (int key in iVals1)
-                dary1.Add (key, key + 1000);
+                dary1.Add(key, key + 1000);
 
-            var target = new KeyValuePair<int,int>[iVals1.Length];
+            var target = new KeyValuePair<int, int>[iVals1.Length];
 
-            od.CopyTo (target, 0);
+            od.CopyTo(target, 0);
 
             for (int i = 0; i < iVals1.Length; ++i)
-                Assert.AreEqual (target[i].Key + 1000, target[i].Value);
+                Assert.AreEqual(target[i].Key + 1000, target[i].Value);
         }
 
 
@@ -279,16 +279,16 @@ namespace Kaos.Test.Collections
         public void UnitRd_odCopyToDowncast()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            dary2.Add ("aardvark", 1);
-            dary2.Add ("bonobo", 2);
+            var od = (IDictionary)dary2;
+            dary2.Add("aardvark", 1);
+            dary2.Add("bonobo", 2);
 
             var obj = new object[4];
-            od.CopyTo (obj, 2);
+            od.CopyTo(obj, 2);
 
-            var pair = new KeyValuePair<string,int>();
-            pair = (KeyValuePair<string,int>) obj[2];
-            Assert.AreEqual ("aardvark", pair.Key);
+            var pair = new KeyValuePair<string, int>();
+            pair = (KeyValuePair<string, int>)obj[2];
+            Assert.AreEqual("aardvark", pair.Key);
         }
 
 
@@ -296,8 +296,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odRemove_ArgumentNull()
         {
             Setup();
-            var od = (IDictionary) dary1;
-            Assert.Throws<ArgumentNullException>(() => { od.Remove (null!); });
+            var od = (IDictionary)dary1;
+            Assert.Throws<ArgumentNullException>(() => { od.Remove(null!); });
         }
 
 
@@ -305,17 +305,17 @@ namespace Kaos.Test.Collections
         public void UnitRd_odRemove()
         {
             Setup();
-            var od = (IDictionary) dary1;
+            var od = (IDictionary)dary1;
 
-            Assert.AreEqual (0, od.Count);
-            od.Add (17, 170);
-            Assert.AreEqual (1, od.Count);
-            od.Remove (18);
-            Assert.AreEqual (1, od.Count);
-            od.Remove (17);
-            Assert.AreEqual (0, od.Count);
+            Assert.AreEqual(0, od.Count);
+            od.Add(17, 170);
+            Assert.AreEqual(1, od.Count);
+            od.Remove(18);
+            Assert.AreEqual(1, od.Count);
+            od.Remove(17);
+            Assert.AreEqual(0, od.Count);
 
-            objCol1.Remove ("ignore wrong type");
+            objCol1.Remove("ignore wrong type");
         }
 
         #endregion
@@ -326,8 +326,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odEtorKey_InvalidOperation()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            dary2.Add ("cc", 3);
+            var od = (IDictionary)dary2;
+            dary2.Add("cc", 3);
 
             IDictionaryEnumerator oEtor = od.GetEnumerator();
             Assert.Throws<InvalidOperationException>(() => { var key = oEtor.Key; });
@@ -337,8 +337,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odEtorValue_InvalidOperation()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            dary2.Add ("cc", 3);
+            var od = (IDictionary)dary2;
+            dary2.Add("cc", 3);
 
             IDictionaryEnumerator etor = od.GetEnumerator();
             Assert.Throws<InvalidOperationException>(() => { var val = etor.Value; });
@@ -348,8 +348,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odEtorEntry_InvalidOperation()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            dary2.Add ("cc", 3);
+            var od = (IDictionary)dary2;
+            dary2.Add("cc", 3);
 
             IDictionaryEnumerator oEtor = od.GetEnumerator();
             Assert.Throws<InvalidOperationException>(() => { DictionaryEntry entry = oEtor.Entry; });
@@ -359,8 +359,8 @@ namespace Kaos.Test.Collections
         public void CrashRd_odEtorCurrent_InvalidOperation()
         {
             Setup();
-            var od = (IDictionary) dary2;
-            dary2.Add ("cc", 3);
+            var od = (IDictionary)dary2;
+            dary2.Add("cc", 3);
 
             IDictionaryEnumerator oEtor = od.GetEnumerator();
             Assert.Throws<InvalidOperationException>(() => { var val = oEtor.Current; });
@@ -370,38 +370,38 @@ namespace Kaos.Test.Collections
         public void UnitRd_odEtor()
         {
             Setup();
-            var od = (IDictionary) dary1;
-            dary1.Add (3, 33);
-            dary1.Add (5, 55);
+            var od = (IDictionary)dary1;
+            dary1.Add(3, 33);
+            dary1.Add(5, 55);
 
             IDictionaryEnumerator etor = od.GetEnumerator();
             etor.MoveNext();
             object key = etor.Key;
             object val = etor.Value;
             DictionaryEntry de = etor.Entry;
-            Assert.AreEqual (3, key);
-            Assert.AreEqual (33, val);
-            Assert.AreEqual (3, de.Key);
-            Assert.AreEqual (33, de.Value);
+            Assert.AreEqual(3, key);
+            Assert.AreEqual(33, val);
+            Assert.AreEqual(3, de.Key);
+            Assert.AreEqual(33, de.Value);
         }
 
         [Test]
         public void UnitRd_odEtorEntry()
         {
             Setup();
-            var od = (IDictionary) dary1;
+            var od = (IDictionary)dary1;
 
             foreach (int k in iVals1)
-                dary1.Add (k, k + 1000);
+                dary1.Add(k, k + 1000);
 
             int actualCount = 0;
             foreach (DictionaryEntry de in od)
             {
-                Assert.AreEqual ((int) de.Key + 1000, de.Value);
+                Assert.AreEqual((int)de.Key + 1000, de.Value);
                 ++actualCount;
             }
 
-            Assert.AreEqual (iVals1.Length, actualCount);
+            Assert.AreEqual(iVals1.Length, actualCount);
         }
 
         #endregion
@@ -412,15 +412,15 @@ namespace Kaos.Test.Collections
         public void UnitRdk_ocCount()
         {
             Setup();
-            var oc = (ICollection) dary1.Keys;
+            var oc = (ICollection)dary1.Keys;
             int n = 10;
 
-            Assert.AreEqual (0, oc.Count);
+            Assert.AreEqual(0, oc.Count);
 
             for (int i = 0; i < n; ++i)
-                dary1.Add (i + 100, i + 1000);
+                dary1.Add(i + 100, i + 1000);
 
-            Assert.AreEqual (n, oc.Count);
+            Assert.AreEqual(n, oc.Count);
         }
 
 
@@ -428,8 +428,8 @@ namespace Kaos.Test.Collections
         public void UnitRdk_ocIsSynchronized()
         {
             Setup();
-            var oc = (ICollection) dary1.Keys;
-            Assert.IsFalse (oc.IsSynchronized);
+            var oc = (ICollection)dary1.Keys;
+            Assert.IsFalse(oc.IsSynchronized);
         }
 
 
@@ -437,8 +437,8 @@ namespace Kaos.Test.Collections
         public void CrashRdk_ocCopyTo_ArgumentNull()
         {
             Setup();
-            var oc = (ICollection) dary1.Keys;
-            Assert.Throws<ArgumentNullException>(() => { oc.CopyTo (null!, -1); });
+            var oc = (ICollection)dary1.Keys;
+            Assert.Throws<ArgumentNullException>(() => { oc.CopyTo(null!, -1); });
         }
 
 
@@ -446,11 +446,11 @@ namespace Kaos.Test.Collections
         public void CrashRdk_ocCopyToMultiDimensional_Argument()
         {
             Setup();
-            var oc = (ICollection) dary1.Keys;
-            dary1.Add (42, 420);
+            var oc = (ICollection)dary1.Keys;
+            dary1.Add(42, 420);
 
             object[,] target = new object[2, 3];
-            Assert.Throws<ArgumentException>(() => { oc.CopyTo (target, -1); });
+            Assert.Throws<ArgumentException>(() => { oc.CopyTo(target, -1); });
         }
 
 
@@ -458,11 +458,11 @@ namespace Kaos.Test.Collections
         public void CrashRdk_ocCopyTo_ArgumentOutOfRange()
         {
             Setup();
-            var oc = (ICollection) dary1.Keys;
-            dary1.Add (42, 420);
+            var oc = (ICollection)dary1.Keys;
+            dary1.Add(42, 420);
 
             object[] target = new object[1];
-            Assert.Throws<ArgumentOutOfRangeException>(() => { oc.CopyTo (target, -1); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { oc.CopyTo(target, -1); });
         }
 
 
@@ -470,14 +470,14 @@ namespace Kaos.Test.Collections
         public void CrashRdk_ocCopyToNotLongEnough_Argument()
         {
             Setup();
-            var oc = (ICollection) dary1.Keys;
+            var oc = (ICollection)dary1.Keys;
 
             for (int i = 0; i < 10; ++i)
-                dary1.Add (i + 100, i + 1000);
+                dary1.Add(i + 100, i + 1000);
 
 
             object[] target = new object[10];
-            Assert.Throws<ArgumentException>(() => { oc.CopyTo (target, 5); });
+            Assert.Throws<ArgumentException>(() => { oc.CopyTo(target, 5); });
         }
 
 
@@ -485,18 +485,18 @@ namespace Kaos.Test.Collections
         public void UnitRdk_ocCopyTo()
         {
             Setup();
-            var oc = (ICollection) dary1.Keys;
+            var oc = (ICollection)dary1.Keys;
             int n = 10;
 
             for (int i = 0; i < n; ++i)
-                dary1.Add (i + 100, i + 1000);
+                dary1.Add(i + 100, i + 1000);
 
             object[] target = new object[n];
 
-            oc.CopyTo (target, 0);
+            oc.CopyTo(target, 0);
 
             for (int i = 0; i < n; ++i)
-                Assert.AreEqual (i + 100, (int) target[i]);
+                Assert.AreEqual(i + 100, (int)target[i]);
         }
 
 
@@ -504,16 +504,16 @@ namespace Kaos.Test.Collections
         public void UnitRdk_odEtor()
         {
             Setup();
-            var od = (IDictionary) dary1;
+            var od = (IDictionary)dary1;
             int n = 10;
 
             for (int k = 0; k < n; ++k)
-                dary1.Add (k, k + 1000);
+                dary1.Add(k, k + 1000);
 
             int expected = 0;
             foreach (object j in od.Keys)
             {
-                Assert.AreEqual (expected, (int) j);
+                Assert.AreEqual(expected, (int)j);
                 ++expected;
             }
         }
@@ -526,15 +526,15 @@ namespace Kaos.Test.Collections
         public void UnitRdv_ocValuesCount()
         {
             Setup();
-            var oc = (ICollection) dary1.Values;
+            var oc = (ICollection)dary1.Values;
             int n = 10;
 
-            Assert.AreEqual (0, oc.Count);
+            Assert.AreEqual(0, oc.Count);
 
             for (int i = 0; i < n; ++i)
-                dary1.Add (i + 100, i + 1000);
+                dary1.Add(i + 100, i + 1000);
 
-            Assert.AreEqual (n, oc.Count);
+            Assert.AreEqual(n, oc.Count);
         }
 
 
@@ -542,8 +542,8 @@ namespace Kaos.Test.Collections
         public void UnitRdv_ocIsSynchronized()
         {
             Setup();
-            var oc = (ICollection) dary1.Values;
-            Assert.IsFalse (oc.IsSynchronized);
+            var oc = (ICollection)dary1.Values;
+            Assert.IsFalse(oc.IsSynchronized);
         }
 
 
@@ -551,8 +551,8 @@ namespace Kaos.Test.Collections
         public void CrashRdv_ocCopyTo_ArgumentNull()
         {
             Setup();
-            var oc = (ICollection) dary1.Values;
-            Assert.Throws<ArgumentNullException>(() => { oc.CopyTo (null!, -1); });
+            var oc = (ICollection)dary1.Values;
+            Assert.Throws<ArgumentNullException>(() => { oc.CopyTo(null!, -1); });
         }
 
 
@@ -560,12 +560,12 @@ namespace Kaos.Test.Collections
         public void CrashRdv_ocCopyToMultiDimensional_Argument()
         {
             Setup();
-            var oc = (ICollection) dary1.Values;
+            var oc = (ICollection)dary1.Values;
 
-            dary1.Add (42, 420);
+            dary1.Add(42, 420);
             object[,] target = new object[2, 3];
 
-            Assert.Throws<ArgumentException>(() => { oc.CopyTo (target, -1); });
+            Assert.Throws<ArgumentException>(() => { oc.CopyTo(target, -1); });
         }
 
 
@@ -573,12 +573,12 @@ namespace Kaos.Test.Collections
         public void CrashRdv_ocCopyTo_ArgumentOutOfRange()
         {
             Setup();
-            var oc = (ICollection) dary1.Values;
+            var oc = (ICollection)dary1.Values;
 
-            dary1.Add (42, 420);
+            dary1.Add(42, 420);
             object[] target = new object[1];
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => { oc.CopyTo (target, -1); });
+            Assert.Throws<ArgumentOutOfRangeException>(() => { oc.CopyTo(target, -1); });
         }
 
 
@@ -586,13 +586,13 @@ namespace Kaos.Test.Collections
         public void CrashRdv_ocCopyToNotLongEnough_Argument()
         {
             Setup();
-            var oc = (ICollection) dary1.Values;
+            var oc = (ICollection)dary1.Values;
 
             for (int i = 0; i < 10; ++i)
-                dary1.Add (i + 100, i + 1000);
+                dary1.Add(i + 100, i + 1000);
             var target = new object[10];
 
-            Assert.Throws<ArgumentException>(() => { oc.CopyTo (target, 5); });
+            Assert.Throws<ArgumentException>(() => { oc.CopyTo(target, 5); });
         }
 
 
@@ -600,17 +600,17 @@ namespace Kaos.Test.Collections
         public void UnitRdv_ocCopyTo()
         {
             Setup();
-            var oc = (ICollection) dary1.Values;
+            var oc = (ICollection)dary1.Values;
             int n = 10;
 
             for (int i = 0; i < n; ++i)
-                dary1.Add (i + 100, i + 1000);
+                dary1.Add(i + 100, i + 1000);
             object[] target = new object[n];
 
-            oc.CopyTo (target, 0);
+            oc.CopyTo(target, 0);
 
             for (int i = 0; i < n; ++i)
-                Assert.AreEqual (i + 1000, (int) target[i]);
+                Assert.AreEqual(i + 1000, (int)target[i]);
         }
 
 
@@ -618,16 +618,16 @@ namespace Kaos.Test.Collections
         public void UnitRdv_ocGetEnumerator()
         {
             Setup();
-            var od = (IDictionary) dary1;
+            var od = (IDictionary)dary1;
             int n = 10;
 
             for (int k = 0; k < n; ++k)
-                dary1.Add (k, k + 1000);
+                dary1.Add(k, k + 1000);
 
             int expected = 1000;
             foreach (object j in od.Values)
             {
-                Assert.AreEqual (expected, (int) j);
+                Assert.AreEqual(expected, (int)j);
                 ++expected;
             }
         }

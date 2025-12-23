@@ -32,7 +32,7 @@ internal
 
         /// <summary>Make an empty path.</summary>
         /// <param name="tree">Target of path.</param>
-        public NodeVector (Btree<T> tree)
+        public NodeVector(Btree<T> tree)
         {
             this.tree = tree;
             this.indexStack = new List<int>();
@@ -42,52 +42,52 @@ internal
         /// <summary>Make a copy with indexes of zero.</summary>
         /// <param name="path">Target of copy.</param>
         /// <param name="count">Depth of copy.</param>
-        public NodeVector (NodeVector path, int count) : this (path.tree)
+        public NodeVector(NodeVector path, int count) : this(path.tree)
         {
             for (var ix = 0; ix < count; ++ix)
             {
-                indexStack.Add (path.indexStack[ix]);
-                nodeStack.Add (path.nodeStack[ix]);
+                indexStack.Add(path.indexStack[ix]);
+                nodeStack.Add(path.nodeStack[ix]);
             }
         }
 
         /// <summary>Perform search and store the result.</summary>
         /// <param name="tree">Tree to search.</param>
         /// <param name="key">Value to find.</param>
-        public NodeVector (Btree<T> tree, T key) : this (tree)
+        public NodeVector(Btree<T> tree, T key) : this(tree)
         {
-            for (var node = tree.root;;)
+            for (var node = tree.root; ;)
             {
-                this.nodeStack.Add (node);
-                var ix = ReferenceEquals(tree.keyComparer, Comparer<T>.Default) ? node.Search (key)
-                    : node.Search (key, tree.keyComparer);
+                this.nodeStack.Add(node);
+                var ix = ReferenceEquals(tree.keyComparer, Comparer<T>.Default) ? node.Search(key)
+                    : node.Search(key, tree.keyComparer);
                 if (node is Branch branch)
                 {
-                    ix = (ix < 0) ? ~ix : ix+1;
-                    this.indexStack.Add (ix);
-                    node = branch.GetChild (ix);
+                    ix = (ix < 0) ? ~ix : ix + 1;
+                    this.indexStack.Add(ix);
+                    node = branch.GetChild(ix);
                 }
                 else
                 {
                     this.IsFound = ix >= 0;
-                    this.indexStack.Add (this.IsFound ? ix : ~ix);
+                    this.indexStack.Add(this.IsFound ? ix : ~ix);
                     return;
                 }
             }
         }
 
-        public NodeVector (Btree<T> tree, T key, bool leftEdge) : this (tree)
+        public NodeVector(Btree<T> tree, T key, bool leftEdge) : this(tree)
         {
-            for (var node = tree.root;;)
+            for (var node = tree.root; ;)
             {
                 var hi = node.KeyCount;
                 if (leftEdge)
-                    for (var lo = 0; lo != hi; )
+                    for (var lo = 0; lo != hi;)
                     {
                         var mid = (lo + hi) >> 1;
                         if (tree.keyComparer != null)
                         {
-                            var diff = tree.keyComparer.Compare (key, node.GetKey (mid));
+                            var diff = tree.keyComparer.Compare(key, node.GetKey(mid));
                             if (diff <= 0)
                             {
                                 if (diff == 0)
@@ -99,12 +99,12 @@ internal
                         }
                     }
                 else
-                    for (var lo = 0; lo != hi; )
+                    for (var lo = 0; lo != hi;)
                     {
                         var mid = (lo + hi) >> 1;
                         if (tree.keyComparer != null)
                         {
-                            var diff = tree.keyComparer.Compare (key, node.GetKey (mid));
+                            var diff = tree.keyComparer.Compare(key, node.GetKey(mid));
                             if (diff < 0)
                                 hi = mid;
                             else
@@ -116,35 +116,35 @@ internal
                         }
                     }
 
-                this.indexStack.Add (hi);
-                this.nodeStack.Add (node);
+                this.indexStack.Add(hi);
+                this.nodeStack.Add(node);
                 if (node is Branch branch)
-                    node = branch.GetChild (hi);
+                    node = branch.GetChild(hi);
                 else
                     return;
             }
         }
 
-        public void Copy (NodeVector path, int count)
+        public void Copy(NodeVector path, int count)
         {
-            Debug.Assert (tree == path.tree);
+            Debug.Assert(tree == path.tree);
             indexStack.Clear();
             nodeStack.Clear();
             for (var ix = 0; ix < count; ++ix)
             {
-                indexStack.Add (path.indexStack[ix]);
-                nodeStack.Add (path.nodeStack[ix]);
+                indexStack.Add(path.indexStack[ix]);
+                nodeStack.Add(path.nodeStack[ix]);
             }
         }
 
         // On exit: path is left-edge normalized.
-        public static NodeVector CreateFromOffset (NodeVector path, int offset)
+        public static NodeVector CreateFromOffset(NodeVector path, int offset)
         {
-            Debug.Assert (offset >= 0);
+            Debug.Assert(offset >= 0);
 
-            var result = new NodeVector (path, path.Height);
+            var result = new NodeVector(path, path.Height);
             var level = path.Height - 1;
-            var leaf = (Leaf) result.nodeStack[level];
+            var leaf = (Leaf)result.nodeStack[level];
             var rix = leaf.KeyCount - result.indexStack[level];
             if (rix >= offset)
             {
@@ -155,8 +155,8 @@ internal
             offset -= rix;
             while (--level >= 0)
             {
-                var bh = (Branch) result.nodeStack[level];
-                for (var ix = result.indexStack[level]+1; ix <= bh.KeyCount;)
+                var bh = (Branch)result.nodeStack[level];
+                for (var ix = result.indexStack[level] + 1; ix <= bh.KeyCount;)
                 {
                     var node = bh.GetChild(ix);
                     var wt = node.Weight;
@@ -174,37 +174,37 @@ internal
                             return result;
                         }
                         ix = 0;
-                        bh = (Branch) node;
+                        bh = (Branch)node;
                     }
                 }
             }
             return null;
         }
 
-        public static NodeVector CreateFromIndex (Btree<T> tree, int index)
+        public static NodeVector CreateFromIndex(Btree<T> tree, int index)
         {
-            Debug.Assert (index <= tree.root.Weight);
+            Debug.Assert(index <= tree.root.Weight);
 
-            var path = new NodeVector (tree);
+            var path = new NodeVector(tree);
             if (index == 0)
-                for (var n0 = tree.root;;)
+                for (var n0 = tree.root; ;)
                 {
-                    path.indexStack.Add (0);
-                    path.nodeStack.Add (n0);
+                    path.indexStack.Add(0);
+                    path.nodeStack.Add(n0);
 
                     if (n0 is Branch bh)
-                        n0 = bh.GetChild (0);
+                        n0 = bh.GetChild(0);
                     else
                         return path;
                 }
             else if (index >= tree.root.Weight)
-                for (var n0 = tree.root;;)
+                for (var n0 = tree.root; ;)
                 {
-                    path.indexStack.Add (n0.KeyCount);
-                    path.nodeStack.Add (n0);
+                    path.indexStack.Add(n0.KeyCount);
+                    path.nodeStack.Add(n0);
 
                     if (n0 is Branch bh)
-                        n0 = bh.GetChild (bh.KeyCount);
+                        n0 = bh.GetChild(bh.KeyCount);
                     else
                         return path;
                 }
@@ -213,22 +213,22 @@ internal
             while (node is Branch branch)
                 for (var ix = 0; ; ++ix)
                 {
-                    Debug.Assert (ix <= node.KeyCount);
+                    Debug.Assert(ix <= node.KeyCount);
 
-                    var child = branch.GetChild (ix);
+                    var child = branch.GetChild(ix);
                     var cw = child.Weight;
                     if (cw > index)
                     {
-                        path.indexStack.Add (ix);
-                        path.nodeStack.Add (node);
+                        path.indexStack.Add(ix);
+                        path.nodeStack.Add(node);
                         node = child;
                         break;
                     }
                     index -= cw;
                 }
 
-            path.indexStack.Add (index);
-            path.nodeStack.Add (node);
+            path.indexStack.Add(index);
+            path.nodeStack.Add(node);
             return path;
         }
 
@@ -239,10 +239,10 @@ internal
         public bool IsFound { get; private set; }
 
         public Node TopNode
-            => nodeStack[indexStack.Count-1];
+            => nodeStack[indexStack.Count - 1];
 
         public int TopIndex
-            => indexStack[indexStack.Count-1];
+            => indexStack[indexStack.Count - 1];
 
         public int Height
             => indexStack.Count;
@@ -251,22 +251,22 @@ internal
 
         #region Methods
 
-        public Node GetNode (int level)
+        public Node GetNode(int level)
             => nodeStack[level];
 
-        public int GetIndex (int level)
+        public int GetIndex(int level)
             => indexStack[level];
 
         public T LeftKey
-            => ((Leaf) TopNode).GetKey (TopIndex-1);
+            => ((Leaf)TopNode).GetKey(TopIndex - 1);
 
         public int GetTreeIndex()
         {
-            var level = Height-1;
+            var level = Height - 1;
             var result = indexStack[level];
             while (--level >= 0)
             {
-                var branch = (Branch) nodeStack[level];
+                var branch = (Branch)nodeStack[level];
                 var ix = indexStack[level];
                 if (ix <= branch.ChildCount >> 1)
                     while (--ix >= 0)
@@ -281,22 +281,22 @@ internal
             return result;
         }
 
-        public void TiltLeft (int delta)
+        public void TiltLeft(int delta)
         {
-            for (var level = indexStack.Count-2; ; --level)
+            for (var level = indexStack.Count - 2; ; --level)
             {
-                Debug.Assert (level >= 0, "One-sided tilt");
+                Debug.Assert(level >= 0, "One-sided tilt");
                 if (indexStack[level] == 0)
-                    ((Branch) nodeStack[level]).AdjustWeight (- delta);
-                else if (level >= indexStack.Count-2)
+                    ((Branch)nodeStack[level]).AdjustWeight(-delta);
+                else if (level >= indexStack.Count - 2)
                     return;
                 else
-                    for (var bh = (Branch) ((Branch) nodeStack[level]).GetChild (indexStack[level]-1);;)
+                    for (var bh = (Branch)((Branch)nodeStack[level]).GetChild(indexStack[level] - 1); ;)
                     {
-                        bh.AdjustWeight (+ delta);
-                        if (++level >= indexStack.Count-2)
+                        bh.AdjustWeight(+delta);
+                        if (++level >= indexStack.Count - 2)
                             return;
-                        bh = (Branch) bh.GetChild (bh.KeyCount);
+                        bh = (Branch)bh.GetChild(bh.KeyCount);
                     }
             }
         }
@@ -305,30 +305,30 @@ internal
         /// <remarks>On entry, top of path refers to a branch.</remarks>
         public T GetPivot()
         {
-            Debug.Assert (TopNode is Branch);
+            Debug.Assert(TopNode is Branch);
             for (var level = indexStack.Count - 2; ; --level)
             {
-                Debug.Assert (level >= 0);
+                Debug.Assert(level >= 0);
                 if (indexStack[level] > 0)
-                    return nodeStack[level].GetKey (indexStack[level] - 1);
+                    return nodeStack[level].GetKey(indexStack[level] - 1);
             }
         }
 
         /// <summary>Set nearest key where left child path taken.</summary>
         /// <remarks>On entry, top of vector refers to a branch.</remarks>
-        public void SetPivot (T key)
+        public void SetPivot(T key)
         {
             for (var level = indexStack.Count - 2; level >= 0; --level)
                 if (indexStack[level] > 0)
                 {
-                    nodeStack[level].SetKey (indexStack[level] - 1, key);
+                    nodeStack[level].SetKey(indexStack[level] - 1, key);
                     return;
                 }
         }
 
-        public void SetPivot (T key, int level)
+        public void SetPivot(T key, int level)
         {
-            for (;;)
+            for (; ; )
                 if (indexStack[--level] > 0)
                 {
                     nodeStack[level].SetKey(indexStack[level] - 1, key);
@@ -344,14 +344,14 @@ internal
 
         public void Pop()
         {
-            nodeStack.RemoveAt (nodeStack.Count - 1);
-            indexStack.RemoveAt (indexStack.Count - 1);
+            nodeStack.RemoveAt(nodeStack.Count - 1);
+            indexStack.RemoveAt(indexStack.Count - 1);
         }
 
-        public void Push (Node node, int nodeIndex)
+        public void Push(Node node, int nodeIndex)
         {
-            nodeStack.Add (node);
-            indexStack.Add (nodeIndex);
+            nodeStack.Add(node);
+            indexStack.Add(nodeIndex);
         }
 
         /// <summary>Adjust tree path to node to the left.</summary>
@@ -365,11 +365,11 @@ internal
                 node = TopNode;
                 var ix = TopIndex - 1;
                 if (ix >= 0)
-                    for (indexStack[indexStack.Count - 1] = ix;;)
+                    for (indexStack[indexStack.Count - 1] = ix; ;)
                     {
-                        node = ((Branch) node).GetChild (ix);
+                        node = ((Branch)node).GetChild(ix);
                         ix = node.KeyCount;
-                        Push (node, ix);
+                        Push(node, ix);
                         if (indexStack.Count >= height)
                             return node;
                     }
@@ -385,7 +385,7 @@ internal
         {
             Node node;
             var height = indexStack.Count;
-            for (;;)
+            for (; ; )
             {
                 if (indexStack.Count < 2)
                 {
@@ -398,16 +398,16 @@ internal
                 node = TopNode;
                 var newIndex = TopIndex + 1;
 
-                if (newIndex < ((Branch) node).ChildCount)
+                if (newIndex < ((Branch)node).ChildCount)
                 {
                     indexStack[indexStack.Count - 1] = newIndex;
-                    node = ((Branch) node).GetChild (newIndex);
-                    for (;;)
+                    node = ((Branch)node).GetChild(newIndex);
+                    for (; ; )
                     {
-                        Push (node, 0);
+                        Push(node, 0);
                         if (indexStack.Count >= height)
                             break;
-                        node = ((Branch) node).Child0;
+                        node = ((Branch)node).Child0;
                     }
                     break;
                 }
@@ -416,52 +416,52 @@ internal
             return node;
         }
 
-        public void ChangePathWeight (int delta)
+        public void ChangePathWeight(int delta)
         {
-            for (var level = Height-2; level >= 0; --level)
-                ((Branch) nodeStack[level]).AdjustWeight (delta);
+            for (var level = Height - 2; level >= 0; --level)
+                ((Branch)nodeStack[level]).AdjustWeight(delta);
         }
 
         public void DecrementPathWeight()
         {
-            for (var level = Height-2; level >= 0; --level)
-                ((Branch) nodeStack[level]).DecrementWeight();
+            for (var level = Height - 2; level >= 0; --level)
+                ((Branch)nodeStack[level]).DecrementWeight();
         }
 
         public void IncrementPathWeight()
         {
-            for (var level = Height-2; level >= 0; --level)
-                ((Branch) nodeStack[level]).IncrementWeight();
+            for (var level = Height - 2; level >= 0; --level)
+                ((Branch)nodeStack[level]).IncrementWeight();
         }
 
         // Leaf or branch has been split so insert the new anchor into a branch.
-        public void Promote (T key, Node newNode, bool isAppend)
+        public void Promote(T key, Node newNode, bool isAppend)
         {
-            for (;;)
+            for (; ; )
             {
                 if (Height == 1)
                 {
                     // Graft new root.
-                    Debug.Assert (tree.root == TopNode);
-                    tree.root = new Branch (tree.maxKeyCount, TopNode, TopNode.Weight + newNode.Weight);
-                    ((Branch) tree.root).Add (key, newNode);
+                    Debug.Assert(tree.root == TopNode);
+                    tree.root = new Branch(tree.maxKeyCount, TopNode, TopNode.Weight + newNode.Weight);
+                    ((Branch)tree.root).Add(key, newNode);
                     break;
                 }
 
                 Pop();
-                var branch = (Branch) TopNode;
+                var branch = (Branch)TopNode;
                 var branchIndex = TopIndex;
 
                 if (branch.KeyCount < tree.maxKeyCount)
                 {
                     // Typical case where branch has room.
-                    branch.InsertKey (branchIndex, key);
-                    branch.Insert (branchIndex + 1, newNode);
+                    branch.InsertKey(branchIndex, key);
+                    branch.Insert(branchIndex + 1, newNode);
                     break;
                 }
 
                 // Branch is full so right split a new branch.
-                var newBranch = new Branch (tree.maxKeyCount);
+                var newBranch = new Branch(tree.maxKeyCount);
                 var splitIndex = isAppend ? branch.KeyCount - 1 : (branch.KeyCount + 1) / 2;
 
                 if (branchIndex < splitIndex)
@@ -469,55 +469,55 @@ internal
                     // Split branch with left-side insert.
                     for (var ix = splitIndex; ; ++ix)
                     {
-                        newBranch.AdjustWeight (+ branch.GetChild (ix).Weight);
+                        newBranch.AdjustWeight(+branch.GetChild(ix).Weight);
                         if (ix >= branch.KeyCount)
                         {
-                            newBranch.Add (branch.GetChild (ix));
+                            newBranch.Add(branch.GetChild(ix));
                             break;
                         }
-                        newBranch.Add (branch.GetKey (ix), branch.GetChild (ix));
+                        newBranch.Add(branch.GetKey(ix), branch.GetChild(ix));
                     }
 
-                    var newPromotion = branch.GetKey (splitIndex - 1);
-                    branch.Truncate (splitIndex - 1);
-                    branch.InsertKey (branchIndex, key);
-                    branch.Insert (branchIndex + 1, newNode);
+                    var newPromotion = branch.GetKey(splitIndex - 1);
+                    branch.Truncate(splitIndex - 1);
+                    branch.InsertKey(branchIndex, key);
+                    branch.Insert(branchIndex + 1, newNode);
                     key = newPromotion;
-                    branch.AdjustWeight (- newBranch.Weight);
+                    branch.AdjustWeight(-newBranch.Weight);
                 }
                 else
                 {
                     // Split branch with right-side insert (or cascade promote).
                     var leftIndex = splitIndex;
-                    newBranch.AdjustWeight (newNode.Weight);
+                    newBranch.AdjustWeight(newNode.Weight);
 
                     if (branchIndex > splitIndex)
                     {
-                        for (;;)
+                        for (; ; )
                         {
                             ++leftIndex;
-                            newBranch.Add (branch.GetChild (leftIndex));
-                            newBranch.AdjustWeight (+ branch.GetChild (leftIndex).Weight);
+                            newBranch.Add(branch.GetChild(leftIndex));
+                            newBranch.AdjustWeight(+branch.GetChild(leftIndex).Weight);
                             if (leftIndex >= branchIndex)
                                 break;
-                            newBranch.AddKey (branch.GetKey (leftIndex));
+                            newBranch.AddKey(branch.GetKey(leftIndex));
                         }
-                        newBranch.AddKey (key);
-                        key = branch.GetKey (splitIndex);
+                        newBranch.AddKey(key);
+                        key = branch.GetKey(splitIndex);
                     }
 
-                    newBranch.Add (newNode);
+                    newBranch.Add(newNode);
 
                     while (leftIndex < branch.KeyCount)
                     {
-                        newBranch.AddKey (branch.GetKey (leftIndex));
+                        newBranch.AddKey(branch.GetKey(leftIndex));
                         ++leftIndex;
-                        newBranch.Add (branch.GetChild (leftIndex));
-                        newBranch.AdjustWeight (+ branch.GetChild (leftIndex).Weight);
+                        newBranch.Add(branch.GetChild(leftIndex));
+                        newBranch.AdjustWeight(+branch.GetChild(leftIndex).Weight);
                     }
 
-                    branch.Truncate (splitIndex);
-                    branch.AdjustWeight (- newBranch.Weight);
+                    branch.Truncate(splitIndex);
+                    branch.AdjustWeight(-newBranch.Weight);
                 }
 
                 newNode = newBranch;
@@ -527,12 +527,12 @@ internal
         // Leaf has been emptied so non-lazy delete its pivot.
         public void Demote()
         {
-            for (;;)
+            for (; ; )
             {
-                Debug.Assert (Height > 0);
+                Debug.Assert(Height > 0);
                 Pop();
 
-                var branch = (Branch) TopNode;
+                var branch = (Branch)TopNode;
                 if (TopIndex == 0)
                 {
                     if (branch.KeyCount == 0)
@@ -541,81 +541,81 @@ internal
 
                     // Rotate pivot for first key.
                     var pivot = branch.Key0;
-                    branch.RemoveKey (0);
-                    branch.RemoveChild (0);
-                    SetPivot (pivot);
+                    branch.RemoveKey(0);
+                    branch.RemoveChild(0);
+                    SetPivot(pivot);
                 }
                 else
                 {
                     // Delete pivot.
-                    branch.RemoveKey (TopIndex - 1);
-                    branch.RemoveChild (TopIndex);
+                    branch.RemoveKey(TopIndex - 1);
+                    branch.RemoveChild(TopIndex);
                 }
 
-                var right = (Branch) TraverseRight();
+                var right = (Branch)TraverseRight();
                 if (right == null)
                     // Must be an empty root.  Prune later.
                     return;
 
-                if (! BalanceBranch2 (branch))
+                if (!BalanceBranch2(branch))
                     return;
             }
         }
 
         /// <summary>Coalesce or rotate if underflow.</summary>
         /// <param name="left">Branch to left of path branch.</param>
-        public void BalanceBranch (Branch left)
+        public void BalanceBranch(Branch left)
         {
-            if (BalanceBranch2 (left))
+            if (BalanceBranch2(left))
                 Demote();
         }
 
-        private bool BalanceBranch2 (Branch left)
+        private bool BalanceBranch2(Branch left)
         {
-            var right = (Branch) TopNode;
+            var right = (Branch)TopNode;
             if (left.KeyCount + right.KeyCount < tree.maxKeyCount)
             {
                 // Coalesce left: move pivot and right sibling nodes.
-                left.AddKey (GetPivot());
+                left.AddKey(GetPivot());
 
                 for (var ix1 = 0; ; ++ix1)
                 {
-                    left.Add (right.GetChild (ix1));
+                    left.Add(right.GetChild(ix1));
                     if (ix1 >= right.KeyCount)
                         break;
-                    left.AddKey (right.GetKey (ix1));
+                    left.AddKey(right.GetKey(ix1));
                 }
-                left.AdjustWeight (+ right.Weight);
-                TiltLeft (+ right.Weight);
+                left.AdjustWeight(+right.Weight);
+                TiltLeft(+right.Weight);
 
                 // Pivot must still be removed.
                 return true;
             }
 
             // Branch underflow?
-            if (tree.IsUnderflow (left.ChildCount))
+            if (tree.IsUnderflow(left.ChildCount))
             {
                 // Balance branches to keep ratio.  Rotate thru the pivot.
                 var shifts = (left.KeyCount + right.KeyCount - 1) / 2 - left.KeyCount;
-                left.AddKey (GetPivot());
+                left.AddKey(GetPivot());
 
                 var delta = 0;
                 for (var ix2 = 0; ; ++ix2)
                 {
-                    left.Add (right.GetChild (ix2));
-                    delta += right.GetChild (ix2).Weight;
+                    left.Add(right.GetChild(ix2));
+                    delta += right.GetChild(ix2).Weight;
 
                     if (ix2 >= shifts)
                         break;
 
-                    left.AddKey (right.GetKey (ix2));
+                    left.AddKey(right.GetKey(ix2));
                 }
 
-                SetPivot (right.GetKey (shifts));
-                right.Remove (0, shifts + 1);
-                left.AdjustWeight (+ delta);
-                right.AdjustWeight (- delta);
-                TiltLeft (delta);
+                SetPivot(right.GetKey(shifts));
+                right.Remove(0, shifts + 1);
+                left.AdjustWeight(+delta);
+                right.AdjustWeight(-delta);
+                TiltLeft(delta);
             }
 
             return false;
@@ -634,12 +634,12 @@ internal
         /// </remarks>
         public void BalanceLeaf()
         {
-            var leaf1 = (Leaf) TopNode;
+            var leaf1 = (Leaf)TopNode;
             var ix1 = TopIndex;
 
             if (ix1 == 0)
                 if (leaf1.KeyCount != 0)
-                    SetPivot (leaf1.Key0);
+                    SetPivot(leaf1.Key0);
                 else
                 {
                     if (leaf1.rightLeaf != null)
@@ -661,7 +661,7 @@ internal
                     return;
                 }
 
-            if (tree.IsUnderflow (leaf1.KeyCount))
+            if (tree.IsUnderflow(leaf1.KeyCount))
             {
                 var leaf2 = leaf1.rightLeaf;
                 if (leaf2 != null)
@@ -669,10 +669,10 @@ internal
                     {
                         // Balance leaves by shifting pairs from right leaf.
                         var shifts = (leaf1.KeyCount + leaf2.KeyCount + 1) / 2 - leaf1.KeyCount;
-                        leaf1.MoveLeft (shifts);
+                        leaf1.MoveLeft(shifts);
                         TraverseRight();
-                        SetPivot (leaf2.Key0);
-                        TiltLeft (shifts);
+                        SetPivot(leaf2.Key0);
+                        TiltLeft(shifts);
                     }
                     else
                     {
@@ -683,7 +683,7 @@ internal
                         else
                             leaf2.rightLeaf.leftLeaf = leaf1;
                         TraverseRight();
-                        TiltLeft (leaf2.KeyCount);
+                        TiltLeft(leaf2.KeyCount);
                         Demote();
                     }
             }
@@ -693,25 +693,25 @@ internal
 
 #if DEBUG
 
-            /// <summary>Make a path to leftmost branch or leaf at the supplied level.</summary>
-            /// <param name="tree">Target of path.</param>
-            /// <param name="level">Level of node to seek (root is level 0).</param>
-            /// <remarks>Used only for diagnostics.</remarks>
-            public NodeVector (Btree<T> tree, int level) : this (tree)
+        /// <summary>Make a path to leftmost branch or leaf at the supplied level.</summary>
+        /// <param name="tree">Target of path.</param>
+        /// <param name="level">Level of node to seek (root is level 0).</param>
+        /// <remarks>Used only for diagnostics.</remarks>
+        public NodeVector(Btree<T> tree, int level) : this(tree)
+        {
+            this.IsFound = false;
+            Push(tree.root, 0);
+
+            for (Node node = TopNode; level > 0; --level)
             {
-                this.IsFound = false;
-                Push (tree.root, 0);
-
-                for (Node node = TopNode; level > 0; --level)
-                {
-                    node = ((Branch) node).GetChild (0);
-                    Push (node, 0);
-                }
+                node = ((Branch)node).GetChild(0);
+                Push(node, 0);
             }
+        }
 
-            /// <summary>Returns <b>true</b> if no left sibling.</summary>
-            public bool IsLeftmostNode
-             => indexStack[Height - 2] == 0;
+        /// <summary>Returns <b>true</b> if no left sibling.</summary>
+        public bool IsLeftmostNode
+         => indexStack[Height - 2] == 0;
 #endif
     }
 }
