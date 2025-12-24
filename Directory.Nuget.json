@@ -13336,6 +13336,11 @@
         "Name": "RbChart02",
         "Project": "Bench\\RbChart02\\RbChart02.csproj",
         "PackageReferences": null
+      },
+      {
+        "Name": "Collections\\Collections.csproj",
+        "Project": "Net4x.Kaos.Collections",
+        "PackageReferences": null
       }
     ]
   }

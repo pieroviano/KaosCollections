@@ -6,9 +6,5 @@
 		<VersionSuffix Condition="'$(Configuration)'=='Release'">0</VersionSuffix>
 		<SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
 		<LangVersion>latest</LangVersion>
-		<DefineConststants>$(DefineConsts);PUBLIC</DefineConststants>
 	</PropertyGroup>
-	<ItemGroup>
-		<PackageReference Include="Net4x.NuGetUtility" Version="$(NuGetUtilityVersion)" PrivateAssets="All" />
-	</ItemGroup>
 </Project>

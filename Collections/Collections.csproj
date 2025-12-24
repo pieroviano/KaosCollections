@@ -35,7 +35,11 @@
         <LangVersion>latest</LangVersion>
         <DefineConstants>PUBLIC</DefineConstants>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DefineConststants>$(DefineConsts);PUBLIC</DefineConststants>
     </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Net4x.NuGetUtility" Version="$(NuGetUtilityVersion)" PrivateAssets="All" />
+    </ItemGroup>
     <ItemGroup>
         <None Include="..\LICENSE">
             <Pack>True</Pack>
@@ -43,5 +47,11 @@
         </None>
     </ItemGroup>
     <Import Project="..\Source\KaosCollections\KaosCollections.projitems" Label="Shared" />
+    <PropertyGroup>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="README.md" Link="README.md" Pack="true" PackagePath="\README.md" />
+    </ItemGroup>
     <Import Project="$(NuGetPackageRoot)net4x.nugetutility/$(NuGetUtilityVersion)/build/NuGet.Utility.targets" Condition="Exists('$(NuGetPackageRoot)net4x.nugetutility/$(NuGetUtilityVersion)/build/NuGet.Utility.targets')" />
 </Project>

@@ -1,8 +1,8 @@
 ![logo](Images/KaosCollections-218.png)
 
-[![Test](https://github.com/kaosborn/KaosCollections/workflows/Test/badge.svg)](https://github.com/kaosborn/KaosCollections/blob/master/.github/workflows/Test.yml)
-[![Build](https://github.com/kaosborn/KaosCollections/workflows/Build/badge.svg)](https://github.com/kaosborn/KaosCollections/blob/master/.github/workflows/Build.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/kaosborn/KaosCollections/blob/master/LICENSE)
+[![Test](https://github.com/pieroviano/KaosCollections/workflows/Test/badge.svg)](https://github.com/pieroviano/KaosCollections/blob/master/.github/workflows/Test.yml)
+[![Build](https://github.com/pieroviano/KaosCollections/workflows/Build/badge.svg)](https://github.com/pieroviano/KaosCollections/blob/master/.github/workflows/Build.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/pieroviano/KaosCollections/blob/master/LICENSE)
 
 # KaosCollections
 
@@ -54,16 +54,16 @@ Do this by adding a project reference to the `KaosCollections.shproj` file.
 Installing as a NuGet package will provide IntelliSense and object browser documentation from the `.xml` file.
 For complete documentation, see:
 
-* https://kaosborn.github.io/help/KaosCollections/
+* https://pieroviano.github.io/help/KaosCollections/
 
 Identical documentation is available as a Microsoft Help v1 file from the link below.
 This downloaded `.chm` file may require unblocking thru its file properties dialog.
 
-* https://github.com/kaosborn/KaosCollections/releases/
+* https://github.com/pieroviano/KaosCollections/releases/
 
 Finally, examples are repeated in the repository wiki:
 
-* https://github.com/kaosborn/KaosCollections/wiki/
+* https://github.com/pieroviano/KaosCollections/wiki/
 
 ### Repository top-level folders
 
@@ -101,7 +101,7 @@ add the `TEST_BCL` compilation symbol to the test project build properties.
 
 All links in this section are to free software.
 
-* https://github.com/kaosborn/KaosCollections/ - Complete source is hosted at GitHub.
+* https://github.com/pieroviano/KaosCollections/ - Complete source is hosted at GitHub.
 
 * https://www.visualstudio.com/downloads/ - Building the solution requires Visual Studio 2017 Community Edition or greater.
 
