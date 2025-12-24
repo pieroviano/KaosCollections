@@ -8,13 +8,13 @@
         <IsPackable>false</IsPackable>
         <Version>$(VersionPrefix).$(VersionSuffix)</Version>
         <Authors>Kasey O.</Authors>
-        <Company>github.com/ionitagheorghe</Company>
+        <Company>github.com/pieroviano</Company>
         <Product>KaosCollections</Product>
         <Description>Test suite (MSTest)</Description>
-        <Copyright>Copyright (c) 2009-2020 github.com/ionitagheorghe</Copyright>
+        <Copyright>Copyright (c) 2009-2020 github.com/pieroviano</Copyright>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-        <PackageProjectUrl>https://github.com/ionitagheorghe/KaosCollections/</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/ionitagheorghe/KaosCombinatorics.git</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/pieroviano/KaosCollections/</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/pieroviano/KaosCombinatorics.git</RepositoryUrl>
         <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
         <NoWarn>NUnit2005;NUnit2007;NUnit1034;NU1504;NUnit2006;CS8892</NoWarn>
     </PropertyGroup>

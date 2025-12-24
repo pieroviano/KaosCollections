@@ -19,16 +19,16 @@
 		</Description>
         <AssemblyVersion>4.2.0.1</AssemblyVersion>
         <FileVersion>4.2.0.1</FileVersion>
-        <Company>github.com/ionitagheorghe</Company>
+        <Company>github.com/pieroviano</Company>
         <PackageId>Net4x.Kaos.Collections</PackageId>
-        <Copyright>Copyright (c) 2009-2021 github.com/ionitagheorghe</Copyright>
-        <PackageProjectUrl>https://github.com/ionitagheorghe/KaosCollections/</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/ionitagheorghe/KaosCollections.git</RepositoryUrl>
+        <Copyright>Copyright (c) 2009-2021 github.com/pieroviano</Copyright>
+        <PackageProjectUrl>https://github.com/pieroviano/KaosCollections/</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/pieroviano/KaosCollections.git</RepositoryUrl>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <RepositoryType>Git</RepositoryType>
         <PackageReleaseNotes>
 			For complete documentation including release history:
-			https://ionitagheorghe.github.io/help/KaosCollections/
+			https://pieroviano.github.io/help/KaosCollections/
 		</PackageReleaseNotes>
         <PackageTags>Generics Collections SortedDictionary SortedSet SortedList BTree Order Statistic Dictionary Set Bag Multiset Multimap</PackageTags>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
