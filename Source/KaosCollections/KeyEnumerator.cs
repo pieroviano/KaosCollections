@@ -19,9 +19,9 @@ internal
     /// <exclude />
     private protected class KeyEnumerator : BaseEnumerator
     {
-        public T CurrentKey { get; private set; }
+        public T? CurrentKey { get; private set; }
 
-        public T CurrentKeyOrDefault
+        public T? CurrentKeyOrDefault
             => NotActive ? default : CurrentKey;
 
         public KeyEnumerator(Btree<T> owner, bool isReverse = false) : base(owner, isReverse)
@@ -45,7 +45,14 @@ internal
         public bool Advance()
         {
             if (AdvanceBase())
-            { CurrentKey = leaf.GetKey(leafIndex); return true; }
+            {
+                if (leaf != null)
+                {
+                    CurrentKey = leaf.GetKey(leafIndex);
+                }
+
+                return true;
+            }
             else
             { CurrentKey = default; return false; }
         }

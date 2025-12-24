@@ -208,7 +208,7 @@ internal
     public int Count
         => root.Weight;
 
-    /// <summary>Gets a <see cref="RankedDictionary{TKey,TValue}.KeyCollection"/> containing the keys of the dictionary.</summary>
+    /// <summary>Gets a <see cref="Dictionary{TKey,TValue}.KeyCollection"/> containing the keys of the dictionary.</summary>
     /// <remarks>
     /// The keys given by this collection are sorted according to the <see cref="Comparer"/> property.
     /// </remarks>
@@ -232,15 +232,15 @@ internal
     ICollection<TKey> IDictionary<TKey, TValue>.Keys
         => Keys;
 
-    /// <summary>Gets a <see cref="RankedDictionary{TKey,TValue}.KeyCollection"/> containing the keys in the dictionary.</summary>
+    /// <summary>Gets a <see cref="Dictionary{TKey,TValue}.KeyCollection"/> containing the keys in the dictionary.</summary>
     IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
         => Keys;
 
-    /// <summary>Gets a <see cref="RankedDictionary{TKey,TValue}.ValueCollection"/> containing the values in the dictionary.</summary>
+    /// <summary>Gets a <see cref="Dictionary{TKey,TValue}.ValueCollection"/> containing the values in the dictionary.</summary>
     IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values
         => Values;
 
-    /// <summary>Gets a <see cref="RankedDictionary{TKey,TValue}.ValueCollection"/> containing the values of the dictionary.</summary>
+    /// <summary>Gets a <see cref="Dictionary{TKey,TValue}.ValueCollection"/> containing the values of the dictionary.</summary>
     /// <remarks>
     /// The values given by this collection are sorted in the same order as their respective keys.
     /// </remarks>

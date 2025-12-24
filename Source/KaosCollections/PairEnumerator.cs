@@ -25,7 +25,7 @@ internal
         public bool NonGeneric { get; private set; }
 
         public KeyValuePair<T, V> CurrentPairOrDefault => NotActive ? default : CurrentPair;
-        public DictionaryEntry CurrentEntry => new DictionaryEntry(CurrentPair.Key, CurrentPair.Value);
+        public DictionaryEntry CurrentEntry => new DictionaryEntry(CurrentPair.Key!, CurrentPair.Value);
 
         public PairEnumerator(Btree<T> owner, bool isReverse = false, bool nonGeneric = false) : base(owner, isReverse)
             => this.NonGeneric = nonGeneric;
@@ -48,7 +48,14 @@ internal
         public bool Advance()
         {
             if (AdvanceBase())
-            { CurrentPair = ((PairLeaf<V>)leaf).GetPair(leafIndex); return true; }
+            {
+                if (leaf != null)
+                {
+                    CurrentPair = ((PairLeaf<V>)leaf).GetPair(leafIndex);
+                }
+
+                return true;
+            }
             else
             { CurrentPair = default; return false; }
         }

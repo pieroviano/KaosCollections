@@ -6,6 +6,8 @@
 // Copyright © 2009-2021 Kasey Osborn (github.com/kaosborn)
 // MIT License - Use and redistribute freely
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -73,9 +75,15 @@ internal
 
         public override void Coalesce()
         {
-            var right = (PairLeaf<TValue>)rightLeaf;
-            for (var ix = 0; ix < right.values.Count; ++ix)
-                values.Add(right.values[ix]);
+            var right = (PairLeaf<TValue>?)rightLeaf;
+            for (var ix = 0; ix < (right?.values.Count ?? 0); ++ix)
+            {
+                if (right != null)
+                {
+                    values.Add(right.values[ix]);
+                }
+            }
+
             base.Coalesce();
         }
 
@@ -88,10 +96,16 @@ internal
 
         public override void MoveLeft(int count)
         {
-            var right = (PairLeaf<TValue>)rightLeaf;
+            var right = (PairLeaf<TValue>?)rightLeaf;
             for (var ix = 0; ix < count; ++ix)
-                values.Add(right.values[ix]);
-            right.values.RemoveRange(0, count);
+            {
+                if (right != null)
+                {
+                    values.Add(right.values[ix]);
+                }
+            }
+
+            right?.values.RemoveRange(0, count);
             base.MoveLeft(count);
         }
 

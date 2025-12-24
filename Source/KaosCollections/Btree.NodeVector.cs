@@ -5,6 +5,8 @@
 // Copyright © 2009-2021 Kasey Osborn (github.com/kaosborn)
 // MIT License - Use and redistribute freely
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -138,7 +140,7 @@ internal
         }
 
         // On exit: path is left-edge normalized.
-        public static NodeVector CreateFromOffset(NodeVector path, int offset)
+        public static NodeVector? CreateFromOffset(NodeVector path, int offset)
         {
             Debug.Assert(offset >= 0);
 
@@ -355,7 +357,7 @@ internal
         }
 
         /// <summary>Adjust tree path to node to the left.</summary>
-        public Node TraverseLeft()
+        public Node? TraverseLeft()
         {
             Node node;
             var height = indexStack.Count;
@@ -381,9 +383,9 @@ internal
         /// <summary>Adjust tree path to node to the right.</summary>
         /// <returns>Node to immediate right of current path;
         /// <b>null</b> if current path at rightmost node.</returns>
-        public Node TraverseRight()
+        public Node? TraverseRight()
         {
-            Node node;
+            Node? node;
             var height = indexStack.Count;
             for (; ; )
             {
@@ -552,7 +554,7 @@ internal
                     branch.RemoveChild(TopIndex);
                 }
 
-                var right = (Branch)TraverseRight();
+                var right = (Branch?)TraverseRight();
                 if (right == null)
                     // Must be an empty root.  Prune later.
                     return;
