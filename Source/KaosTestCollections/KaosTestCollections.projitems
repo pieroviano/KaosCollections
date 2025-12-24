@@ -9,8 +9,27 @@
     <Import_RootNamespace>KaosTestCollections</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Model\BadStudentSet.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\BadPlayerMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\BadPlayerDary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BinaryFormatterEnable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TestInit.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\BadExamBag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Exam.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\ExamBag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\NameItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Person.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\PersonComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\TestBtree.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\ScoreComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\PlayerComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Player.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\TS0.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\TS1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\PlayerDary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\PlayerMap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\Student.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\StudentComparer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Model\StudentSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestRb.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestRbDeLinq.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestRbSerialization.cs" />

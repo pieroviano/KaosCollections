@@ -1,13 +1,18 @@
-﻿using System;
-using NUnit.Framework;
+using System;
+using Xunit;
 
 namespace Kaos.Test.Collections;
-
-[SetUpFixture]
-public class BinaryFormatterEnable
+public class BinaryFormatterEnable : IClassFixture<BinaryFormatterEnableFixture>
 {
-    [OneTimeSetUp]
     public void OneTimeSetup()
+    {
+        AppContext.SetSwitch("System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization", true);
+    }
+}
+
+public class BinaryFormatterEnableFixture
+{
+    public BinaryFormatterEnableFixture()
     {
         AppContext.SetSwitch("System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization", true);
     }

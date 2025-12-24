@@ -3,7 +3,7 @@
 // File:    TestRsSetCompare.cs
 //
 
-using NUnit.Framework;
+using Xunit;
 #if TEST_BCL
 using System.Collections.Generic;
 #else
@@ -12,19 +12,24 @@ using Kaos.Collections;
 
 namespace Kaos.Test.Collections
 {
-    public class UserComparer : System.Collections.Generic.Comparer<User>
+    public class UserComparer : System.Collections.Generic.Comparer<User>, IClassFixture<BinaryFormatterEnableFixture>
     {
         public override int Compare(User x, User y) => string.Compare(x.Name, y.Name);
     }
 
-    public class User : System.IComparable<User>
+    public class User : System.IComparable<User>, IClassFixture<BinaryFormatterEnableFixture>
     {
         public string Name { get; private set; }
-        public User(string name) { this.Name = name; }
+
+        public User(string name)
+        {
+            this.Name = name;
+        }
+
         public int CompareTo(User other) => string.Compare(this.Name, other.Name);
     }
 
-    public partial class TestRs
+    public partial class TestRs : IClassFixture<BinaryFormatterEnableFixture>
     {
 #if TEST_BCL
         SortedSet<string> setS1 = new SortedSet<string>(), setS2 = new SortedSet<string>();
@@ -33,11 +38,9 @@ namespace Kaos.Test.Collections
 #else
         private RankedSet<string> setS1 = new RankedSet<string>();
         private RankedSet<string> setS2 = new RankedSet<string>();
-        System.Collections.Generic.IEqualityComparer<RankedSet<string>> setComparer
-            = RankedSet<string>.CreateSetComparer();
+        System.Collections.Generic.IEqualityComparer<RankedSet<string>> setComparer = RankedSet<string>.CreateSetComparer();
 #endif
-
-        [Test]
+        [Fact]
         public void UnitRsc_Equals()
         {
 #if TEST_BCL
@@ -48,72 +51,60 @@ namespace Kaos.Test.Collections
             var setComparer3 = RankedSet<int>.CreateSetComparer();
 #endif
             bool eq0 = setComparer.Equals(null);
-            Assert.IsFalse(eq0);
-
+            Assert.False(eq0);
             bool eq1 = setComparer.Equals(setComparer);
-            Assert.IsTrue(eq1);
-
+            Assert.True(eq1);
             bool eq2 = setComparer.Equals(setComparer2);
-            Assert.IsTrue(eq2);
-
+            Assert.True(eq2);
             bool eq3 = setComparer.Equals(setComparer3);
-            Assert.IsFalse(eq3);
+            Assert.False(eq3);
         }
 
-
-        [Test]
+        [Fact]
         public void UnitRsc_GetHashCode()
         {
             int comparerHashCode0 = setComparer.GetHashCode(null);
-            Assert.AreEqual(0, comparerHashCode0);
-
+            Assert.Equal(0, comparerHashCode0);
             int comparerHashCode1 = setComparer.GetHashCode();
-            Assert.AreNotEqual(0, comparerHashCode1);
+            Assert.NotEqual(0, comparerHashCode1);
         }
 
-
-        [Test]
+        [Fact]
         public void UnitRsc_SetGetHashCode()
         {
             if (setS1 == null)
             {
                 setS1 = new RankedSet<string>();
             }
+
             int hc0 = setComparer.GetHashCode(setS1);
             setS1.Add("ABC");
             int hc1 = setComparer.GetHashCode(setS1);
-
-            Assert.AreNotEqual(hc0, hc1);
+            Assert.NotEqual(hc0, hc1);
         }
 
-
-        [Test]
+        [Fact]
         public void UnitRsc_SetEquals1()
         {
             setS1.Add("ABC");
             setS2.Add("DEF");
             bool eq2 = setComparer.Equals(setS1, setS2);
-            Assert.IsFalse(eq2);
-
+            Assert.False(eq2);
             setS2.Add("ABC");
             bool eq3 = setComparer.Equals(setS1, setS2);
-            Assert.IsFalse(eq3);
-
+            Assert.False(eq3);
             setS1.Add("DEF");
             bool eq4 = setComparer.Equals(setS1, setS2);
-            Assert.IsTrue(eq4);
-
+            Assert.True(eq4);
             setS2 = null;
             bool eq0 = setComparer.Equals(setS1, setS2);
-            Assert.IsFalse(eq0);
-
+            Assert.False(eq0);
             setS1 = null;
             bool eq1 = setComparer.Equals(setS1, setS2);
-            Assert.IsTrue(eq1);
+            Assert.True(eq1);
         }
 
-
-        [Test]
+        [Fact]
         public void UnitRsc_SetEquals2()
         {
 #if TEST_BCL
@@ -126,17 +117,15 @@ namespace Kaos.Test.Collections
             var user2 = new RankedSet<User>(new UserComparer());
 #endif
             bool eq0 = cp.Equals(user1, user2);
-            Assert.IsTrue(eq0);
-
+            Assert.True(eq0);
             user1.Add(new User("admin"));
             user2.Add(new User("tester"));
             bool eq1 = cp.Equals(user1, user2);
-            Assert.IsFalse(eq1);
-
+            Assert.False(eq1);
             user1.Add(new User("tester"));
             user2.Add(new User("admin"));
             bool eq2 = cp.Equals(user1, user2);
-            Assert.IsTrue(eq2);
+            Assert.True(eq2);
         }
     }
 }

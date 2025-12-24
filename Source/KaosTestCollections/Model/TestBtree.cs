@@ -15,37 +15,6 @@ using Kaos.Collections;
 
 namespace Kaos.Test.Collections
 {
-    public class TS0
-    {
-        public int K0 { get; set; }
-        public TS0(int k0) { this.K0 = k0; }
-    }
-
-    public class TS1 : IComparable<TS1>, IComparable
-    {
-        public int K1 { get; private set; }
-        public TS1(int k1) { this.K1 = k1; }
-
-        public int CompareTo(TS1 other) { return this.K1 - other.K1; }
-        public int CompareTo(object ob) { return this.K1 - ((TS1)ob).K1; }
-    }
-
-    public class Person
-    {
-        public static string[] names = new string[]
-        { "Walter", "Bob", "Trent", "Chuck", "Alice" , "Maynard", "Frank", "Sybil", "Eve" };
-
-        public string Name { get; private set; }
-        public Person(string name) { Name = name; }
-        public override string ToString() { return Name; }
-    }
-
-    public class PersonComparer : System.Collections.Generic.Comparer<Person>
-    {
-        public override int Compare(Person x, Person y)
-        { return x == null ? (y == null ? 0 : -1) : (y == null ? 1 : String.Compare(x.Name, y.Name)); }
-    }
-
     public partial class TestBtree
     {
         public static bool IsAlways(int arg) => true;

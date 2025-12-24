@@ -4,59 +4,29 @@
 //
 
 #pragma warning disable SYSLIB0011
-
 using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using NUnit.Framework;
-using Kaos.Collections;
+using Xunit;
 
 namespace Kaos.Test.Collections
 {
-    [Serializable]
-    public class PlayerMap : RankedMap<Player, int>
+    public partial class TestRm : IClassFixture<BinaryFormatterEnableFixture>
     {
-        public PlayerMap() : base(new PlayerComparer())
-        { }
-
-        public PlayerMap(SerializationInfo info, StreamingContext context) : base(info, context)
-        { }
-    }
-
-    [Serializable]
-    public class BadPlayerMap : RankedMap<Player, int>, IDeserializationCallback
-    {
-        public BadPlayerMap() : base(new PlayerComparer())
-        { }
-
-        public BadPlayerMap(SerializationInfo info, StreamingContext context) : base(info, context)
-        { }
-
-        void IDeserializationCallback.OnDeserialization(Object sender)
-        {
-            // This double call is for coverage purposes only.
-            OnDeserialization(sender);
-            OnDeserialization(sender);
-        }
-    }
-
-
-    public partial class TestRm
-    {
-        [Test]
+        [Fact]
         public void CrashRmz_ArgumentNull()
         {
             Assert.Throws<ArgumentNullException>(() =>
             {
                 var map = new PlayerMap();
 #pragma warning disable SYSLIB0050
-                ((ISerializable)map).GetObjectData(null!, new StreamingContext());
+                ((ISerializable)map).GetObjectData(null !, new StreamingContext());
 #pragma warning restore SYSLIB0050
             });
         }
 
-        [Test]
+        [Fact]
         public void CrashRmz_NullCB()
         {
             Assert.Throws<SerializationException>(() =>
@@ -66,7 +36,7 @@ namespace Kaos.Test.Collections
             });
         }
 
-        [Test]
+        [Fact]
         public void CrashRmz_BadCount()
         {
             Assert.Throws<SerializationException>(() =>
@@ -74,11 +44,13 @@ namespace Kaos.Test.Collections
                 string fileName = @"Targets\MapBadCount.bin";
                 IFormatter formatter = new BinaryFormatter();
                 using (var fs = new FileStream(fileName, FileMode.Open))
-                { var map = (PlayerMap)formatter.Deserialize(fs); }
+                {
+                    var map = (PlayerMap)formatter.Deserialize(fs);
+                }
             });
         }
 
-        [Test]
+        [Fact]
         public void CrashRmz_MismatchKV()
         {
             Assert.Throws<SerializationException>(() =>
@@ -86,11 +58,13 @@ namespace Kaos.Test.Collections
                 string fileName = @"Targets\MapMismatchKV.bin";
                 IFormatter formatter = new BinaryFormatter();
                 using (var fs = new FileStream(fileName, FileMode.Open))
-                { var map = (PlayerMap)formatter.Deserialize(fs); }
+                {
+                    var map = (PlayerMap)formatter.Deserialize(fs);
+                }
             });
         }
 
-        [Test]
+        [Fact]
         public void CrashRmz_MissingKeys()
         {
             Assert.Throws<SerializationException>(() =>
@@ -98,11 +72,13 @@ namespace Kaos.Test.Collections
                 string fileName = @"Targets\MapMissingKeys.bin";
                 IFormatter formatter = new BinaryFormatter();
                 using (var fs = new FileStream(fileName, FileMode.Open))
-                { var map = (PlayerMap)formatter.Deserialize(fs); }
+                {
+                    var map = (PlayerMap)formatter.Deserialize(fs);
+                }
             });
         }
 
-        [Test]
+        [Fact]
         public void CrashRmz_MissingValues()
         {
             Assert.Throws<SerializationException>(() =>
@@ -110,12 +86,13 @@ namespace Kaos.Test.Collections
                 string fileName = @"Targets\MapMissingValues.bin";
                 IFormatter formatter = new BinaryFormatter();
                 using (var fs = new FileStream(fileName, FileMode.Open))
-                { var map = (PlayerMap)formatter.Deserialize(fs); }
+                {
+                    var map = (PlayerMap)formatter.Deserialize(fs);
+                }
             });
         }
 
-
-        [Test]
+        [Fact]
         public void UnitRmz_Serialization()
         {
             string fileName = "MapScores.bin";
@@ -126,35 +103,40 @@ namespace Kaos.Test.Collections
             map1.Add(new Player("GG", "Chuck"), 44);
             map1.Add(new Player("A1", "Ziggy"), 55);
             map1.Add(new Player("GG", null), 66);
-
             IFormatter formatter = new BinaryFormatter();
             using (var fs = new FileStream(fileName, FileMode.Create))
-            { formatter.Serialize(fs, map1); }
+            {
+                formatter.Serialize(fs, map1);
+            }
 
             PlayerMap map2 = null;
             using (var fs = new FileStream(fileName, FileMode.Open))
-            { map2 = (PlayerMap)formatter.Deserialize(fs); }
+            {
+                map2 = (PlayerMap)formatter.Deserialize(fs);
+            }
 
-            Assert.AreEqual(6, map2.Count);
+            Assert.Equal(6, map2.Count);
         }
 
-
-        [Test]
+        [Fact]
         public void UnitRmz_BadSerialization()
         {
             string fileName = "BadMapScores.bin";
             var map1 = new BadPlayerMap();
             map1.Add(new Player("VV", "Vicky"), 11);
-
             IFormatter formatter = new BinaryFormatter();
             using (var fs = new FileStream(fileName, FileMode.Create))
-            { formatter.Serialize(fs, map1); }
+            {
+                formatter.Serialize(fs, map1);
+            }
 
             BadPlayerMap map2 = null;
             using (var fs = new FileStream(fileName, FileMode.Open))
-            { map2 = (BadPlayerMap)formatter.Deserialize(fs); }
+            {
+                map2 = (BadPlayerMap)formatter.Deserialize(fs);
+            }
 
-            Assert.AreEqual(1, map2.Count);
+            Assert.Equal(1, map2.Count);
         }
     }
 }
