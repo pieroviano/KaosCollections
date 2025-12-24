@@ -3,6 +3,8 @@
 // File:    TestRdSerializaton.cs
 //
 
+#pragma warning disable SYSLIB0050
+
 using NUnit.Framework;
 using System;
 using System.Runtime.Serialization;
@@ -12,7 +14,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 #else
 using Kaos.Collections;
-#pragma warning disable SYSLIB0050
 #endif
 
 namespace Kaos.Test.Collections
@@ -61,7 +62,7 @@ namespace Kaos.Test.Collections
         public PlayerDary() : base(new PlayerComparer())
         { }
 
-#if ! TEST_BCL
+#if !TEST_BCL
         public PlayerDary(SerializationInfo info, StreamingContext context) : base(info, context)
         { }
 #endif
@@ -77,7 +78,7 @@ namespace Kaos.Test.Collections
         public BadPlayerDary() : base(new PlayerComparer())
         { }
 
-#if ! TEST_BCL
+#if !TEST_BCL
         public BadPlayerDary(SerializationInfo info, StreamingContext context) : base(info, context)
         { }
 
@@ -93,7 +94,7 @@ namespace Kaos.Test.Collections
 
     public partial class TestRd
     {
-#if ! TEST_BCL
+#if !TEST_BCL
         [Test]
         public void CrashRdz_ArgumentNull()
         {

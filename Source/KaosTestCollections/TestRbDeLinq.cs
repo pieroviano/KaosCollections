@@ -5,11 +5,11 @@
 
 using System;
 using NUnit.Framework;
-using SLE = System.Linq.Enumerable;
+using Kaos.Collections;
 #if TEST_BCL
 using System.Linq;
 #endif
-using Kaos.Collections;
+using SLE = System.Linq.Enumerable;
 
 namespace Kaos.Test.Collections
 {
@@ -401,7 +401,7 @@ namespace Kaos.Test.Collections
         }
 
 
-#if ! TEST_BCL
+#if !TEST_BCL
         [Test]
         public void CrashRbq_ReverseHotUpdate()
         {
@@ -478,7 +478,7 @@ namespace Kaos.Test.Collections
         #endregion
 
         #region Test bonus (LINQ emulation)
-#if ! TEST_BCL
+#if !TEST_BCL
 
         [Test]
         public void UnitRbqx_oEtorGetEnumerator()

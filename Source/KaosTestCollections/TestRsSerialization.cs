@@ -3,6 +3,9 @@
 // File:    TestRsSerializaton.cs
 //
 
+#pragma warning disable SYSLIB0050
+#pragma warning disable SYSLIB0011
+
 using NUnit.Framework;
 using System;
 using System.IO;
@@ -12,8 +15,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
 #else
 using Kaos.Collections;
-#pragma warning disable SYSLIB0050
-#pragma warning disable SYSLIB0011
 #endif
 
 namespace Kaos.Test.Collections
@@ -109,7 +110,7 @@ namespace Kaos.Test.Collections
             }
         }
 
-#if ! TEST_BCL
+#if !TEST_BCL
         [Test]
         public void CrashRsz_BadCount()
         {

@@ -4,7 +4,8 @@
 //
 
 #pragma warning disable SYSLIB0050
-# if ! TEST_BCL
+#pragma warning disable SYSLIB0011
+#if !TEST_BCL
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,8 +13,6 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Kaos.Collections;
 using NUnit.Framework;
-
-#pragma warning disable SYSLIB0011
 #endif
 
 namespace Kaos.Test.Collections;
@@ -52,7 +51,7 @@ public class Exam : ISerializable
     }
 }
 
-#if ! TEST_BCL
+#if !TEST_BCL
 [Serializable]
 public class ExamBag : RankedBag<Exam>
 {

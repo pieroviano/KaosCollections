@@ -4,13 +4,13 @@
 //
 
 using System;
-using SLE = System.Linq.Enumerable;
-using SCG = System.Collections.Generic;
 using NUnit.Framework;
+using Kaos.Collections;
 #if TEST_BCL
 using System.Linq;
 #endif
-using Kaos.Collections;
+using SLE = System.Linq.Enumerable;
+using SCG = System.Collections.Generic;
 
 namespace Kaos.Test.Collections
 {
@@ -335,7 +335,7 @@ namespace Kaos.Test.Collections
         }
 
         [Test]
-#if ! TEST_BCL
+#if !TEST_BCL
 #endif
         public void CrashRmq_ReverseHotUpdate()
         {
@@ -378,7 +378,7 @@ namespace Kaos.Test.Collections
         #endregion
 
         #region Test bonus (LINQ emulation)
-#if ! TEST_BCL
+#if !TEST_BCL
 
         [Test]
         public void UnitRmqx_oEtorGetEnumerator()
@@ -757,7 +757,7 @@ namespace Kaos.Test.Collections
 
 
         [Test]
-#if ! TEST_BCL
+#if !TEST_BCL
 #endif
         public void CrashRmkq_ReverseHotUpdate()
         {
@@ -805,7 +805,7 @@ namespace Kaos.Test.Collections
         #endregion
 
         #region Test Keys bonus (LINQ emulation)
-#if ! TEST_BCL
+#if !TEST_BCL
 
         [Test]
         public void UnitRmkqx_oEtorGetEnumerator()
@@ -1114,7 +1114,7 @@ namespace Kaos.Test.Collections
         #region Test Values enumeration (LINQ emulation)
 
         [Test]
-#if ! TEST_BCL
+#if !TEST_BCL
 #endif
         public void CrashRmvq_ReverseHotUpdate()
         {
@@ -1162,7 +1162,7 @@ namespace Kaos.Test.Collections
         #endregion
 
         #region Test Values bonus (LINQ emulation)
-#if ! TEST_BCL
+#if !TEST_BCL
 
         [Test]
         public void UnitRmvqx_oEtorGetEnumerator()

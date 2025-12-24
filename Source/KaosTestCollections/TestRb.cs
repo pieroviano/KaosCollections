@@ -4,13 +4,12 @@
 //
 
 using Kaos.Collections;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using System;
 
 namespace Kaos.Test.Collections
 {
-#if ! TEST_BCL
+#if !TEST_BCL
     public class NameItem
     {
         public NameItem(string name) { this.Name = name; }

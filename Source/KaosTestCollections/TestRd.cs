@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-#if ! TEST_BCL
+#if !TEST_BCL
 using Kaos.Collections;
 #endif
 
@@ -1080,7 +1080,7 @@ namespace Kaos.Test.Collections
         #endregion
 
         #region Test bonus methods
-#if ! TEST_BCL
+#if !TEST_BCL
 
         [Test]
         public void UnitRdx_MinMax()

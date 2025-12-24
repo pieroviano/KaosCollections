@@ -3,7 +3,7 @@
 // File:    TestRm.cs
 //
 
-#if ! TEST_BCL
+#if !TEST_BCL
 
 using System;
 using System.Collections;

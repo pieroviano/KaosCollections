@@ -1222,7 +1222,7 @@ namespace Kaos.Test.Collections
         #endregion
 
         #region Test bonus methods
-#if ! TEST_BCL
+#if !TEST_BCL
 
         [Test]
 

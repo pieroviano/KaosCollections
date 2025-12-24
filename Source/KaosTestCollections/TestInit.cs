@@ -9,8 +9,7 @@
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
-#if ! TEST_BCL
+#if !TEST_BCL
 using Kaos.Collections;
 #endif
 

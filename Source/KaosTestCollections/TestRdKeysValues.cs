@@ -197,7 +197,7 @@ namespace Kaos.Test.Collections
         #endregion
 
         #region Test Keys bonus methods
-#if ! TEST_BCL
+#if !TEST_BCL
 
         [Test]
         public void UnitRdkx_Indexer()
@@ -686,7 +686,7 @@ namespace Kaos.Test.Collections
         #endregion
 
         #region Test Values bonus methods
-#if ! TEST_BCL
+#if !TEST_BCL
 
         [Test]
         public void UnitRdvx_Indexer()

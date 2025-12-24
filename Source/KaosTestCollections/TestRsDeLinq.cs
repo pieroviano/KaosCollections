@@ -4,11 +4,11 @@
 //
 
 using System;
-using SLE = System.Linq.Enumerable;
+using NUnit.Framework;
 #if TEST_BCL
 using System.Linq;
 #endif
-using NUnit.Framework;
+using SLE = System.Linq.Enumerable;
 
 namespace Kaos.Test.Collections
 {
@@ -40,7 +40,7 @@ namespace Kaos.Test.Collections
 #endif
         }
 
-#if ! TEST_BCL
+#if !TEST_BCL
         [Test]
         public void StressRsq_Contains()
         {
@@ -498,7 +498,7 @@ namespace Kaos.Test.Collections
         #endregion
 
         #region Test bonus (LINQ emulation)
-#if ! TEST_BCL
+#if !TEST_BCL
 
         [Test]
         public void UnitRsqx_oEtorGetEnumerator()
