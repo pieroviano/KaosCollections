@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace System.Collections;
+namespace Kaos.Collections;
 
 /// <summary>
 /// Defines an enumerator that provides advanced iteration and skipping capabilities over a collection of elements of

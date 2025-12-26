@@ -1,9 +1,11 @@
+#nullable enable
+
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-#nullable enable
-
-namespace System.Collections;
+namespace Kaos.Collections;
 
 /// <summary>
 /// Defines a sorted set collection that maintains items in order according to a specified comparer and provides
@@ -32,15 +34,15 @@ public interface IRankedSet<T> :
     /// To override sorting based on the default comparer,
     /// supply an alternate comparer when constructing the set.
     /// </remarks>
-    IComparer<T> Comparer { get; }
+    IComparer<T>? Comparer { get; }
 
     /// <summary>Gets the maximum item in the set per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
-    T Max { get; }
+    T? Max { get; }
 
     /// <summary>Gets the minimum item in the set per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
-    T Min { get; }
+    T? Min { get; }
 
     /// <summary>Gets or sets the <em>order</em> of the underlying B+ tree structure.</summary>
     /// <remarks>
@@ -110,25 +112,25 @@ public interface IRankedSet<T> :
     /// <returns>The item at <em>index</em>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or not less than the number of items.</exception>
-    T ElementAt(int index);
+    T? ElementAt(int index);
 
     /// <summary>Gets the item at the supplied index or the default if the index is out of range.</summary>
     /// <param name="index">The zero-based index of the item to get.</param>
     /// <returns>The item at <em>index</em>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    T ElementAtOrDefault(int index);
+    T? ElementAtOrDefault(int index);
 
     /// <summary>Gets the minimum item in the set per the comparer.</summary>
     /// <returns>The minimum item in the set.</returns>
     /// <remarks>This is a O(1) operation.</remarks>
     /// <exception cref="InvalidOperationException">When &lt;see cref="Count"/&gt; is zero.</exception>
-    T First();
+    T? First();
 
     /// <summary>Gets the maximum item in the set per the comparer.</summary>
     /// <returns>The maximum item in the set.</returns>
     /// <remarks>This is a O(1) operation.</remarks>
     /// <exception cref="InvalidOperationException">When &lt;see cref="Count"/&gt; is zero.</exception>
-    T Last();
+    T? Last();
 
     /// <summary>Returns an IEnumerable that iterates thru the set in reverse order.</summary>
     /// <returns>An enumerator that reverse iterates thru the set.</returns>
@@ -261,8 +263,8 @@ public interface IRankedSet<T> :
     /// <summary>Gets the actual item for the supplied search item.</summary>
     /// <param name="getItem">The item to find.</param>
     /// <param name="item">
-    /// If <em>item</em> is found, its value is placed here;
-    /// otherwise it will be loaded with the default for its type.
+    ///     If <em>item</em> is found, its value is placed here;
+    ///     otherwise it will be loaded with the default for its type.
     /// </param>
     /// <returns><b>true</b> if <em>getItem</em> is found; otherwise <b>false</b>.</returns>
     bool TryGet(T getItem, out T? item);

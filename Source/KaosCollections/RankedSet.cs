@@ -6,7 +6,6 @@
 // MIT License - Use and redistribute freely
 //
 
-#nullable enable
 #pragma warning disable CS8766
 
 using System;
@@ -165,7 +164,7 @@ internal
     /// <summary>Adds an item to the set.</summary>
     /// <param name="item">The item to add.</param>
     void ICollection<T>.Add(T item)
-        => Add(item!);
+        => Add(item);
 
     /// <summary>Adds an item to the set and returns a success indicator.</summary>
     /// <param name="item">The item to add.</param>
@@ -336,11 +335,15 @@ internal
             return;
 
         StageBump();
-        var oSet = other as RankedSet<T?> ?? new RankedSet<T?>(other, Comparer!);
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+        var oSet = other as RankedSet<T?> ?? new RankedSet<T?>(other, Comparer);
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
 
+#pragma warning disable CS8604 // Possible null reference argument.
         if (Comparer != null && (oSet.Count == 0 ||
-                                 Comparer.Compare(oSet.Max!, Min!) < 0 ||
-                                 Comparer.Compare(oSet.Min!, Max!) > 0))
+                                 Comparer.Compare(oSet.Max, Min) < 0 ||
+                                 Comparer.Compare(oSet.Min, Max) > 0))
+#pragma warning restore CS8604 // Possible null reference argument.
         {
             Clear();
             return;
@@ -459,19 +462,23 @@ internal
             throw new ArgumentNullException(nameof(other));
 
         if (Count != 0)
-            if (other is RankedSet<T> oSet)
+            if (other is RankedSet<T?> oSet)
             {
                 RankedSet<T?> set1;
                 RankedSet<T?> set2;
                 if (Count > oSet.Count)
                 {
-                    set1 = this!;
-                    set2 = oSet!;
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+                    set1 = this;
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+                    set2 = oSet;
                 }
                 else
                 {
-                    set2 = this!;
-                    set1 = oSet!;
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+                    set2 = this;
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+                    set1 = oSet;
                 }
 
                 foreach (var key in set2.ElementsBetween(set1.Min, set1.Max))
@@ -801,7 +808,9 @@ internal
             if (index >= leaf.KeyCount)
             { index = 0; leaf = leaf.rightLeaf; }
 
-            yield return leaf!.GetKey(index);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            yield return leaf.GetKey(index);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             StageCheck(stageFreeze);
             ++index;
         }
@@ -953,8 +962,8 @@ internal
     /// <summary>Gets the actual item for the supplied search item.</summary>
     /// <param name="getItem">The item to find.</param>
     /// <param name="item">
-    /// If <em>item</em> is found, its value is placed here;
-    /// otherwise it will be loaded with the default for its type.
+    ///     If <em>item</em> is found, its value is placed here;
+    ///     otherwise it will be loaded with the default for its type.
     /// </param>
     /// <returns><b>true</b> if <em>getItem</em> is found; otherwise <b>false</b>.</returns>
     public bool TryGet(T getItem, out T? item)
@@ -1053,7 +1062,7 @@ internal
         => new RankedSetEqualityComparer(memberEqualityComparer);
 
     private bool HasEqualComparer(RankedSet<T> other)
-        => Comparer != null && (Comparer == other.Comparer || Comparer.Equals(other.Comparer));
+        => Comparer != null && (ReferenceEquals(Comparer, other.Comparer) || Comparer.Equals(other.Comparer));
 
     private static bool RankedSetEquals(RankedSet<T>? set1, RankedSet<T>? set2, IComparer<T> comparer)
     {
@@ -1105,7 +1114,7 @@ internal
 
     /// <summary>Enumerates the items of a <see cref="RankedSet{T}"/> in sort order.</summary>
     [DebuggerTypeProxy(typeof(IEnumerableDebugView<>))]
-    public struct Enumerator : IEnumerator<T>, IEnumerable<T>, ICollectionEnumerator<T>
+    public struct Enumerator : IEnumerator<T>, ICollectionEnumerator<T>
     {
         private readonly KeyEnumerator etor;
 
