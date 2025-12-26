@@ -2,7 +2,7 @@ namespace Kaos.Test.Collections;
 
 public class Person
 {
-    public static string[] names = new string[]
+    public static string[] names = new[]
         { "Walter", "Bob", "Trent", "Chuck", "Alice" , "Maynard", "Frank", "Sybil", "Eve" };
 
     public string Name { get; private set; }

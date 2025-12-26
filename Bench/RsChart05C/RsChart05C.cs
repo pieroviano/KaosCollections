@@ -10,44 +10,43 @@ using System;
 using System.Reflection;
 using Kaos.Collections;
 
-namespace ChartApp
+namespace ChartApp;
+
+class RsChart05C
 {
-    class RsChart05C
+    static void WriteInfo (Btree<int> tree, bool showStats=false)
     {
-        static void WriteInfo (Btree<int> tree, bool showStats=false)
-        {
-            Console.WriteLine();
+        Console.WriteLine();
 #if DEBUG
-            foreach (var lx in tree.GenerateTreeText())
-                Console.WriteLine (lx);
+        foreach (var lx in tree.GenerateTreeText())
+            Console.WriteLine (lx);
 
-            tree.SanityCheck();
-            Console.WriteLine();
+        tree.SanityCheck();
+        Console.WriteLine();
 
-            if (showStats)
-            {
-                Console.WriteLine (tree.GetTreeStatsText());
-                Console.WriteLine();
-            }
-#endif
-        }
-
-        static void Main()
+        if (showStats)
         {
-            for (int i = 1; i <= 12; i+= 1)
-            {
-                var set = new RankedSet<int>() { Capacity=4 };
+            Console.WriteLine (tree.GetTreeStatsText());
+            Console.WriteLine();
+        }
+#endif
+    }
 
-                foreach (int kk in new int[] { 3, 5, 6, 7, 9, 10, 11 })
-                    set.Add (kk);
-                set.Remove (6); set.Remove (10);
-                WriteInfo (set);
+    static void Main()
+    {
+        for (var i = 1; i <= 12; i+= 1)
+        {
+            var set = new RankedSet<int>() { Capacity=4 };
 
-                set.SymmetricExceptWith (new int[] { i });
-                Console.WriteLine ("SymmetricExceptWith " + i + ":");
-                WriteInfo (set);
-                Console.WriteLine ("----");
-            }
+            foreach (var kk in new[] { 3, 5, 6, 7, 9, 10, 11 })
+                set.Add (kk);
+            set.Remove (6); set.Remove (10);
+            WriteInfo (set);
+
+            set.SymmetricExceptWith (new[] { i });
+            Console.WriteLine ("SymmetricExceptWith " + i + ":");
+            WriteInfo (set);
+            Console.WriteLine ("----");
         }
     }
 }

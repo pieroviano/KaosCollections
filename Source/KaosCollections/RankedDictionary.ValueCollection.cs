@@ -7,6 +7,8 @@
 // MIT License - Use and redistribute freely
 //
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -129,7 +131,7 @@ internal
             if (Count > array.Length - index)
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
 
-            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>)leaf.rightLeaf)
+            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
             {
                 leaf.CopyValuesTo(array, index, leaf.ValueCount);
                 index += leaf.ValueCount;
@@ -156,7 +158,7 @@ internal
             if (Count > array.Length - index)
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
 
-            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>)leaf.rightLeaf)
+            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
                 for (var ix = 0; ix < leaf.KeyCount; ++ix)
                 {
                     array.SetValue(leaf.GetValue(ix), index);
@@ -200,7 +202,7 @@ internal
         /// <param name="index">The zero-based index of the value to get.</param>
         /// <returns>The value at <em>index</em>.</returns>
         /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-        public TValue ElementAtOrDefault(int index)
+        public TValue? ElementAtOrDefault(int index)
         {
             if (index < 0 || index >= Count)
                 return default;
@@ -228,7 +230,7 @@ internal
         /// This is a O(<em>n</em>) operation.
         /// </remarks>
         public int IndexOf(TValue value)
-            => tree.ContainsValue2<TValue>(value);
+            => tree.ContainsValue2(value);
 
         /// <summary>Gets the value of the element with the maximum key in the dictionary per the comparer.</summary>
         /// <returns>The value of the element with the maximum key.</returns>
@@ -292,14 +294,15 @@ internal
         IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator()
             => new Enumerator(tree);
 
-        /// <summary>Gets an enumerator that iterates thru the collection.</summary>
+        /// <summary>Gets an enumerator that iterates through the collection.</summary>
         /// <returns>An enumerator for the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
             => new Enumerator(tree);
 
         /// <summary>Enumerates the items of a <see cref="RankedDictionary{TKey,TValue}.ValueCollection"/> in key sort order.</summary>
         [DebuggerTypeProxy(typeof(IEnumerableValuesDebugView<,>))]
-        public struct Enumerator : IEnumerator<TValue>, IEnumerable<TValue>
+        // ReSharper disable once MemberHidesStaticFromOuterClass
+        public readonly struct Enumerator : IEnumerator<TValue>, IEnumerable<TValue>
         {
             private readonly ValueEnumerator<TValue> etor;
 
@@ -317,7 +320,7 @@ internal
 
             /// <summary>Gets the value at the current position.</summary>
             /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
-            object IEnumerator.Current
+            object? IEnumerator.Current
             {
                 get
                 {

@@ -1,6 +1,9 @@
 using System;
 using System.Runtime.Serialization;
 using Xunit;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8601 // Possible null reference assignment.
 
 namespace Kaos.Test.Collections;
 

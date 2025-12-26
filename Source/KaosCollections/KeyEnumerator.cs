@@ -6,6 +6,8 @@
 // MIT License - Use and redistribute freely
 //
 
+#nullable enable
+
 using System;
 
 namespace Kaos.Collections;

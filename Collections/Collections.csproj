@@ -37,6 +37,8 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <DefineConststants>$(DefineConsts);PUBLIC</DefineConststants>
         <NoWarn>NU5118</NoWarn>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Net4x.NuGetUtility" Version="$(NuGetUtilityVersion)" PrivateAssets="All" />

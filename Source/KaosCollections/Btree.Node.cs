@@ -77,7 +77,7 @@ internal
 #if DEBUG
         public StringBuilder Append(StringBuilder sb)
         {
-            for (int ix = 0; ix < KeyCount; ix++)
+            for (var ix = 0; ix < KeyCount; ix++)
             {
                 if (ix > 0)
                     sb.Append(',');

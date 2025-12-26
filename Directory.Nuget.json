@@ -9,6 +9,11 @@
         "Name": "Net35.Threading.Tasks",
         "Project": "Net35.Threading.Tasks\\Net35.Threading.Tasks.csproj",
         "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.Kaos.Collections",
+        "Project": "KaosCollections\\Collections\\Collections.csproj",
+        "PackageReferences": null
       }
     ]
   },

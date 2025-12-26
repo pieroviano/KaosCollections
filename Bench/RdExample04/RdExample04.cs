@@ -1,48 +1,51 @@
 using System;
 using Kaos.Collections;
 
-namespace ExampleApp
+namespace ExampleApp;
+
+class RdExample04
 {
-    class RdExample04
+    static void Main()
     {
-        static void Main()
+        var dary1 = new RankedDictionary<string,int> (StringComparer.InvariantCultureIgnoreCase)
         {
-            var dary1 = new RankedDictionary<string,int> (StringComparer.InvariantCultureIgnoreCase);
-            dary1.Add ("AAA", 0);
-            dary1.Add ("bbb", 1);
-            dary1.Add ("CCC", 2);
-            dary1.Add ("ddd", 3);
+            { "AAA", 0 },
+            { "bbb", 1 },
+            { "CCC", 2 },
+            { "ddd", 3 }
+        };
 
-            Console.WriteLine ("Comparer is case insensitive:");
-            foreach (System.Collections.Generic.KeyValuePair<string,int> pair in dary1)
-                Console.WriteLine (pair.Key);
-            Console.WriteLine();
+        Console.WriteLine ("Comparer is case insensitive:");
+        foreach (var pair in dary1)
+            Console.WriteLine (pair.Key);
+        Console.WriteLine();
 
-            var dary2 = new RankedDictionary<string,int> (StringComparer.Ordinal);
-            dary2.Add ("AAA", 0);
-            dary2.Add ("bbb", 2);
-            dary2.Add ("CCC", 1);
-            dary2.Add ("ddd", 3);
+        var dary2 = new RankedDictionary<string,int> (StringComparer.Ordinal)
+        {
+            { "AAA", 0 },
+            { "bbb", 2 },
+            { "CCC", 1 },
+            { "ddd", 3 }
+        };
 
-            Console.WriteLine ("Comparer is case sensitive:");
-            foreach (System.Collections.Generic.KeyValuePair<string,int> pair in dary2)
-                Console.WriteLine (pair.Key);
-        }
-
-        /* Output:
-
-        Comparer is case insensitive:
-        AAA
-        bbb
-        CCC
-        ddd
-
-        Comparer is case sensitive:
-        AAA
-        CCC
-        bbb
-        ddd
-
-        */
+        Console.WriteLine ("Comparer is case sensitive:");
+        foreach (var pair in dary2)
+            Console.WriteLine (pair.Key);
     }
+
+    /* Output:
+
+    Comparer is case insensitive:
+    AAA
+    bbb
+    CCC
+    ddd
+
+    Comparer is case sensitive:
+    AAA
+    CCC
+    bbb
+    ddd
+
+    */
 }

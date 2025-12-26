@@ -12,13 +12,14 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Kaos.Collections;
 using Xunit;
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 #endif
 
 namespace Kaos.Test.Collections;
 
 #if !TEST_BCL
-public partial class TestRb : IClassFixture<BinaryFormatterEnableFixture>
+public partial class TestRb
 {
     [Fact]
     public void CrashRbz_ArgumentNull()
@@ -26,7 +27,7 @@ public partial class TestRb : IClassFixture<BinaryFormatterEnableFixture>
         Assert.Throws<ArgumentNullException>(() =>
         {
             var bag = new ExamBag();
-            ((ISerializable)bag).GetObjectData(null !, new StreamingContext());
+            ((ISerializable)bag).GetObjectData(null, new StreamingContext());
         });
     }
 
@@ -82,7 +83,7 @@ public partial class TestRb : IClassFixture<BinaryFormatterEnableFixture>
             formatter.Serialize(fs, bag1);
         }
 
-        BadExamBag bag2 = null;
+        BadExamBag? bag2 = null;
         using (var fs = new FileStream(fileName, FileMode.Open))
         {
             bag2 = (BadExamBag)formatter.Deserialize(fs);
@@ -105,7 +106,7 @@ public partial class TestRb : IClassFixture<BinaryFormatterEnableFixture>
             formatter.Serialize(fs, bag1);
         }
 
-        RankedBag<Exam> bag2 = null;
+        RankedBag<Exam>? bag2;
         using (var fs = new FileStream(fileName, FileMode.Open))
         {
             bag2 = (ExamBag)formatter.Deserialize(fs);

@@ -11,420 +11,420 @@ using System.Linq;
 #endif
 using SLE = System.Linq.Enumerable;
 
-namespace Kaos.Test.Collections
+namespace Kaos.Test.Collections;
+
+public partial class TestRb : IClassFixture<BinaryFormatterEnableFixture>
 {
-    public partial class TestRb : IClassFixture<BinaryFormatterEnableFixture>
+    #region Test methods (LINQ emulation)
+    [Fact]
+    public void CrashRbq_ElementAtA_ArgumentOutOfRange()
     {
-#region Test methods (LINQ emulation)
-        [Fact]
-        public void CrashRbq_ElementAtA_ArgumentOutOfRange()
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>();
+            var rb = new RankedBag<int>();
 #if TEST_BCL
                 var zz = Enumerable.ElementAt (rb, -1);
 #else
-                var zz = rb.ElementAt(-1);
+            var zz = rb.ElementAt(-1);
 #endif
-            });
-        }
+        });
+    }
 
-        [Fact]
-        public void CrashRbq_ElementAtB_ArgumentOutOfRange()
+    [Fact]
+    public void CrashRbq_ElementAtB_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>();
+            var rb = new RankedBag<int>();
 #if TEST_BCL
                 var zz = Enumerable.ElementAt (rb, 0);
 #else
-                var zz = rb.ElementAt(0);
+            var zz = rb.ElementAt(0);
 #endif
-            });
-        }
+        });
+    }
 
-        [Fact]
-        public void UnitRbq_ElementAt()
+    [Fact]
+    public void UnitRbq_ElementAt()
+    {
+        var rb = new RankedBag<int>
         {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 5
-            };
-            int n = 200;
-            for (int ii = 0; ii <= n; ++ii)
-                rb.Add(ii / 2);
-            for (int ii = 0; ii <= n; ++ii)
-            {
+            Capacity = 5
+        };
+        var n = 200;
+        for (var ii = 0; ii <= n; ++ii)
+            rb.Add(ii / 2);
+        for (var ii = 0; ii <= n; ++ii)
+        {
 #if TEST_BCL
                 Assert.Equal (ii / 2, Enumerable.ElementAt(rb, ii));
 #else
-                Assert.Equal(ii / 2, rb.ElementAt(ii));
+            Assert.Equal(ii / 2, rb.ElementAt(ii));
 #endif
-            }
         }
+    }
 
-        [Fact]
-        public void UnitRbq_ElementAtOrDefault()
-        {
-            var rb = new RankedBag<int>();
+    [Fact]
+    public void UnitRbq_ElementAtOrDefault()
+    {
+        var rb = new RankedBag<int>();
 #if TEST_BCL
             int keyN = Enumerable.ElementAtOrDefault (rb, -1);
             int key0 = Enumerable.ElementAtOrDefault (rb, 0);
 #else
-            int keyN = rb.ElementAtOrDefault(-1);
-            int key0 = rb.ElementAtOrDefault(0);
+        var keyN = rb.ElementAtOrDefault(-1);
+        var key0 = rb.ElementAtOrDefault(0);
 #endif
-            Assert.Equal(default(int), keyN);
-            Assert.Equal(default(int), key0);
-            rb.Add(9);
+        Assert.Equal(default(int), keyN);
+        Assert.Equal(default(int), key0);
+        rb.Add(9);
 #if TEST_BCL
             int keyZ = Enumerable.ElementAtOrDefault (rb, 0);
             int key1 = Enumerable.ElementAtOrDefault (rb, 1);
 #else
-            int keyZ = rb.ElementAtOrDefault(0);
-            int key1 = rb.ElementAtOrDefault(1);
+        var keyZ = rb.ElementAtOrDefault(0);
+        var key1 = rb.ElementAtOrDefault(1);
 #endif
-            Assert.Equal(9, keyZ);
-            Assert.Equal(default(int), key1);
-        }
+        Assert.Equal(9, keyZ);
+        Assert.Equal(default(int), key1);
+    }
 
-        [Fact]
-        public void CrashRbq_First_InvalidOperation()
+    [Fact]
+    public void CrashRbq_First_InvalidOperation()
+    {
+        Assert.Throws<InvalidOperationException>(() =>
         {
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                var rb = new RankedBag<int>();
+            var rb = new RankedBag<int>();
 #if TEST_BCL
                 var zz = Enumerable.First (rb);
 #else
-                var zz = rb.First();
+            var zz = rb.First();
 #endif
-            });
-        }
+        });
+    }
 
-        [Fact]
-        public void CrashRbq_Last_InvalidOperation()
+    [Fact]
+    public void CrashRbq_Last_InvalidOperation()
+    {
+        Assert.Throws<InvalidOperationException>(() =>
         {
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                var rb = new RankedBag<int>();
+            var rb = new RankedBag<int>();
 #if TEST_BCL
                 var zz = Enumerable.Last (rb);
 #else
-                var zz = rb.Last();
+            var zz = rb.Last();
 #endif
-            });
-        }
+        });
+    }
 
-        [Fact]
-        public void UnitRbq_FirstLast()
+    [Fact]
+    public void UnitRbq_FirstLast()
+    {
+        var rb = new RankedBag<int>
         {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            int n = 99;
-            for (int ii = n; ii >= 1; --ii)
-                rb.Add(ii);
+            Capacity = 4
+        };
+        var n = 99;
+        for (var ii = n; ii >= 1; --ii)
+            rb.Add(ii);
 #if TEST_BCL
             Assert.Equal(1, Enumerable.First (rb));
             Assert.Equal(n, Enumerable.Last (rb));
 #else
-            Assert.Equal(1, rb.First());
-            Assert.Equal(n, rb.Last());
+        Assert.Equal(1, rb.First());
+        Assert.Equal(n, rb.Last());
 #endif
-        }
+    }
 
-        [Fact]
-        public void UnitRbq_Skip()
+    [Fact]
+    public void UnitRbq_Skip()
+    {
+        var rb = new RankedBag<int>
         {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 5
-            };
-            Assert.Equal(0, SLE.Count(rb.Skip(0)));
-            Assert.Equal(0, SLE.Count(rb.Skip(-1)));
-            Assert.Equal(0, SLE.Count(rb.Skip(1)));
-            rb.Add(1);
-            rb.Add(2);
-            Assert.True(SLE.SequenceEqual(new int[] { 1, 2 }, rb.Skip(-1)));
-            Assert.True(SLE.SequenceEqual(new int[] { 1, 2 }, rb.Skip(0)));
-            Assert.True(SLE.SequenceEqual(new int[] { 2 }, rb.Skip(1)));
-            Assert.Equal(0, SLE.Count(rb.Skip(2)));
-            Assert.Equal(0, SLE.Count(rb.Skip(3)));
-            Assert.True(SLE.SequenceEqual(new int[] { 1, 2 }, rb.Skip(0).Skip(-1)));
-            Assert.True(SLE.SequenceEqual(new int[] { 1, 2 }, rb.Skip(0).Skip(0)));
-            Assert.True(SLE.SequenceEqual(new int[] { 2 }, rb.Skip(0).Skip(1)));
-            Assert.Equal(0, SLE.Count(rb.Skip(0).Skip(3)));
-            Assert.True(SLE.SequenceEqual(new int[] { 2, 1 }, rb.Reverse().Skip(-1)));
-            Assert.True(SLE.SequenceEqual(new int[] { 2, 1 }, rb.Reverse().Skip(0)));
-            Assert.True(SLE.SequenceEqual(new int[] { 1 }, rb.Reverse().Skip(1)));
-            Assert.Equal(0, SLE.Count(rb.Reverse().Skip(2)));
-            Assert.Equal(0, SLE.Count(rb.Reverse().Skip(3)));
-        }
+            Capacity = 5
+        };
+        Assert.Equal(0, SLE.Count(rb.Skip(0)));
+        Assert.Equal(0, SLE.Count(rb.Skip(-1)));
+        Assert.Equal(0, SLE.Count(rb.Skip(1)));
+        rb.Add(1);
+        rb.Add(2);
+        Assert.True(SLE.SequenceEqual(new[] { 1, 2 }, rb.Skip(-1)));
+        Assert.True(SLE.SequenceEqual(new[] { 1, 2 }, rb.Skip(0)));
+        Assert.True(SLE.SequenceEqual(new[] { 2 }, rb.Skip(1)));
+        Assert.Equal(0, SLE.Count(rb.Skip(2)));
+        Assert.Equal(0, SLE.Count(rb.Skip(3)));
+        Assert.True(SLE.SequenceEqual(new[] { 1, 2 }, rb.Skip(0).Skip(-1)));
+        Assert.True(SLE.SequenceEqual(new[] { 1, 2 }, rb.Skip(0).Skip(0)));
+        Assert.True(SLE.SequenceEqual(new[] { 2 }, rb.Skip(0).Skip(1)));
+        Assert.Equal(0, SLE.Count(rb.Skip(0).Skip(3)));
+        Assert.True(SLE.SequenceEqual(new[] { 2, 1 }, rb.Reverse().Skip(-1)));
+        Assert.True(SLE.SequenceEqual(new[] { 2, 1 }, rb.Reverse().Skip(0)));
+        Assert.True(SLE.SequenceEqual(new[] { 1 }, rb.Reverse().Skip(1)));
+        Assert.Equal(0, SLE.Count(rb.Reverse().Skip(2)));
+        Assert.Equal(0, SLE.Count(rb.Reverse().Skip(3)));
+    }
 
-        [Fact]
-        public void StressRbq_SkipF()
+    [Fact]
+    public void StressRbq_SkipF()
+    {
+        var rb = new RankedBag<int>
         {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 5
-            };
-            int n = 25;
-            for (int ix = 0; ix < n; ++ix)
-                rb.Add(n + ix);
-            for (int s1 = 0; s1 <= n; ++s1)
-                for (int s2 = 0; s2 <= n - s1; ++s2)
-                {
-                    int e0 = n + s1 + s2;
-                    foreach (var a0 in rb.Skip(s1).Skip(s2))
-                    {
-                        Assert.Equal(e0, a0);
-                        ++e0;
-                    }
-
-                    Assert.Equal(n + n, e0);
-                }
-        }
-
-        [Fact]
-        public void StressRbq_SkipR()
+            Capacity = 5
+        };
+        var n = 25;
+        for (var ix = 0; ix < n; ++ix)
+            rb.Add(n + ix);
+        for (var s1 = 0; s1 <= n; ++s1)
+        for (var s2 = 0; s2 <= n - s1; ++s2)
         {
-            var rb = new RankedBag<int>
+            var e0 = n + s1 + s2;
+            foreach (var a0 in rb.Skip(s1).Skip(s2))
             {
-                Capacity = 5
-            };
-            int n = 25;
-            for (int ix = 0; ix < n; ++ix)
-                rb.Add(n + ix);
-            for (int s1 = 0; s1 <= n; ++s1)
-            {
-                int e0 = n + n - s1;
-                foreach (var a0 in rb.Reverse().Skip(s1))
-                {
-                    --e0;
-                    Assert.Equal(e0, a0);
-                }
-
-                Assert.Equal(n, e0);
+                Assert.Equal(e0, a0);
+                ++e0;
             }
-        }
 
-        [Fact]
-        public void UnitRbq_SkipWhile2Ctor()
-        {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            Assert.Equal(0, SLE.Count(rb.SkipWhile(x => false)));
-            Assert.Equal(0, SLE.Count(rb.SkipWhile(x => true)));
-            rb.Add(-1);
-            Assert.Equal(0, SLE.Count(rb.SkipWhile(x => true)));
-            Assert.True(SLE.SequenceEqual(new int[] { -1 }, rb.SkipWhile(x => false)));
-            rb.Add(-2);
-            rb.Add(-3);
-            Assert.True(SLE.SequenceEqual(new int[] { -2, -1 }, rb.SkipWhile(x => x % 2 != 0)));
+            Assert.Equal(n + n, e0);
         }
+    }
 
-        [Fact]
-        public void UnitRbq_SkipWhile2F()
+    [Fact]
+    public void StressRbq_SkipR()
+    {
+        var rb = new RankedBag<int>
         {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile(x => false)));
-            Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile(x => true)));
-            rb.Add(-1);
-            Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile(x => true)));
-            Assert.True(SLE.SequenceEqual(new int[] { -1 }, rb.Skip(0).SkipWhile(x => false)));
-            rb.Add(-2);
-            rb.Add(-3);
-            Assert.True(SLE.SequenceEqual(new int[] { -2, -1 }, rb.Skip(0).SkipWhile(x => x % 2 != 0)));
-        }
-
-        [Fact]
-        public void UnitRbq_SkipWhile2R()
+            Capacity = 5
+        };
+        var n = 25;
+        for (var ix = 0; ix < n; ++ix)
+            rb.Add(n + ix);
+        for (var s1 = 0; s1 <= n; ++s1)
         {
-            var rb = new RankedBag<int>
+            var e0 = n + n - s1;
+            foreach (var a0 in rb.Reverse().Skip(s1))
             {
-                Capacity = 4
-            };
-            Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile(x => false)));
-            Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile(x => true)));
-            rb.Add(-1);
-            Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile(x => true)));
-            Assert.True(SLE.SequenceEqual(new int[] { -1 }, rb.Reverse().SkipWhile(x => false)));
-            rb.Add(-2);
-            rb.Add(-3);
-            Assert.True(SLE.SequenceEqual(new int[] { -2, -3 }, rb.Reverse().SkipWhile(x => x % 2 != 0)));
-        }
-
-        [Fact]
-        public void UnitRbq_SkipWhile3Ctor()
-        {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 5
-            };
-            Assert.Equal(0, SLE.Count(rb.SkipWhile((x, i) => false)));
-            Assert.Equal(0, SLE.Count(rb.SkipWhile((x, i) => true)));
-            rb.Add(1);
-            Assert.Equal(0, SLE.Count(rb.SkipWhile((x, i) => true)));
-            Assert.True(SLE.SequenceEqual(new int[] { 1 }, rb.SkipWhile((x, i) => false)));
-            rb.Add(2);
-            rb.Add(3);
-            rb.Add(4);
-            Assert.True(SLE.SequenceEqual(new int[] { 4 }, rb.SkipWhile((x, i) => x % 2 != 0 || i < 3)));
-        }
-
-        [Fact]
-        public void UnitRbq_SkipWhile3F()
-        {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 5
-            };
-            Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile((x, i) => false)));
-            Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile((x, i) => true)));
-            Assert.Equal(0, SLE.Count(rb.SkipWhile((x, i) => true).SkipWhile((x, i) => true)));
-            rb.Add(1);
-            Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile((x, i) => true)));
-            Assert.True(SLE.SequenceEqual(new int[] { 1 }, rb.Skip(0).SkipWhile((x, i) => false)));
-            rb.Add(2);
-            rb.Add(3);
-            Assert.True(SLE.SequenceEqual(new int[] { 2, 3 }, rb.Skip(0).SkipWhile((x, i) => x % 2 != 0)));
-            for (int i = 4; i < 50; ++i)
-                rb.Add(i);
-            Assert.True(SLE.SequenceEqual(new int[] { 48, 49 }, rb.Skip(30).SkipWhile((x, i) => x % 3 != 0 || i < 15)));
-        }
-
-        [Fact]
-        public void UnitRbq_SkipWhile3R()
-        {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 5
-            };
-            Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile((x, i) => false)));
-            Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile((x, i) => true)));
-            Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile((x, i) => true).SkipWhile((x, i) => true)));
-            rb.Add(1);
-            Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile((x, i) => true)));
-            Assert.True(SLE.SequenceEqual(new int[] { 1 }, rb.Reverse().SkipWhile((x, i) => false)));
-            rb.Add(2);
-            rb.Add(3);
-            Assert.True(SLE.SequenceEqual(new int[] { 2, 1 }, rb.Reverse().SkipWhile((x, i) => x % 2 != 0)));
-            for (int i = 4; i < 50; ++i)
-                rb.Add(i);
-            Assert.True(SLE.SequenceEqual(new int[] { 3, 2, 1 }, rb.Reverse().Skip(20).SkipWhile((x, i) => x % 3 != 0 || i < 24)));
-        }
-
-        [Fact]
-        public void StressRbq_SkipWhile()
-        {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            int n = 25;
-            for (int x1 = 0; x1 < n; ++x1)
-            {
-                rb.Clear();
-                for (int x3 = 0; x3 < x1; ++x3)
-                    rb.Add(x3);
-                System.Collections.Generic.IEnumerable<int> q0 = rb.SkipWhile(x => false);
-                Assert.Equal(x1, SLE.Count(q0));
+                --e0;
+                Assert.Equal(e0, a0);
             }
+
+            Assert.Equal(n, e0);
         }
+    }
 
-#endregion
-#region Test enumeration (LINQ emulation)
-        [Fact]
-        public void CrashRbq_DistinctHotUpdate()
+    [Fact]
+    public void UnitRbq_SkipWhile2Ctor()
+    {
+        var rb = new RankedBag<int>
         {
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    Capacity = 4
-                };
-                foreach (int ii in new int[]
-                {
-                    1,
-                    1,
-                    3,
-                    5,
-                    7,
-                    9
-                }
+            Capacity = 4
+        };
+        Assert.Equal(0, SLE.Count(rb.SkipWhile(x => false)));
+        Assert.Equal(0, SLE.Count(rb.SkipWhile(x => true)));
+        rb.Add(-1);
+        Assert.Equal(0, SLE.Count(rb.SkipWhile(x => true)));
+        Assert.True(SLE.SequenceEqual(new[] { -1 }, rb.SkipWhile(x => false)));
+        rb.Add(-2);
+        rb.Add(-3);
+        Assert.True(SLE.SequenceEqual(new[] { -2, -1 }, rb.SkipWhile(x => x % 2 != 0)));
+    }
 
-                )
-                    rb.Add(ii);
-                int n = 0;
+    [Fact]
+    public void UnitRbq_SkipWhile2F()
+    {
+        var rb = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile(x => false)));
+        Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile(x => true)));
+        rb.Add(-1);
+        Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile(x => true)));
+        Assert.True(SLE.SequenceEqual(new[] { -1 }, rb.Skip(0).SkipWhile(x => false)));
+        rb.Add(-2);
+        rb.Add(-3);
+        Assert.True(SLE.SequenceEqual(new[] { -2, -1 }, rb.Skip(0).SkipWhile(x => x % 2 != 0)));
+    }
+
+    [Fact]
+    public void UnitRbq_SkipWhile2R()
+    {
+        var rb = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile(x => false)));
+        Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile(x => true)));
+        rb.Add(-1);
+        Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile(x => true)));
+        Assert.True(SLE.SequenceEqual(new[] { -1 }, rb.Reverse().SkipWhile(x => false)));
+        rb.Add(-2);
+        rb.Add(-3);
+        Assert.True(SLE.SequenceEqual(new[] { -2, -3 }, rb.Reverse().SkipWhile(x => x % 2 != 0)));
+    }
+
+    [Fact]
+    public void UnitRbq_SkipWhile3Ctor()
+    {
+        var rb = new RankedBag<int>
+        {
+            Capacity = 5
+        };
+        Assert.Equal(0, SLE.Count(rb.SkipWhile((x, i) => false)));
+        Assert.Equal(0, SLE.Count(rb.SkipWhile((x, i) => true)));
+        rb.Add(1);
+        Assert.Equal(0, SLE.Count(rb.SkipWhile((x, i) => true)));
+        Assert.True(SLE.SequenceEqual(new[] { 1 }, rb.SkipWhile((x, i) => false)));
+        rb.Add(2);
+        rb.Add(3);
+        rb.Add(4);
+        Assert.True(SLE.SequenceEqual(new[] { 4 }, rb.SkipWhile((x, i) => x % 2 != 0 || i < 3)));
+    }
+
+    [Fact]
+    public void UnitRbq_SkipWhile3F()
+    {
+        var rb = new RankedBag<int>
+        {
+            Capacity = 5
+        };
+        Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile((x, i) => false)));
+        Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile((x, i) => true)));
+        Assert.Equal(0, SLE.Count(rb.SkipWhile((x, i) => true).SkipWhile((x, i) => true)));
+        rb.Add(1);
+        Assert.Equal(0, SLE.Count(rb.Skip(0).SkipWhile((x, i) => true)));
+        Assert.True(SLE.SequenceEqual(new[] { 1 }, rb.Skip(0).SkipWhile((x, i) => false)));
+        rb.Add(2);
+        rb.Add(3);
+        Assert.True(SLE.SequenceEqual(new[] { 2, 3 }, rb.Skip(0).SkipWhile((x, i) => x % 2 != 0)));
+        for (var i = 4; i < 50; ++i)
+            rb.Add(i);
+        Assert.True(SLE.SequenceEqual(new[] { 48, 49 }, rb.Skip(30).SkipWhile((x, i) => x % 3 != 0 || i < 15)));
+    }
+
+    [Fact]
+    public void UnitRbq_SkipWhile3R()
+    {
+        var rb = new RankedBag<int>
+        {
+            Capacity = 5
+        };
+        Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile((x, i) => false)));
+        Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile((x, i) => true)));
+        Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile((x, i) => true).SkipWhile((x, i) => true)));
+        rb.Add(1);
+        Assert.Equal(0, SLE.Count(rb.Reverse().SkipWhile((x, i) => true)));
+        Assert.True(SLE.SequenceEqual(new[] { 1 }, rb.Reverse().SkipWhile((x, i) => false)));
+        rb.Add(2);
+        rb.Add(3);
+        Assert.True(SLE.SequenceEqual(new[] { 2, 1 }, rb.Reverse().SkipWhile((x, i) => x % 2 != 0)));
+        for (var i = 4; i < 50; ++i)
+            rb.Add(i);
+        Assert.True(SLE.SequenceEqual(new[] { 3, 2, 1 }, rb.Reverse().Skip(20).SkipWhile((x, i) => x % 3 != 0 || i < 24)));
+    }
+
+    [Fact]
+    public void StressRbq_SkipWhile()
+    {
+        var rb = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        var n = 25;
+        for (var x1 = 0; x1 < n; ++x1)
+        {
+            rb.Clear();
+            for (var x3 = 0; x3 < x1; ++x3)
+                rb.Add(x3);
+            System.Collections.Generic.IEnumerable<int> q0 = rb.SkipWhile(x => false);
+            Assert.Equal(x1, SLE.Count(q0));
+        }
+    }
+
+    #endregion
+    #region Test enumeration (LINQ emulation)
+    [Fact]
+    public void CrashRbq_DistinctHotUpdate()
+    {
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                Capacity = 4
+            };
+            foreach (var ii in new[]
+                     {
+                         1,
+                         1,
+                         3,
+                         5,
+                         7,
+                         9
+                     }
+
+                    )
+                rb.Add(ii);
+            var n = 0;
 #if TEST_BCL
                 foreach (var x in Enumerable.Distinct (rb))
 #else
-                foreach (var x in rb.Distinct())
+            foreach (var x in rb.Distinct())
 #endif
-                    if (++n == 2)
-                        rb.Remove(3);
-            });
-        }
+                if (++n == 2)
+                    rb.Remove(3);
+        });
+    }
 
-        [Fact]
-        public void UnitRbq_Distinct()
+    [Fact]
+    public void UnitRbq_Distinct()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb1 = new RankedBag<int>
         {
-            var rb0 = new RankedBag<int>();
-            var rb1 = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            int a0 = 0, a1 = 0;
-            foreach (var ii in new int[]
-            {
-                3,
-                5,
-                5,
-                7,
-                7
-            }
+            Capacity = 4
+        };
+        int a0 = 0, a1 = 0;
+        foreach (var ii in new[]
+                 {
+                     3,
+                     5,
+                     5,
+                     7,
+                     7
+                 }
 
-            )
-                rb1.Add(ii);
+                )
+            rb1.Add(ii);
 #if TEST_BCL
             foreach (var k0 in Enumerable.Distinct (rb0)) ++a0;
             foreach (var k1 in Enumerable.Distinct (rb1)) ++a1;
 #else
-            foreach (var k0 in rb0.Distinct())
-                ++a0;
-            foreach (var k1 in rb1.Distinct())
-                ++a1;
+        foreach (var k0 in rb0.Distinct())
+            ++a0;
+        foreach (var k1 in rb1.Distinct())
+            ++a1;
 #endif
-            Assert.Equal(0, a0);
-            Assert.Equal(3, a1);
-        }
+        Assert.Equal(0, a0);
+        Assert.Equal(3, a1);
+    }
 
 #if !TEST_BCL
-        [Fact]
-        public void CrashRbq_ReverseHotUpdate()
+    [Fact]
+    public void CrashRbq_ReverseHotUpdate()
+    {
+        Assert.Throws<InvalidOperationException>(() =>
         {
-            Assert.Throws<InvalidOperationException>(() =>
+            var rb = new RankedBag<int>
             {
-                var rb = new RankedBag<int>
-                {
-                    Capacity = 4
-                };
-                for (int ii = 9; ii >= 0; --ii)
-                    rb.Add(ii);
-                int a = 0;
-                foreach (var x in rb.Reverse())
-                    if (++a == 2)
-                        rb.Clear();
-            });
-        }
+                Capacity = 4
+            };
+            for (var ii = 9; ii >= 0; --ii)
+                rb.Add(ii);
+            var a = 0;
+            foreach (var x in rb.Reverse())
+                if (++a == 2)
+                    rb.Clear();
+        });
+    }
 
 #else
         [Test]
@@ -443,83 +443,82 @@ namespace Kaos.Test.Collections
                     rb.Clear();
         }
 #endif
-        [Fact]
-        public void UnitRbq_Reverse()
+    [Fact]
+    public void UnitRbq_Reverse()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb1 = new RankedBag<int>
         {
-            var rb0 = new RankedBag<int>();
-            var rb1 = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            int n = 400;
-            for (int i1 = 0; i1 < n; ++i1)
-                rb1.Add(i1 / 2);
-            int a0 = 0, a1 = 0;
+            Capacity = 4
+        };
+        var n = 400;
+        for (var i1 = 0; i1 < n; ++i1)
+            rb1.Add(i1 / 2);
+        int a0 = 0, a1 = 0;
 #if TEST_BCL
             foreach (var k0 in Enumerable.Reverse (rb0)) ++a0;
             foreach (var k1 in Enumerable.Reverse (rb1))
 #else
-            foreach (var k0 in rb0.Reverse())
-                ++a0;
-            foreach (var k1 in rb1.Reverse())
+        foreach (var k0 in rb0.Reverse())
+            ++a0;
+        foreach (var k1 in rb1.Reverse())
 #endif
-            {
-                ++a1;
-                Assert.Equal((n - a1) / 2, k1);
-            }
-
-            Assert.Equal(0, a0);
-            Assert.Equal(n, a1);
-        }
-
-        [Fact]
-        public void UnitRbq_Reset()
         {
-            var rb = new RankedBag<int>(new int[] { 1, 2, 5, 8, 9 })
-            {
-                Capacity = 4
-            };
-            System.Collections.Generic.IEnumerable<int> bagEtor = rb.Reverse().Skip(1).SkipWhile(x => x % 2 == 0);
-            Assert.True(SLE.SequenceEqual(new int[] { 5, 2, 1 }, bagEtor));
-            ((System.Collections.IEnumerator)bagEtor).Reset();
-            Assert.True(SLE.SequenceEqual(new int[] { 5, 2, 1 }, bagEtor));
+            ++a1;
+            Assert.Equal((n - a1) / 2, k1);
         }
 
-#endregion
-#region Test bonus (LINQ emulation)
-#if !TEST_BCL
-        [Fact]
-        public void UnitRbqx_oEtorGetEnumerator()
-        {
-            var ia = new int[]
-            {
-                2,
-                2,
-                3,
-                3,
-                5,
-                6,
-                8
-            };
-            var rb = new RankedBag<int>(ia)
-            {
-                Capacity = 4
-            };
-            var oAble1 = (System.Collections.IEnumerable)rb;
-            System.Collections.IEnumerator oEtor1 = oAble1.GetEnumerator();
-            var oAble2 = (System.Collections.IEnumerable)oEtor1;
-            System.Collections.IEnumerator oEtor2 = oAble2.GetEnumerator();
-            int ix = 0;
-            while (oEtor2.MoveNext())
-            {
-                object oItem = oEtor2.Current;
-                Assert.Equal(ia[ix], oItem);
-                ++ix;
-            }
-
-            Assert.Equal(ia.Length, ix);
-        }
-#endif
-#endregion
+        Assert.Equal(0, a0);
+        Assert.Equal(n, a1);
     }
+
+    [Fact]
+    public void UnitRbq_Reset()
+    {
+        var rb = new RankedBag<int>(new[] { 1, 2, 5, 8, 9 })
+        {
+            Capacity = 4
+        };
+        System.Collections.Generic.IEnumerable<int> bagEtor = rb.Reverse().Skip(1).SkipWhile(x => x % 2 == 0);
+        Assert.True(SLE.SequenceEqual(new[] { 5, 2, 1 }, bagEtor));
+        ((System.Collections.IEnumerator)bagEtor).Reset();
+        Assert.True(SLE.SequenceEqual(new[] { 5, 2, 1 }, bagEtor));
+    }
+
+    #endregion
+    #region Test bonus (LINQ emulation)
+#if !TEST_BCL
+    [Fact]
+    public void UnitRbqx_oEtorGetEnumerator()
+    {
+        var ia = new[]
+        {
+            2,
+            2,
+            3,
+            3,
+            5,
+            6,
+            8
+        };
+        var rb = new RankedBag<int>(ia)
+        {
+            Capacity = 4
+        };
+        var oAble1 = (System.Collections.IEnumerable)rb;
+        var oEtor1 = oAble1.GetEnumerator();
+        var oAble2 = (System.Collections.IEnumerable)oEtor1;
+        var oEtor2 = oAble2.GetEnumerator();
+        var ix = 0;
+        while (oEtor2.MoveNext())
+        {
+            var oItem = oEtor2.Current;
+            Assert.Equal(ia[ix], oItem);
+            ++ix;
+        }
+
+        Assert.Equal(ia.Length, ix);
+    }
+#endif
+    #endregion
 }

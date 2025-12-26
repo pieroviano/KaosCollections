@@ -13,42 +13,41 @@ using System.Linq;
 using System.Reflection;
 using Kaos.Collections;
 
-namespace StressApp
+namespace StressApp;
+
+class RsStress02
 {
-    class RsStress02
+    static RankedSet<int> set;
+
+    static void Main()
     {
-        static RankedSet<int> set;
-
-        static void Main()
+        for (var width = 1; ; ++width)
         {
-            for (int width = 1; ; ++width)
+            Console.Write (width + " ");
+            for (var count = 0; count <= width; ++count)
+            for (var index = 0; index <= width-count; ++index)
+            for (var order = 4; order <= 7; ++order)
             {
-                Console.Write (width + " ");
-                for (int count = 0; count <= width; ++count)
-                    for (int index = 0; index <= width-count; ++index)
-                        for (int order = 4; order <= 7; ++order)
-                        {
-                            set = new RankedSet<int> { Capacity=order };
-                            for (int ii = 0; ii < width; ++ii)
-                                set.Add (ii);
+                set = new RankedSet<int> { Capacity=order };
+                for (var ii = 0; ii < width; ++ii)
+                    set.Add (ii);
 
-                            try
-                            {
-                                set.RemoveRange (index, count);
+                try
+                {
+                    set.RemoveRange (index, count);
 
-                                Debug.Assert (set.Count == width-count);
-                                Debug.Assert (set.Count == set.Count());
-                                Debug.Assert (set.Count == set.Reverse().Count());
+                    Debug.Assert (set.Count == width-count);
+                    Debug.Assert (set.Count == set.Count());
+                    Debug.Assert (set.Count == set.Reverse().Count());
 #if DEBUG
-                                set.SanityCheck();
+                    set.SanityCheck();
 #endif
-                            }
-                            catch (Exception)
-                            {
-                                Console.WriteLine ($"\nwidth={width}, index={index}, count={count}, order={order}");
-                                throw;
-                            }
-                        }
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine ($"\nwidth={width}, index={index}, count={count}, order={order}");
+                    throw;
+                }
             }
         }
     }

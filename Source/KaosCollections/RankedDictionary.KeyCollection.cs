@@ -7,6 +7,8 @@
 // MIT License - Use and redistribute freely
 //
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -174,7 +176,7 @@ internal
         /// <param name="index">The zero-based index of the key to get.</param>
         /// <returns>The key at <em>index</em>.</returns>
         /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-        public TKey ElementAtOrDefault(int index)
+        public TKey? ElementAtOrDefault(int index)
         {
             if (index < 0 || index >= Count)
                 return default;
@@ -260,7 +262,7 @@ internal
         /// otherwise it will be loaded with the default for its type.
         /// </param>
         /// <returns><b>true</b> if <em>getKey</em> is found; otherwise <b>false</b>.</returns>
-        public bool TryGet(TKey getKey, out TKey key)
+        public bool TryGet(TKey getKey, out TKey? key)
         {
             var leaf = tree.Find(getKey, out var index);
             if (index < 0)
@@ -274,7 +276,7 @@ internal
         /// <param name="getKey">The key to use for comparison.</param>
         /// <param name="key">The actual key found.</param>
         /// <returns><b>true</b> if a key greater than <em>getKey</em> is found; otherwise <b>false</b>.</returns>
-        public bool TryGetGreaterThan(TKey getKey, out TKey key)
+        public bool TryGetGreaterThan(TKey getKey, out TKey? key)
         {
             tree.TryGetGT(getKey, out var leaf, out var index);
             if (leaf == null)
@@ -287,7 +289,7 @@ internal
         /// <param name="getKey">The key to use for comparison.</param>
         /// <param name="key">The actual key found.</param>
         /// <returns><b>true</b> if a key greater than or equal to <em>getKey</em> found; otherwise <b>false</b>.</returns>
-        public bool TryGetGreaterThanOrEqual(TKey getKey, out TKey key)
+        public bool TryGetGreaterThanOrEqual(TKey getKey, out TKey? key)
         {
             tree.TryGetGE(getKey, out var leaf, out var index);
             if (leaf == null)
@@ -304,7 +306,7 @@ internal
         {
             tree.TryGetLT(getKey, out var leaf, out var index);
             if (leaf == null)
-            { key = default; return false; }
+            { key = default!; return false; }
             else
             { key = leaf.GetKey(index); return true; }
         }
@@ -313,7 +315,7 @@ internal
         /// <param name="getKey">The key to use for comparison.</param>
         /// <param name="key">The actual key if found; otherwise the default.</param>
         /// <returns><b>true</b> if a key less than or equal to <em>getKey</em> found; otherwise <b>false</b>.</returns>
-        public bool TryGetLessThanOrEqual(TKey getKey, out TKey key)
+        public bool TryGetLessThanOrEqual(TKey getKey, out TKey? key)
         {
             tree.TryGetLE(getKey, out var leaf, out var index);
             if (leaf == null)
@@ -322,8 +324,8 @@ internal
             { key = leaf.GetKey(index); return true; }
         }
 
-        /// <summary>Returns an enumerator that iterates thru the dictionary keys in reverse order.</summary>
-        /// <returns>An enumerator that reverse iterates thru the dictionary keys.</returns>
+        /// <summary>Returns an enumerator that iterates through the dictionary keys in reverse order.</summary>
+        /// <returns>An enumerator that reverse iterates through the dictionary keys.</returns>
         /// <exception cref="InvalidOperationException">When the dictionary was modified after the enumerator was created.</exception>
         public Enumerator Reverse()
             => new Enumerator(tree, isReverse: true);
@@ -332,24 +334,25 @@ internal
 
         #region Enumeration
 
-        /// <summary>Gets an enumerator that iterates thru the collection.</summary>
+        /// <summary>Gets an enumerator that iterates through the collection.</summary>
         /// <returns>An enumerator for the collection.</returns>
         public Enumerator GetEnumerator()
             => new Enumerator(tree);
 
-        /// <summary>Gets an enumerator that iterates thru the collection.</summary>
+        /// <summary>Gets an enumerator that iterates through the collection.</summary>
         /// <returns>An enumerator for the collection.</returns>
         IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator()
             => new Enumerator(tree);
 
-        /// <summary>Gets an enumerator that iterates thru the collection.</summary>
+        /// <summary>Gets an enumerator that iterates through the collection.</summary>
         /// <returns>An enumerator for the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
             => new Enumerator(tree);
 
         /// <summary>Enumerates the items of a <see cref="RankedDictionary{TKey,TValue}.KeyCollection"/> in sort order.</summary>
         [DebuggerTypeProxy(typeof(IEnumerableKeysDebugView<,>))]
-        public struct Enumerator : IEnumerator<TKey>, IEnumerable<TKey>
+        // ReSharper disable once MemberHidesStaticFromOuterClass
+        public readonly struct Enumerator : IEnumerator<TKey>, IEnumerable<TKey>
         {
             private readonly KeyEnumerator etor;
 
@@ -367,7 +370,7 @@ internal
 
             /// <summary>Gets the key at the current position.</summary>
             /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
-            object IEnumerator.Current
+            object? IEnumerator.Current
             {
                 get
                 {
@@ -379,7 +382,7 @@ internal
 
             /// <summary>Gets the key at the current position of the enumerator.</summary>
             public TKey Current
-                => etor.CurrentKeyOrDefault;
+                => etor.CurrentKeyOrDefault!;
 
             /// <summary>Advances the enumerator to the next key in the collection.</summary>
             /// <returns><b>true</b> if the enumerator was successfully advanced to the next key; <b>false</b> if the enumerator has passed the end of the collection.</returns>

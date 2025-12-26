@@ -1,136 +1,135 @@
 using Xunit;
 
-namespace Kaos.Test.Collections
+namespace Kaos.Test.Collections;
+
+public partial class TestRd
 {
-    public partial class TestRd : IClassFixture<BinaryFormatterEnableFixture>
+    [Fact]
+    public void StressRd_WithLongPermutations()
     {
-        [Fact]
-        public void StressRd_WithLongPermutations()
-        {
 #if STRESS
-            int n = 8, m = 500;
+        int n = 8, m = 500;
 #else
-            int n = 5, m = 20;
+        int n = 5, m = 20;
 #endif
-            for (int order = 5; order <= n; ++order)
+        for (var order = 5; order <= n; ++order)
+        {
+            Setup(order);
+            for (var w = 1; w <= m; ++w)
             {
-                Setup(order);
-                for (int w = 1; w <= m; ++w)
-                {
-                    for (int v = 0; v < w; v++)
-                        dary1.Add(v, v + 1000);
-                    for (int v = w - 1; v >= 0; --v)
-                        dary1.Remove(v);
-                    Assert.Equal(0, dary1.Count);
-                }
+                for (var v = 0; v < w; v++)
+                    dary1!.Add(v, v + 1000);
+                for (var v = w - 1; v >= 0; --v)
+                    dary1!.Remove(v);
+                Assert.Equal(0, dary1!.Count);
             }
         }
+    }
 
-        [Fact]
-        public void StressRd_RemoveForLongBranchShift()
-        {
-            Setup(6);
+    [Fact]
+    public void StressRd_RemoveForLongBranchShift()
+    {
+        Setup(6);
 #if STRESS
             int n=90;
 #else
-            int n = 10;
+        var n = 10;
 #endif
-            for (int size = 1; size < n; ++size)
+        for (var size = 1; size < n; ++size)
+        {
+            for (var i = 1; i <= size; ++i)
+                dary1!.Add(i, i + 200);
+            for (var i = 1; i <= size; ++i)
             {
-                for (int i = 1; i <= size; ++i)
-                    dary1.Add(i, i + 200);
-                for (int i = 1; i <= size; ++i)
-                {
-                    dary1.Remove(i);
-                    foreach (var kv in dary1)
-                        Assert.Equal(kv.Key + 200, kv.Value);
+                dary1!.Remove(i);
+                foreach (var kv in dary1!)
+                    Assert.Equal(kv.Key + 200, kv.Value);
 #if (!TEST_BCL && DEBUG)
-                    dary1.SanityCheck();
+                dary1!.SanityCheck();
 #endif
-                }
             }
         }
+    }
 
-        [Fact]
-        public void StressRd_RemoveSlidingWindowForCoalesce()
-        {
-            Setup(5);
+    [Fact]
+    public void StressRd_RemoveSlidingWindowForCoalesce()
+    {
+        Setup(5);
 #if STRESS
             int n1=65, n2=75;
 #else
-            int n1 = 11, n2 = 12;
+        int n1 = 11, n2 = 12;
 #endif
-            for (int size = n1; size <= n2; ++size)
-            {
-                for (int a = 1; a <= size; ++a)
-                    for (int b = a; b <= size; ++b)
-                    {
-                        dary1.Clear();
-                        for (int i = 1; i <= size; ++i)
-                            dary1.Add(i, i + 100);
-                        for (int i = a; i <= b; ++i)
-                            dary1.Remove(i);
-                        foreach (var kv in dary1)
-                            Assert.Equal(kv.Key + 100, kv.Value);
-#if (!TEST_BCL && DEBUG)
-                        dary1.SanityCheck();
-#endif
-                    }
-            }
-        }
-
-        [Fact]
-        public void StressRd_RemoveSpanForNontrivialCoalesce()
+        for (var size = n1; size <= n2; ++size)
         {
-            Setup();
-            for (int key = 1; key < 70; ++key)
-                dary1.Add(key, key + 100);
-            for (int key = 19; key <= 25; ++key)
-                dary1.Remove(key);
-        }
-
-        [Fact]
-        public void StressRd_RemoveSpanForBranchBalancing()
-        {
-            Setup(6);
-            for (int key = 1; key <= 46; ++key)
-                dary1.Add(key, key + 100);
-            for (int key = 1; key <= 46; ++key)
+            for (var a = 1; a <= size; ++a)
+            for (var b = a; b <= size; ++b)
             {
-                dary1.Remove(key);
+                dary1!.Clear();
+                for (var i = 1; i <= size; ++i)
+                    dary1!.Add(i, i + 100);
+                for (var i = a; i <= b; ++i)
+                    dary1!.Remove(i);
+                foreach (var kv in dary1!)
+                    Assert.Equal(kv.Key + 100, kv.Value);
 #if (!TEST_BCL && DEBUG)
-                dary1.SanityCheck();
+                dary1!.SanityCheck();
 #endif
             }
         }
+    }
 
-        [Fact]
-        public void StressRd_AddForSplits()
+    [Fact]
+    public void StressRd_RemoveSpanForNontrivialCoalesce()
+    {
+        Setup();
+        for (var key = 1; key < 70; ++key)
+            dary1!.Add(key, key + 100);
+        for (var key = 19; key <= 25; ++key)
+            dary1!.Remove(key);
+    }
+
+    [Fact]
+    public void StressRd_RemoveSpanForBranchBalancing()
+    {
+        Setup(6);
+        for (var key = 1; key <= 46; ++key)
+            dary1!.Add(key, key + 100);
+        for (var key = 1; key <= 46; ++key)
         {
-            Setup(5);
-            for (int k = 0; k < 99; k += 8)
-                dary1.Add(k, k + 100);
-            dary1.Add(20, 1);
-            dary1.Add(50, 1);
-            dary1.Add(66, 132);
-            dary1.Remove(20);
-            dary1.Add(38, 147);
-            dary1.Add(35, 142);
-            dary1.Add(12, 142);
-            dary1.Add(10, 147);
-            dary1.Add(36, 147);
-            dary1.Remove(12);
-            dary1.Remove(8);
-            dary1.Remove(10);
-            dary1.Remove(88);
-            dary1.Remove(56);
-            dary1.Remove(80);
-            dary1.Remove(96);
-            dary1.Add(18, 118);
-            dary1.Add(11, 111);
+            dary1!.Remove(key);
 #if (!TEST_BCL && DEBUG)
-            dary1.SanityCheck();
+            dary1!.SanityCheck();
 #endif
         }
+    }
+
+    [Fact]
+    public void StressRd_AddForSplits()
+    {
+        Setup(5);
+        for (var k = 0; k < 99; k += 8)
+            dary1!.Add(k, k + 100);
+        dary1!.Add(20, 1);
+        dary1!.Add(50, 1);
+        dary1!.Add(66, 132);
+        dary1!.Remove(20);
+        dary1!.Add(38, 147);
+        dary1!.Add(35, 142);
+        dary1!.Add(12, 142);
+        dary1!.Add(10, 147);
+        dary1!.Add(36, 147);
+        dary1!.Remove(12);
+        dary1!.Remove(8);
+        dary1!.Remove(10);
+        dary1!.Remove(88);
+        dary1!.Remove(56);
+        dary1!.Remove(80);
+        dary1!.Remove(96);
+        dary1!.Add(18, 118);
+        dary1!.Add(11, 111);
+#if (!TEST_BCL && DEBUG)
+        dary1!.SanityCheck();
+#endif
     }
 }

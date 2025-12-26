@@ -6,6 +6,8 @@
 // MIT License - Use and redistribute freely
 //
 
+#nullable enable
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -22,13 +24,13 @@ internal
         private readonly IComparer<T> comparer;
         private readonly IEqualityComparer<T> equalityComparer;
 
-        public RankedSetEqualityComparer(IEqualityComparer<T> equalityComparer)
+        public RankedSetEqualityComparer(IEqualityComparer<T>? equalityComparer)
         {
             this.comparer = Comparer<T>.Default;
             this.equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
         }
 
-        public bool Equals(RankedSet<T> s1, RankedSet<T> s2)
+        public bool Equals(RankedSet<T>? s1, RankedSet<T>? s2)
             => RankedSet<T>.RankedSetEquals(s1, s2, comparer);
 
         public int GetHashCode(RankedSet<T> set)
@@ -36,12 +38,17 @@ internal
             var hashCode = 0;
             if (set != null)
                 foreach (var item in set)
-                    hashCode ^= (equalityComparer.GetHashCode(item) & 0x7FFFFFFF);
+                {
+                    if (item != null)
+                    {
+                        hashCode ^= (equalityComparer.GetHashCode(item) & 0x7FFFFFFF);
+                    }
+                }
 
             return hashCode;
         }
 
-        public override bool Equals(object obComparer)
+        public override bool Equals(object? obComparer)
             => obComparer is RankedSetEqualityComparer rsComparer && comparer == rsComparer.comparer;
 
         public override int GetHashCode()

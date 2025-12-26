@@ -6,11 +6,15 @@
 // MIT License - Use and redistribute freely
 //
 
+#nullable enable
+#pragma warning disable CS8766
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+// ReSharper disable NotResolvedInText
 
 namespace Kaos.Collections;
 
@@ -71,13 +75,7 @@ public
 internal
 #endif
     partial class RankedSet<T> :
-    Btree<T>,
-    ISet<T>,
-    ICollection<T>,
-    ICollection,
-    IReadOnlyCollection<T>,
-    ISerializable,
-    IDeserializationCallback
+    Btree<T>
 {
     #region Constructors
 
@@ -92,7 +90,7 @@ internal
     /// <code source="..\Bench\RsExample01\RsExample01.cs" lang="cs" />
     /// </example>
     /// <exception cref="InvalidOperationException">When <em>comparer</em> is <b>null</b> and no other comparer available.</exception>
-    public RankedSet(IComparer<T> comparer) : base(comparer, new Leaf())
+    public RankedSet(IComparer<T>? comparer) : base(comparer, new Leaf())
     { }
 
     /// <summary>Initializes a new set instance that contains items copied from the supplied collection.</summary>
@@ -112,7 +110,7 @@ internal
     /// </remarks>
     /// <exception cref="ArgumentNullException">When <em>collection</em> is <b>null</b>.</exception>
     /// <exception cref="InvalidOperationException">When <em>comparer</em> is <b>null</b> and no other comparer available.</exception>
-    public RankedSet(IEnumerable<T> collection, IComparer<T> comparer) : this(comparer)
+    public RankedSet(IEnumerable<T> collection, IComparer<T>? comparer) : this(comparer)
     {
         if (collection == null)
             throw new ArgumentNullException(nameof(collection));
@@ -130,7 +128,7 @@ internal
     /// To override sorting based on the default comparer,
     /// supply an alternate comparer when constructing the set.
     /// </remarks>
-    public IComparer<T> Comparer
+    public IComparer<T>? Comparer
         => keyComparer;
 
     /// <summary>Gets the number of items in the set.</summary>
@@ -148,12 +146,12 @@ internal
 
     /// <summary>Gets the maximum item in the set per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
-    public T Max
+    public T? Max
         => Count == 0 ? default : rightmostLeaf.GetKey(rightmostLeaf.KeyCount - 1);
 
     /// <summary>Gets the minimum item in the set per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
-    public T Min
+    public T? Min
         => Count == 0 ? default : leftmostLeaf.Key0;
 
     /// <summary>Gets an object that can be used to synchronize access to the collection.</summary>
@@ -316,7 +314,7 @@ internal
 
         StageBump();
         if (Count > 0)
-            if (other == this)
+            if (ReferenceEquals(other, this))
                 Clear();
             else
                 foreach (var key in other)
@@ -338,9 +336,11 @@ internal
             return;
 
         StageBump();
-        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
+        var oSet = other as RankedSet<T?> ?? new RankedSet<T?>(other, Comparer!);
 
-        if (oSet.Count == 0 || Comparer.Compare(oSet.Max, Min) < 0 || Comparer.Compare(oSet.Min, Max) > 0)
+        if (Comparer != null && (oSet.Count == 0 ||
+                                 Comparer.Compare(oSet.Max!, Min!) < 0 ||
+                                 Comparer.Compare(oSet.Min!, Max!) > 0))
         {
             Clear();
             return;
@@ -461,11 +461,18 @@ internal
         if (Count != 0)
             if (other is RankedSet<T> oSet)
             {
-                RankedSet<T> set1, set2;
+                RankedSet<T?> set1;
+                RankedSet<T?> set2;
                 if (Count > oSet.Count)
-                { set1 = this; set2 = oSet; }
+                {
+                    set1 = this!;
+                    set2 = oSet!;
+                }
                 else
-                { set2 = this; set1 = oSet; }
+                {
+                    set2 = this!;
+                    set1 = oSet!;
+                }
 
                 foreach (var key in set2.ElementsBetween(set1.Min, set1.Max))
                     if (set1.Contains(key))
@@ -528,7 +535,7 @@ internal
             for (var ix = 0; ix < leaf.KeyCount;)
                 for (var key = leaf.GetKey(ix); ;)
                 {
-                    var diff = Comparer.Compare(oKey, key);
+                    var diff = Comparer?.Compare(oKey, key);
                     if (diff >= 0)
                     {
                         if (diff > 0)
@@ -579,7 +586,7 @@ internal
 
     #region ISerializable implementation and support
 
-    private SerializationInfo serializationInfo;
+    private SerializationInfo? serializationInfo;
 
     /// <summary>Initializes a new set instance that contains serialized data.</summary>
     /// <param name="info">The object that contains the information required to serialize the set.</param>
@@ -609,7 +616,7 @@ internal
     /// <param name="sender">The source of the deserialization event.</param>
     /// <exception cref="ArgumentNullException">When <em>sender</em> is <b>null</b>.</exception>
     /// <exception cref="SerializationException">When the associated <em>SerializationInfo</em> is invalid.</exception>
-    protected virtual void OnDeserialization(object sender)
+    protected virtual void OnDeserialization(object? sender)
     {
         if (keyComparer != null)
             return;  // Owner did the fixups.
@@ -617,11 +624,11 @@ internal
         if (serializationInfo == null)
             throw new SerializationException("Missing information.");
 
-        keyComparer = (IComparer<T>)serializationInfo.GetValue("Comparer", typeof(IComparer<T>));
+        keyComparer = (IComparer<T>?)serializationInfo.GetValue("Comparer", typeof(IComparer<T>));
         var storedCount = serializationInfo.GetInt32("Count");
         stage = serializationInfo.GetInt32("Stage");
 
-        var items = (T[])serializationInfo.GetValue("Items", typeof(T[]));
+        var items = (T[]?)serializationInfo.GetValue("Items", typeof(T[]));
         if (items == null)
             throw new SerializationException("Missing Items.");
 
@@ -645,7 +652,7 @@ internal
     /// <param name="sender">The source of the deserialization event.</param>
     /// <exception cref="ArgumentNullException">When <em>sender</em> is <b>null</b>.</exception>
     /// <exception cref="SerializationException">When the associated <em>SerializationInfo</em> is invalid.</exception>
-    void IDeserializationCallback.OnDeserialization(Object sender)
+    void IDeserializationCallback.OnDeserialization(Object? sender)
         => OnDeserialization(sender);
 
     #endregion
@@ -670,7 +677,7 @@ internal
     /// <param name="index">The zero-based index of the item to get.</param>
     /// <returns>The item at <em>index</em>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    public T ElementAtOrDefault(int index)
+    public T? ElementAtOrDefault(int index)
     {
         if (index < 0 || index >= Count)
             return default;
@@ -741,7 +748,7 @@ internal
         {
             if (index < leaf.KeyCount)
             {
-                if (Comparer.Compare(leaf.GetKey(index), upper) > 0)
+                if (Comparer != null && Comparer.Compare(leaf.GetKey(index), upper) > 0)
                     yield break;
 
                 yield return leaf.GetKey(index);
@@ -794,7 +801,7 @@ internal
             if (index >= leaf.KeyCount)
             { index = 0; leaf = leaf.rightLeaf; }
 
-            yield return leaf.GetKey(index);
+            yield return leaf!.GetKey(index);
             StageCheck(stageFreeze);
             ++index;
         }
@@ -950,11 +957,14 @@ internal
     /// otherwise it will be loaded with the default for its type.
     /// </param>
     /// <returns><b>true</b> if <em>getItem</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGet(T getItem, out T item)
+    public bool TryGet(T getItem, out T? item)
     {
         var leaf = Find(getItem, out var index);
         if (index < 0)
-        { item = default; return false; }
+        {
+            item = default;
+            return false;
+        }
 
         item = leaf.GetKey(index);
         return true;
@@ -964,33 +974,45 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item greater than <em>getItem</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGetGreaterThan(T getItem, out T item)
+    public bool TryGetGreaterThan(T getItem, out T? item)
     {
         TryGetGT(getItem, out var leaf, out var index);
         if (leaf == null)
-        { item = default; return false; }
+        {
+            item = default;
+            return false;
+        }
         else
-        { item = leaf.GetKey(index); return true; }
+        {
+            item = leaf.GetKey(index);
+            return true;
+        }
     }
 
     /// <summary>Gets the least item greater than or equal to the supplied item.</summary>
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item greater than or equal to <em>getItem</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetGreaterThanOrEqual(T getItem, out T item)
+    public bool TryGetGreaterThanOrEqual(T getItem, out T? item)
     {
         TryGetGE(getItem, out var leaf, out var index);
         if (leaf == null)
-        { item = default; return false; }
+        {
+            item = default;
+            return false;
+        }
         else
-        { item = leaf.GetKey(index); return true; }
+        {
+            item = leaf.GetKey(index);
+            return true;
+        }
     }
 
     /// <summary>Gets the greatest item that is less than the supplied item.</summary>
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item less than <em>item</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetLessThan(T getItem, out T item)
+    public bool TryGetLessThan(T getItem, out T? item)
     {
         TryGetLT(getItem, out var leaf, out var index);
         if (leaf == null)
@@ -1003,7 +1025,7 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item less than or equal to <em>item</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetLessThanOrEqual(T getItem, out T item)
+    public bool TryGetLessThanOrEqual(T getItem, out T? item)
     {
         TryGetLE(getItem, out var leaf, out var index);
         if (leaf == null)
@@ -1027,13 +1049,13 @@ internal
     /// <summary>Returns an equality comparer using a supplied comparer that can be used to create a collection that contains sets.</summary>
     /// <param name="memberEqualityComparer">Used for creating the returned comparer.</param>
     /// <returns>An equality comparer for creating a collection of sets.</returns>
-    public static IEqualityComparer<RankedSet<T>> CreateSetComparer(IEqualityComparer<T> memberEqualityComparer)
+    public static IEqualityComparer<RankedSet<T>> CreateSetComparer(IEqualityComparer<T>? memberEqualityComparer)
         => new RankedSetEqualityComparer(memberEqualityComparer);
 
     private bool HasEqualComparer(RankedSet<T> other)
-        => Comparer == other.Comparer || Comparer.Equals(other.Comparer);
+        => Comparer != null && (Comparer == other.Comparer || Comparer.Equals(other.Comparer));
 
-    private static bool RankedSetEquals(RankedSet<T> set1, RankedSet<T> set2, IComparer<T> comparer)
+    private static bool RankedSetEquals(RankedSet<T>? set1, RankedSet<T>? set2, IComparer<T> comparer)
     {
         if (set1 == null)
             return set2 == null;
@@ -1101,7 +1123,7 @@ internal
 
         /// <summary>Gets the item at the current position.</summary>
         /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
-        object IEnumerator.Current
+        object? IEnumerator.Current
         {
             get
             {
@@ -1112,7 +1134,7 @@ internal
         }
 
         /// <summary>Gets the item at the current position of the enumerator.</summary>
-        public T Current
+        public T? Current
             => etor.CurrentKeyOrDefault;
 
         /// <summary>Advances the enumerator to the next item in the set.</summary>

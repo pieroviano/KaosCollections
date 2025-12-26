@@ -5,87 +5,87 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using Kaos.Collections;
 
-namespace ExampleApp
+namespace ExampleApp;
+
+[Serializable]
+public class PersonComparer : Comparer<Person>
 {
-    [Serializable]
-    public class PersonComparer : Comparer<Person>
+    public override int Compare (Person x, Person y)
+    { return x==null? (y==null? 0 : -1) : (y==null? 1 : String.CompareOrdinal (x.ToString(), y.ToString())); }
+}
+
+[Serializable]
+public class Person : ISerializable
+{
+    public string First { get; private set; }
+    public string Last { get; private set; }
+
+    public Person (string first, string last)
+    { this.First = first; this.Last = last; }
+
+    protected Person (SerializationInfo info, StreamingContext context)
     {
-        public override int Compare (Person x, Person y)
-        { return x==null? (y==null? 0 : -1) : (y==null? 1 : String.Compare (x.ToString(), y.ToString())); }
+        this.First = (string) info.GetValue ("First", typeof (String));
+        this.Last = (string) info.GetValue ("Last", typeof (String));
     }
 
-    [Serializable]
-    public class Person : ISerializable
+    public virtual void GetObjectData (SerializationInfo info, StreamingContext context)
     {
-        public string First { get; private set; }
-        public string Last { get; private set; }
-
-        public Person (string first, string last)
-        { this.First = first; this.Last = last; }
-
-        protected Person (SerializationInfo info, StreamingContext context)
-        {
-            this.First = (string) info.GetValue ("First", typeof (String));
-            this.Last = (string) info.GetValue ("Last", typeof (String));
-        }
-
-        public virtual void GetObjectData (SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue ("First", First, typeof (String));
-            info.AddValue ("Last", Last, typeof (String));
-        }
-
-        public override string ToString() => Last + ", " + First;
+        info.AddValue ("First", First, typeof (String));
+        info.AddValue ("Last", Last, typeof (String));
     }
 
+    public override string ToString() => Last + ", " + First;
+}
 
-    class RdExample05
+
+class RdExample05
+{
+    static void Main()
     {
-        static void Main()
-        {
 #pragma warning disable SYSLIB0011
-            IFormatter formatter = new BinaryFormatter();
+        IFormatter formatter = new BinaryFormatter();
 #pragma warning restore SYSLIB0011
-            var set1 = new RankedDictionary<Person,string> (new PersonComparer());
-
-            set1.Add (new Person ("Hugh", "Mann"), "B+");
-            set1.Add (new Person ("Hammond", "Egger"), "C-");
-
-            SerializePersons ("Persons.bin", set1, formatter);
-            Console.WriteLine ($"Wrote {set1.Count} key/value pairs.");
-            Console.WriteLine ();
-
-            RankedDictionary<Person,string> set2 = DeserializePersons ("Persons.bin", formatter);
-            Console.WriteLine ("Read back:");
-
-            foreach (var kv in set2)
-                Console.WriteLine (kv);
-        }
-
-#pragma warning disable SYSLIB0011
-        public static void SerializePersons (string fn, RankedDictionary<Person,string> set, IFormatter formatter)
-#pragma warning restore SYSLIB0011
+        var set1 = new RankedDictionary<Person,string> (new PersonComparer())
         {
-            using (var fs = new FileStream (fn, FileMode.Create))
-            { formatter.Serialize (fs, set); }
-        }
+            { new Person("Hugh", "Mann"), "B+" },
+            { new Person("Hammond", "Egger"), "C-" }
+        };
 
-#pragma warning disable SYSLIB0011
-        static RankedDictionary<Person,string> DeserializePersons (string fn, IFormatter formatter)
-#pragma warning restore SYSLIB0011
-        {
-            using (var fs = new FileStream (fn, FileMode.Open))
-            { return (RankedDictionary<Person,string>) formatter.Deserialize (fs); }
-        }
+        SerializePersons ("Persons.bin", set1, formatter);
+        Console.WriteLine ($"Wrote {set1.Count} key/value pairs.");
+        Console.WriteLine ();
 
-        /* Output:
+        var set2 = DeserializePersons ("Persons.bin", formatter);
+        Console.WriteLine ("Read back:");
 
-        Wrote 2 key/value pairs.
-
-        Read back:
-        [Egger, Hammond, C-]
-        [Mann, Hugh, B+]
-
-        */
+        foreach (var kv in set2)
+            Console.WriteLine (kv);
     }
+
+#pragma warning disable SYSLIB0011
+    public static void SerializePersons (string fn, RankedDictionary<Person,string> set, IFormatter formatter)
+#pragma warning restore SYSLIB0011
+    {
+        using (var fs = new FileStream (fn, FileMode.Create))
+        { formatter.Serialize (fs, set); }
+    }
+
+#pragma warning disable SYSLIB0011
+    static RankedDictionary<Person,string> DeserializePersons (string fn, IFormatter formatter)
+#pragma warning restore SYSLIB0011
+    {
+        using (var fs = new FileStream (fn, FileMode.Open))
+        { return (RankedDictionary<Person,string>) formatter.Deserialize (fs); }
+    }
+
+    /* Output:
+
+    Wrote 2 key/value pairs.
+
+    Read back:
+    [Egger, Hammond, C-]
+    [Mann, Hugh, B+]
+
+    */
 }

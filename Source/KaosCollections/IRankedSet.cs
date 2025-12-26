@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+#nullable enable
+
 namespace System.Collections;
 
 /// <summary>
@@ -263,31 +265,31 @@ public interface IRankedSet<T> :
     /// otherwise it will be loaded with the default for its type.
     /// </param>
     /// <returns><b>true</b> if <em>getItem</em> is found; otherwise <b>false</b>.</returns>
-    bool TryGet(T getItem, out T item);
+    bool TryGet(T getItem, out T? item);
 
     /// <summary>Gets the least item greater than the supplied item.</summary>
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item greater than <em>getItem</em> is found; otherwise <b>false</b>.</returns>
-    bool TryGetGreaterThan(T getItem, out T item);
+    bool TryGetGreaterThan(T getItem, out T? item);
 
     /// <summary>Gets the least item greater than or equal to the supplied item.</summary>
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item greater than or equal to <em>getItem</em> found; otherwise <b>false</b>.</returns>
-    bool TryGetGreaterThanOrEqual(T getItem, out T item);
+    bool TryGetGreaterThanOrEqual(T getItem, out T? item);
 
     /// <summary>Gets the greatest item that is less than the supplied item.</summary>
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item less than <em>item</em> found; otherwise <b>false</b>.</returns>
-    bool TryGetLessThan(T getItem, out T item);
+    bool TryGetLessThan(T getItem, out T? item);
 
     /// <summary>Gets the greatest item that is less than or equal to the supplied item.</summary>
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item less than or equal to <em>item</em> found; otherwise <b>false</b>.</returns>
-    bool TryGetLessThanOrEqual(T getItem, out T item);
+    bool TryGetLessThanOrEqual(T getItem, out T? item);
 
     /// <summary>Returns an enumerator that iterates thru the set.</summary>
     /// <returns>An enumerator that iterates thru the set in sorted order.</returns>

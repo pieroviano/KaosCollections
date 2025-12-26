@@ -7,6 +7,8 @@
 // MIT License - Use and redistribute freely
 //
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -94,7 +96,7 @@ internal
         /// <returns><b>true</b> if <em>value</em> is found in the map; otherwise <b>false</b>.</returns>
         /// <remarks>This is a O(<em>n</em>) operation.</remarks>
         bool ICollection<TValue>.Contains(TValue value)
-            => tree.ContainsValue2<TValue>(value) >= 0;
+            => tree.ContainsValue2(value) >= 0;
 
         /// <summary>Copies values to a supplied array, starting as the supplied position.</summary>
         /// <param name="array">A one-dimensional array that is the destination of the copy.</param>
@@ -113,7 +115,7 @@ internal
             if (Count > array.Length - index)
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
 
-            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>)leaf.rightLeaf)
+            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
             {
                 leaf.CopyValuesTo(array, index, leaf.ValueCount);
                 index += leaf.ValueCount;
@@ -140,7 +142,7 @@ internal
             if (Count > array.Length - index)
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
 
-            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>)leaf.rightLeaf)
+            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
                 for (var ix = 0; ix < leaf.KeyCount; ++ix)
                 {
                     array.SetValue(leaf.GetValue(ix), index);
@@ -176,7 +178,7 @@ internal
         /// <param name="index">The zero-based index of the value to get.</param>
         /// <returns>The value at <em>index</em>.</returns>
         /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-        public TValue ElementAtOrDefault(int index)
+        public TValue? ElementAtOrDefault(int index)
         {
             if (index < 0 || index >= Count)
                 return default;
@@ -202,7 +204,7 @@ internal
         /// <returns>The index of the first occurrence of <em>value</em> if found; otherwise -1.</returns>
         /// <remarks>This is a O(<em>n</em>) operation.</remarks>
         public int IndexOf(TValue value)
-            => tree.ContainsValue2<TValue>(value);
+            => tree.ContainsValue2(value);
 
         /// <summary>Gets the value of the element with the highest sorted key in the map.</summary>
         /// <returns>The value of the element with the highest sorted key.</returns>
@@ -291,7 +293,7 @@ internal
 
             /// <summary>Gets the value at the current position.</summary>
             /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
-            object IEnumerator.Current
+            object? IEnumerator.Current
             {
                 get
                 {

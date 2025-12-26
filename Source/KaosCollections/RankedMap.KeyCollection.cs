@@ -7,6 +7,8 @@
 // MIT License - Use and redistribute freely
 //
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -171,7 +173,7 @@ internal
         /// <param name="index">The zero-based index of the key to get.</param>
         /// <returns>The key at <em>index</em>.</returns>
         /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-        public TKey ElementAtOrDefault(int index)
+        public TKey? ElementAtOrDefault(int index)
         {
             if (index < 0 || index >= Count)
                 return default;
@@ -260,7 +262,7 @@ internal
         /// <param name="getKey">The key to use for comparison.</param>
         /// <param name="key">The actual key if found; otherwise the default.</param>
         /// <returns><b>true</b> if key greater than <em>getKey</em> is found; otherwise <b>false</b>.</returns>
-        public bool TryGetGreaterThan(TKey getKey, out TKey key)
+        public bool TryGetGreaterThan(TKey getKey, out TKey? key)
         {
             tree.TryGetGT(getKey, out var leaf, out var index);
             if (leaf == null)
@@ -273,7 +275,7 @@ internal
         /// <param name="getKey">The key to use for comparison.</param>
         /// <param name="key">The actual key if found; otherwise the default.</param>
         /// <returns><b>true</b> if key greater than or equal to <em>getKey</em> found; otherwise <b>false</b>.</returns>
-        public bool TryGetGreaterThanOrEqual(TKey getKey, out TKey key)
+        public bool TryGetGreaterThanOrEqual(TKey getKey, out TKey? key)
         {
             tree.TryGetGE(getKey, out var leaf, out var index);
             if (leaf == null)
@@ -286,7 +288,7 @@ internal
         /// <param name="getKey">The key to use for comparison.</param>
         /// <param name="key">The actual key if found; otherwise the default.</param>
         /// <returns><b>true</b> if key less than <em>getKey</em> found; otherwise <b>false</b>.</returns>
-        public bool TryGetLessThan(TKey getKey, out TKey key)
+        public bool TryGetLessThan(TKey getKey, out TKey? key)
         {
             tree.TryGetLT(getKey, out var leaf, out var index);
             if (leaf == null)
@@ -299,7 +301,7 @@ internal
         /// <param name="getKey">The key to use for comparison.</param>
         /// <param name="key">The actual key if found; otherwise the default.</param>
         /// <returns><b>true</b> if key less than or equal to <em>getKey</em> found; otherwise <b>false</b>.</returns>
-        public bool TryGetLessThanOrEqual(TKey getKey, out TKey key)
+        public bool TryGetLessThanOrEqual(TKey getKey, out TKey? key)
         {
             tree.TryGetLE(getKey, out var leaf, out var index);
             if (leaf == null)
@@ -367,7 +369,7 @@ internal
 
             /// <summary>Gets the key at the current position.</summary>
             /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
-            object IEnumerator.Current
+            object? IEnumerator.Current
             {
                 get
                 {
@@ -379,7 +381,7 @@ internal
 
             /// <summary>Gets the key at the current position of the enumerator.</summary>
             public TKey Current
-                => etor.CurrentKeyOrDefault;
+                => etor.CurrentKeyOrDefault!;
 
             /// <summary>Advances the enumerator to the next key in the collection.</summary>
             /// <returns><b>true</b> if the enumerator was successfully advanced to the next key; <b>false</b> if the enumerator has passed the end of the collection.</returns>

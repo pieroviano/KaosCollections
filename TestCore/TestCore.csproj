@@ -14,7 +14,9 @@
         <PackageProjectUrl>https://github.com/pieroviano/KaosCollections/</PackageProjectUrl>
         <RepositoryUrl>https://github.com/pieroviano/KaosCombinatorics.git</RepositoryUrl>
         <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
-        <NoWarn>xUnit2000;xUnit2013;xUnit2017;NU1504;CS8892</NoWarn>
+        <NoWarn>xUnit2000;xUnit2013;xUnit2017;NU1504;CS8892;CS8625;CS8602</NoWarn>
+		<Nullable>enable</Nullable>
+	    <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DefineConstants>TRACE</DefineConstants>

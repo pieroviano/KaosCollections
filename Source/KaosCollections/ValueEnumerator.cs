@@ -6,6 +6,8 @@
 // MIT License - Use and redistribute freely
 //
 
+#nullable enable
+
 using System;
 
 namespace Kaos.Collections;
@@ -19,9 +21,9 @@ internal
     /// <exclude />
     private protected class ValueEnumerator<V> : BaseEnumerator
     {
-        public V CurrentValue { get; private set; }
+        public V? CurrentValue { get; private set; }
 
-        public V CurrentValueOrDefault => NotActive ? default : CurrentValue;
+        public V CurrentValueOrDefault => (NotActive ? default : CurrentValue)!;
 
         public ValueEnumerator(Btree<T> owner, bool isReverse = false) : base(owner, isReverse)
         { }
@@ -44,7 +46,14 @@ internal
         public bool Advance()
         {
             if (AdvanceBase())
-            { CurrentValue = ((PairLeaf<V>)leaf).GetValue(leafIndex); return true; }
+            {
+                var pairLeaf = ((PairLeaf<V>?)leaf);
+                if (pairLeaf != null)
+                {
+                    CurrentValue = pairLeaf.GetValue(leafIndex);
+                }
+
+                return true; }
             else
             { CurrentValue = default; return false; }
         }

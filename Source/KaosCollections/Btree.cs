@@ -501,7 +501,11 @@ internal
         }
 
         StageBump();
-        Delete(path1, path2);
+        if (path2 != null)
+        {
+            Delete(path1, path2);
+        }
+
         return count;
     }
 
@@ -710,7 +714,7 @@ internal
                 if (IsUnderflow(branch1.ChildCount))
                 {
                     path2.Copy(path1, level);
-                    var branch2 = (Branch)path2.TraverseRight();
+                    var branch2 = (Branch?)path2.TraverseRight();
                     if (branch2 == null)
                     {
                         continue;
@@ -720,7 +724,7 @@ internal
                     if (j1 != 0 && IsUnderflow(branch1.ChildCount))
                     {
                         path2.Copy(path1, level);
-                        branch2 = (Branch)path2.TraverseRight();
+                        branch2 = (Branch?)path2.TraverseRight();
                         if (branch2 == null)
                         {
                             continue;
@@ -733,10 +737,10 @@ internal
                 if (j1 != 0)
                 {
                     path2.Copy(path1, level);
-                    branch1 = (Branch)path2.TraverseRight();
+                    branch1 = (Branch?)path2.TraverseRight();
                     if (branch1 != null && IsUnderflow(branch1.ChildCount))
                     {
-                        var branch2 = (Branch)path2.TraverseRight();
+                        var branch2 = (Branch?)path2.TraverseRight();
                         if (branch2 != null)
                         {
                             path2.BalanceBranch(branch1);
@@ -802,7 +806,7 @@ internal
             if (leafLoss == 0)
             {
                 ix = 0;
-                leaf = (Leaf)path.TraverseRight();
+                leaf = (Leaf?)path.TraverseRight();
             }
             else
             {
@@ -823,7 +827,7 @@ internal
                 else if (!IsUnderflow(leaf.KeyCount))
                 {
                     ix = 0;
-                    leaf = (Leaf)path.TraverseRight();
+                    leaf = (Leaf?)path.TraverseRight();
                 }
                 else
                 {
@@ -836,11 +840,11 @@ internal
                     else
                     {
                         ix = 0;
-                        leaf = (Leaf)path.TraverseLeft();
+                        leaf = (Leaf?)path.TraverseLeft();
                         path2.Balance();
                         if (leaf != null)
                         {
-                            leaf = (Leaf)path.TraverseRight();
+                            leaf = (Leaf?)path.TraverseRight();
                         }
                         else
                         {
@@ -1206,7 +1210,7 @@ internal
             if (leafLoss == 0)
             {
                 ix = 0;
-                leaf = (PairLeaf<V>)path.TraverseRight();
+                leaf = (PairLeaf<V>?)path.TraverseRight();
             }
             else
             {
@@ -1227,7 +1231,7 @@ internal
                 else if (!IsUnderflow(leaf.KeyCount))
                 {
                     ix = 0;
-                    leaf = (PairLeaf<V>)path.TraverseRight();
+                    leaf = (PairLeaf<V>?)path.TraverseRight();
                 }
                 else
                 {
@@ -1240,11 +1244,11 @@ internal
                     else
                     {
                         ix = 0;
-                        leaf = (PairLeaf<V>)path.TraverseLeft();
+                        leaf = (PairLeaf<V>?)path.TraverseLeft();
                         path2.Balance();
                         if (leaf != null)
                         {
-                            leaf = (PairLeaf<V>)path.TraverseRight();
+                            leaf = (PairLeaf<V>?)path.TraverseRight();
                         }
                         else
                         {
@@ -1354,8 +1358,8 @@ internal
     /// <returns>Number of levels in the tree.</returns>
     public int GetHeight()
     {
-        Node node = root;
-        for (int level = 1; ; ++level)
+        var node = root;
+        for (var level = 1; ; ++level)
             if (node is Branch branch)
                 node = branch.Child0;
             else
@@ -1380,11 +1384,11 @@ internal
         if (branch.ChildCount != branch.KeyCount + 1)
             throw new InvalidOperationException("Branch mismatched ChildCount, KeyCount");
 
-        int actualWeight = 0;
-        for (int i = 0; i < branch.ChildCount; ++i)
+        var actualWeight = 0;
+        for (var i = 0; i < branch.ChildCount; ++i)
         {
-            T? anchor0 = i == 0 ? anchor : branch.GetKey(i - 1);
-            bool isRightmost0 = isRightmost && i == branch.KeyCount;
+            var anchor0 = i == 0 ? anchor : branch.GetKey(i - 1);
+            var isRightmost0 = isRightmost && i == branch.KeyCount;
             if (i < branch.KeyCount - 1)
                 if (keyComparer?.Compare(branch.GetKey(i), branch.GetKey(i + 1)) > 0)
                     throw new InvalidOperationException("Branch keys descending");
@@ -1415,7 +1419,7 @@ CheckBranch((Branch)branch.GetChild(i), level + 1, height, isRightmost0, anchor0
         if (anchor != null && !anchor.Equals(default(T)) && !anchor.Equals(leaf.Key0))
             throw new InvalidOperationException("Leaf has wrong anchor");
 
-        for (int i = 0; i < leaf.KeyCount; ++i)
+        for (var i = 0; i < leaf.KeyCount; ++i)
             if (i < leaf.KeyCount - 1 && keyComparer != null && keyComparer.Compare(leaf.GetKey(i), leaf.GetKey(i + 1)) > 0)
                 throw new InvalidOperationException("Leaf keys descending");
 
@@ -1436,7 +1440,7 @@ CheckBranch((Branch)branch.GetChild(i), level + 1, height, isRightmost0, anchor0
     public string GetTreeStatsText()
     {
         SanityCheck();
-        string result = "--- height = " + GetHeight();
+        var result = "--- height = " + GetHeight();
 
         if (BranchSlotCount != 0)
             result += ", branch fill = " + (int)(BranchSlotsUsed * 100.0 / BranchSlotCount + 0.5) + "%";
@@ -1448,7 +1452,7 @@ CheckBranch((Branch)branch.GetChild(i), level + 1, height, isRightmost0, anchor0
     /// <returns>Text lines where each line is a level of the tree.</returns>
     public IEnumerable<string> GenerateTreeText(bool showWeight = false)
     {
-        int level = 0;
+        var level = 0;
         Node leftmost;
         var sb = new StringBuilder();
 
@@ -1474,7 +1478,7 @@ CheckBranch((Branch)branch.GetChild(i), level + 1, height, isRightmost0, anchor0
                     sb.Append(") ");
                 }
 
-                branch = (Branch)branchPath.TraverseRight();
+                branch = (Branch?)branchPath.TraverseRight();
                 if (branch == null)
                     break;
 
@@ -1492,7 +1496,7 @@ CheckBranch((Branch)branch.GetChild(i), level + 1, height, isRightmost0, anchor0
         for (var leaf = (Leaf)leftmost; ;)
         {
             leaf.Append(sb);
-            leaf = (Leaf)leafPath.TraverseRight();
+            leaf = (Leaf?)leafPath.TraverseRight();
             if (leaf == null)
                 break;
 

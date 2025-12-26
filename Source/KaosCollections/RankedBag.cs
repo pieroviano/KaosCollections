@@ -3,7 +3,9 @@
 // Copyright © 2009-2020 Kasey Osborn (github.com/kaosborn)
 // MIT License - Use and redistribute freely
 //
+
 #nullable enable
+#pragma warning disable CS8766
 
 using System;
 using System.Collections;
@@ -955,7 +957,7 @@ internal
         }
 
         /// <summary>Gets the item at the current position of the enumerator.</summary>
-        public T Current
+        public T? Current
             => etor.CurrentKeyOrDefault;
 
         /// <summary>Advances the enumerator to the next item in the bag.</summary>

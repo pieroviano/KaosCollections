@@ -6,1542 +6,1541 @@
 using Kaos.Collections;
 using Xunit;
 using System;
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
-namespace Kaos.Test.Collections
-{
+namespace Kaos.Test.Collections;
 #if !TEST_BCL
 
-    public partial class TestRb : TestBtree, IClassFixture<BinaryFormatterEnableFixture>
+public partial class TestRb : TestBtree, IClassFixture<BinaryFormatterEnableFixture>
+{
+    #region Test constructors
+    [Fact]
+    public void UnitRb_Inheritance()
     {
-#region Test constructors
-        [Fact]
-        public void UnitRb_Inheritance()
+        var rb = new RankedBag<int>
+        {
+            42,
+            21,
+            63
+        };
+        var toIColI = rb as System.Collections.Generic.ICollection<int>;
+        var toIEnuI = rb as System.Collections.Generic.IEnumerable<int>;
+        var toIEnuO = rb as System.Collections.IEnumerable;
+        var toIColO = rb as System.Collections.ICollection;
+        var toIRocI = rb as System.Collections.Generic.IReadOnlyCollection<int>;
+        Assert.NotNull(toIColI);
+        Assert.NotNull(toIEnuI);
+        Assert.NotNull(toIEnuO);
+        Assert.NotNull(toIColO);
+        Assert.NotNull(toIRocI);
+        var ObjEnumCount = 0;
+        for (var oe = toIEnuO.GetEnumerator(); oe.MoveNext();)
+            ++ObjEnumCount;
+        Assert.Equal(3, toIColI.Count);
+        Assert.Equal(3, System.Linq.Enumerable.Count(toIEnuI));
+        Assert.Equal(3, ObjEnumCount);
+        Assert.Equal(3, toIColO.Count);
+        Assert.Equal(3, toIRocI.Count);
+    }
+
+    public class DerivedB : RankedBag<int>, IClassFixture<BinaryFormatterEnableFixture>
+    {
+    }
+
+    [Fact]
+    public void UnitRb_CtorSubclass()
+    {
+        var sub = new DerivedB();
+        var isRO = ((System.Collections.Generic.ICollection<int>)sub).IsReadOnly;
+        Assert.False(isRO);
+    }
+
+    [Fact]
+    public void UnitRb_Ctor0Empty()
+    {
+        var rb = new RankedBag<int>();
+        Assert.Equal(0, rb.Count);
+    }
+
+    [Fact]
+    public void CrashRb_Ctor1_ArgumentNull()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            var rb = new RankedBag<int>((System.Collections.Generic.IEnumerable<int>)null);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_Ctor2_ArgumentNull()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            var rb = new RankedBag<int>(null, null);
+        });
+    }
+
+    #endregion
+    #region Test properties
+    [Fact]
+    public void UnitRb_IsSynchronized()
+    {
+        var rb = new RankedBag<int>();
+        var oc = (System.Collections.ICollection)rb;
+        var isSync = oc.IsSynchronized;
+        Assert.False(isSync);
+    }
+
+    [Fact]
+    public void UnitRb_MinMax()
+    {
+        var rb = new RankedBag<int>();
+        var min0 = rb.Min;
+        var max0 = rb.Max;
+        rb.Add(3);
+        rb.Add(5);
+        rb.Add(7);
+        var min1 = rb.Min;
+        var max1 = rb.Max;
+        Assert.Equal(3, min1);
+        Assert.Equal(7, max1);
+    }
+
+    [Fact]
+    public void UnitRb_ocSyncRoot()
+    {
+        var rb = new RankedBag<int>();
+        var oc = (System.Collections.ICollection)rb;
+        Assert.False(oc.SyncRoot.GetType().IsValueType);
+    }
+
+    #endregion
+    #region Test methods
+    [Fact]
+    public void UnitRb_AddNull()
+    {
+        var rb = new RankedBag<NameItem> { null };
+        Assert.Equal(1, rb.Count);
+    }
+
+    [Fact]
+    public void CrashRb_Add2_ArgumentNull()
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            var rb = new RankedBag<int>();
+            var zz = rb.Add(1, -1);
+        });
+    }
+
+    [Fact]
+    public void UnitRb_Add2()
+    {
+        var rb = new RankedBag<int>(new[] { 0, 0 });
+        var retVal = rb.Add(0, 0);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 0, 0 }, rb));
+        Assert.True(retVal);
+        Assert.Equal(2, rb.Count);
+        rb = new RankedBag<int>(new[] { 1, 1 });
+        retVal = rb.Add(2, 0);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 1, 1 }, rb));
+        Assert.False(retVal);
+        Assert.Equal(2, rb.Count);
+        rb = new RankedBag<int>(new[] { 0, 1 });
+        retVal = rb.Add(2, 3);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 0, 1, 2, 2, 2 }, rb));
+        Assert.False(retVal);
+        Assert.Equal(5, rb.Count);
+        rb = new RankedBag<int>(new[] { 0, 1 });
+        retVal = rb.Add(2, 3);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 0, 1, 2, 2, 2 }, rb));
+        Assert.False(retVal);
+        Assert.Equal(5, rb.Count);
+        rb = new RankedBag<int>(new[] { 0, 2, 3 });
+        retVal = rb.Add(1, 2);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 0, 1, 1, 2, 3 }, rb));
+        Assert.False(retVal);
+        Assert.Equal(5, rb.Count);
+        rb = new RankedBag<int>(new[] { 1, 2, 3, 4 });
+        retVal = rb.Add(0, 2);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 0, 0, 1, 2, 3, 4 }, rb));
+        Assert.False(retVal);
+        Assert.Equal(6, rb.Count);
+        rb = new RankedBag<int>(new[] { 0, 2, 3 });
+        retVal = rb.Add(1, 4);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 0, 1, 1, 1, 1, 2, 3 }, rb));
+        Assert.False(retVal);
+        Assert.Equal(7, rb.Count);
+    }
+
+    [Fact]
+    public void UnitRb_AddEx1()
+    {
+        var rb = new RankedBag<int>();
+        var gc = (System.Collections.Generic.ICollection<int>)rb;
+        gc.Add(5);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 5 }, rb));
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 5 }, gc));
+    }
+
+    [Fact]
+    public void UnitRb_Clear()
+    {
+        var rb = new RankedBag<int>();
+        for (var ix = 0; ix < 50; ++ix)
+            rb.Add(ix);
+        Assert.Equal(50, rb.Count);
+        var k1 = 0;
+        foreach (var i1 in rb.Reverse())
+            ++k1;
+        Assert.Equal(50, k1);
+        rb.Clear();
+        var k2 = 0;
+        foreach (var i1 in rb.Reverse())
+            ++k2;
+        Assert.Equal(0, k2);
+    }
+
+    [Fact]
+    public void CrashRb_ContainsAll_ArgumentNull()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
         {
             var rb = new RankedBag<int>
             {
-                42,
-                21,
-                63
-            };
-            var toIColI = rb as System.Collections.Generic.ICollection<int>;
-            var toIEnuI = rb as System.Collections.Generic.IEnumerable<int>;
-            var toIEnuO = rb as System.Collections.IEnumerable;
-            var toIColO = rb as System.Collections.ICollection;
-            var toIRocI = rb as System.Collections.Generic.IReadOnlyCollection<int>;
-            Assert.NotNull(toIColI);
-            Assert.NotNull(toIEnuI);
-            Assert.NotNull(toIEnuO);
-            Assert.NotNull(toIColO);
-            Assert.NotNull(toIRocI);
-            int ObjEnumCount = 0;
-            for (var oe = toIEnuO.GetEnumerator(); oe.MoveNext();)
-                ++ObjEnumCount;
-            Assert.Equal(3, toIColI.Count);
-            Assert.Equal(3, System.Linq.Enumerable.Count(toIEnuI));
-            Assert.Equal(3, ObjEnumCount);
-            Assert.Equal(3, toIColO.Count);
-            Assert.Equal(3, toIRocI.Count);
-        }
-
-        public class DerivedB : RankedBag<int>, IClassFixture<BinaryFormatterEnableFixture>
-        {
-        }
-
-        [Fact]
-        public void UnitRb_CtorSubclass()
-        {
-            var sub = new DerivedB();
-            bool isRO = ((System.Collections.Generic.ICollection<int>)sub).IsReadOnly;
-            Assert.False(isRO);
-        }
-
-        [Fact]
-        public void UnitRb_Ctor0Empty()
-        {
-            var rb = new RankedBag<int>();
-            Assert.Equal(0, rb.Count);
-        }
-
-        [Fact]
-        public void CrashRb_Ctor1_ArgumentNull()
-        {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var rb = new RankedBag<int>((System.Collections.Generic.IEnumerable<int>)null);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_Ctor2_ArgumentNull()
-        {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var rb = new RankedBag<int>(null, null);
-            });
-        }
-
-#endregion
-#region Test properties
-        [Fact]
-        public void UnitRb_IsSynchronized()
-        {
-            var rb = new RankedBag<int>();
-            var oc = (System.Collections.ICollection)rb;
-            bool isSync = oc.IsSynchronized;
-            Assert.False(isSync);
-        }
-
-        [Fact]
-        public void UnitRb_MinMax()
-        {
-            var rb = new RankedBag<int>();
-            var min0 = rb.Min;
-            var max0 = rb.Max;
-            rb.Add(3);
-            rb.Add(5);
-            rb.Add(7);
-            var min1 = rb.Min;
-            var max1 = rb.Max;
-            Assert.Equal(3, min1);
-            Assert.Equal(7, max1);
-        }
-
-        [Fact]
-        public void UnitRb_ocSyncRoot()
-        {
-            var rb = new RankedBag<int>();
-            var oc = (System.Collections.ICollection)rb;
-            Assert.False(oc.SyncRoot.GetType().IsValueType);
-        }
-
-#endregion
-#region Test methods
-        [Fact]
-        public void UnitRb_AddNull()
-        {
-            var rb = new RankedBag<NameItem>();
-            rb.Add(null);
-            Assert.Equal(1, rb.Count);
-        }
-
-        [Fact]
-        public void CrashRb_Add2_ArgumentNull()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>();
-                var zz = rb.Add(1, -1);
-            });
-        }
-
-        [Fact]
-        public void UnitRb_Add2()
-        {
-            var rb = new RankedBag<int>(new int[] { 0, 0 });
-            bool retVal = rb.Add(0, 0);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 0, 0 }, rb));
-            Assert.True(retVal);
-            Assert.Equal(2, rb.Count);
-            rb = new RankedBag<int>(new int[] { 1, 1 });
-            retVal = rb.Add(2, 0);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 1, 1 }, rb));
-            Assert.False(retVal);
-            Assert.Equal(2, rb.Count);
-            rb = new RankedBag<int>(new int[] { 0, 1 });
-            retVal = rb.Add(2, 3);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 0, 1, 2, 2, 2 }, rb));
-            Assert.False(retVal);
-            Assert.Equal(5, rb.Count);
-            rb = new RankedBag<int>(new int[] { 0, 1 });
-            retVal = rb.Add(2, 3);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 0, 1, 2, 2, 2 }, rb));
-            Assert.False(retVal);
-            Assert.Equal(5, rb.Count);
-            rb = new RankedBag<int>(new int[] { 0, 2, 3 });
-            retVal = rb.Add(1, 2);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 0, 1, 1, 2, 3 }, rb));
-            Assert.False(retVal);
-            Assert.Equal(5, rb.Count);
-            rb = new RankedBag<int>(new int[] { 1, 2, 3, 4 });
-            retVal = rb.Add(0, 2);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 0, 0, 1, 2, 3, 4 }, rb));
-            Assert.False(retVal);
-            Assert.Equal(6, rb.Count);
-            rb = new RankedBag<int>(new int[] { 0, 2, 3 });
-            retVal = rb.Add(1, 4);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 0, 1, 1, 1, 1, 2, 3 }, rb));
-            Assert.False(retVal);
-            Assert.Equal(7, rb.Count);
-        }
-
-        [Fact]
-        public void UnitRb_AddEx1()
-        {
-            var rb = new RankedBag<int>();
-            var gc = (System.Collections.Generic.ICollection<int>)rb;
-            gc.Add(5);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 5 }, rb));
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 5 }, gc));
-        }
-
-        [Fact]
-        public void UnitRb_Clear()
-        {
-            var rb = new RankedBag<int>();
-            for (int ix = 0; ix < 50; ++ix)
-                rb.Add(ix);
-            Assert.Equal(50, rb.Count);
-            int k1 = 0;
-            foreach (var i1 in rb.Reverse())
-                ++k1;
-            Assert.Equal(50, k1);
-            rb.Clear();
-            int k2 = 0;
-            foreach (var i1 in rb.Reverse())
-                ++k2;
-            Assert.Equal(0, k2);
-        }
-
-        [Fact]
-        public void CrashRb_ContainsAll_ArgumentNull()
-        {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    5
-                };
-                var zz = rb.ContainsAll(null);
-            });
-        }
-
-        [Fact]
-        public void UnitRb_ContainsAll()
-        {
-            var rb1 = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            foreach (var ii in new int[]
-            {
-                3,
-                5,
-                5,
-                5,
-                7,
-                7,
-                9
-            }
-
-            )
-                rb1.Add(ii);
-            var rb2 = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            foreach (var ii in rb1)
-                rb2.Add(ii);
-            Assert.True(rb1.ContainsAll(new int[] { }));
-            Assert.True(rb1.ContainsAll(new int[] { 5, 5 }));
-            Assert.True(rb1.ContainsAll(new int[] { 5, 5, 5 }));
-            Assert.True(rb1.ContainsAll(new int[] { 5, 7 }));
-            Assert.False(rb1.ContainsAll(new int[] { 5, 5, 5, 5 }));
-            Assert.False(rb1.ContainsAll(new int[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
-            Assert.True(rb1.ContainsAll(rb2));
-        }
-
-        [Fact]
-        public void CrashRb_CopyTo1_ArgumentNull()
-        {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    1
-                };
-                rb.CopyTo(null);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_CopyTo1_Argument()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    1,
-                    11
-                };
-                var d1 = new int[1];
-                rb.CopyTo(d1);
-            });
-        }
-
-        [Fact]
-        public void UnitRb_CopyTo1()
-        {
-            var e5 = new int[]
-            {
-                3,
-                5,
-                5,
-                7,
-                0
-            };
-            var s4 = new int[]
-            {
-                3,
-                5,
-                5,
-                7
-            };
-            var d4 = new int[4];
-            var d5 = new int[5];
-            var rb = new RankedBag<int>(s4);
-            rb.CopyTo(d4);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(s4, d4));
-            rb.CopyTo(d5);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(e5, d5));
-        }
-
-        [Fact]
-        public void CrashRb_CopyTo2_ArgumentNull()
-        {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    2
-                };
-                rb.CopyTo(null !, 0);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_CopyTo2_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    2,
-                    22
-                };
-                var d2 = new int[2];
-                rb.CopyTo(d2, -1);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_CopyTo2_Argument()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    2,
-                    22
-                };
-                var d2 = new int[2];
-                rb.CopyTo(d2, 1);
-            });
-        }
-
-        [Fact]
-        public void UnitRb_CopyTo2()
-        {
-            var s2 = new int[]
-            {
-                3,
                 5
             };
-            var e4 = new int[]
+            var zz = rb.ContainsAll(null);
+        });
+    }
+
+    [Fact]
+    public void UnitRb_ContainsAll()
+    {
+        var rb1 = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        foreach (var ii in new[]
+                 {
+                     3,
+                     5,
+                     5,
+                     5,
+                     7,
+                     7,
+                     9
+                 }
+
+                )
+            rb1.Add(ii);
+        var rb2 = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        foreach (var ii in rb1)
+            rb2.Add(ii);
+        Assert.True(rb1.ContainsAll(new int[] { }));
+        Assert.True(rb1.ContainsAll(new[] { 5, 5 }));
+        Assert.True(rb1.ContainsAll(new[] { 5, 5, 5 }));
+        Assert.True(rb1.ContainsAll(new[] { 5, 7 }));
+        Assert.False(rb1.ContainsAll(new[] { 5, 5, 5, 5 }));
+        Assert.False(rb1.ContainsAll(new[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
+        Assert.True(rb1.ContainsAll(rb2));
+    }
+
+    [Fact]
+    public void CrashRb_CopyTo1_ArgumentNull()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            var rb = new RankedBag<int>
             {
-                0,
-                3,
-                5,
-                0
+                1
+            };
+            rb.CopyTo(null);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_CopyTo1_Argument()
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                1,
+                11
+            };
+            var d1 = new int[1];
+            rb.CopyTo(d1);
+        });
+    }
+
+    [Fact]
+    public void UnitRb_CopyTo1()
+    {
+        var e5 = new[]
+        {
+            3,
+            5,
+            5,
+            7,
+            0
+        };
+        var s4 = new[]
+        {
+            3,
+            5,
+            5,
+            7
+        };
+        var d4 = new int[4];
+        var d5 = new int[5];
+        var rb = new RankedBag<int>(s4);
+        rb.CopyTo(d4);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(s4, d4));
+        rb.CopyTo(d5);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(e5, d5));
+    }
+
+    [Fact]
+    public void CrashRb_CopyTo2_ArgumentNull()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                2
+            };
+            rb.CopyTo(null, 0);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_CopyTo2_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                2,
+                22
             };
             var d2 = new int[2];
-            var d4 = new int[4];
-            var rb = new RankedBag<int>(s2);
-            rb.CopyTo(d2, 0);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(s2, d2));
-            rb.CopyTo(d4, 1);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(e4, d4));
-        }
+            rb.CopyTo(d2, -1);
+        });
+    }
 
-        [Fact]
-        public void CrashRb_CopyTo3_ArgumentNull()
+    [Fact]
+    public void CrashRb_CopyTo2_Argument()
+    {
+        Assert.Throws<ArgumentException>(() =>
         {
-            Assert.Throws<ArgumentNullException>(() =>
+            var rb = new RankedBag<int>
             {
-                var rb = new RankedBag<int>
-                {
-                    2
-                };
-                rb.CopyTo(null, 0, 1);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_CopyTo3A_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    2
-                };
-                var d2 = new int[2];
-                rb.CopyTo(d2, -1, 1);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_CopyTo3B_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    2
-                };
-                var d2 = new int[2];
-                rb.CopyTo(d2, 0, -1);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_CopyTo3A_Argument()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    2,
-                    22
-                };
-                var d2 = new int[2];
-                rb.CopyTo(d2, 1, 2);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_CopyTo3B_Argument()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    2,
-                    22
-                };
-                var d3 = new int[3];
-                rb.CopyTo(d3, 1, 3);
-            });
-        }
-
-        [Fact]
-        public void UnitRb_CopyTo3()
-        {
-            var s4 = new int[]
-            {
-                3,
-                5,
-                5,
-                7
-            };
-            var e2 = new int[]
-            {
-                0,
-                0
-            };
-            var e3 = new int[]
-            {
-                0,
-                3,
-                5
-            };
-            var e5 = new int[]
-            {
-                0,
-                3,
-                5,
-                5,
-                0
+                2,
+                22
             };
             var d2 = new int[2];
+            rb.CopyTo(d2, 1);
+        });
+    }
+
+    [Fact]
+    public void UnitRb_CopyTo2()
+    {
+        var s2 = new[]
+        {
+            3,
+            5
+        };
+        var e4 = new[]
+        {
+            0,
+            3,
+            5,
+            0
+        };
+        var d2 = new int[2];
+        var d4 = new int[4];
+        var rb = new RankedBag<int>(s2);
+        rb.CopyTo(d2, 0);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(s2, d2));
+        rb.CopyTo(d4, 1);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(e4, d4));
+    }
+
+    [Fact]
+    public void CrashRb_CopyTo3_ArgumentNull()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                2
+            };
+            rb.CopyTo(null, 0, 1);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_CopyTo3A_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                2
+            };
+            var d2 = new int[2];
+            rb.CopyTo(d2, -1, 1);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_CopyTo3B_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                2
+            };
+            var d2 = new int[2];
+            rb.CopyTo(d2, 0, -1);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_CopyTo3A_Argument()
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                2,
+                22
+            };
+            var d2 = new int[2];
+            rb.CopyTo(d2, 1, 2);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_CopyTo3B_Argument()
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                2,
+                22
+            };
             var d3 = new int[3];
-            var d4 = new int[4];
-            var d5 = new int[5];
-            var d6 = new int[6];
-            var rb = new RankedBag<int>(s4);
-            rb.CopyTo(d2, 1, 0);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(e2, d2));
-            rb.CopyTo(d3, 1, 2);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(e3, d3));
-            rb.CopyTo(d4, 0, 4);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(s4, d4));
-            rb.CopyTo(d5, 1, 3);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(e5, d5));
-        }
+            rb.CopyTo(d3, 1, 3);
+        });
+    }
 
-        [Fact]
-        public void CrashRb_ocCopyTo2_ArgumentNull()
+    [Fact]
+    public void UnitRb_CopyTo3()
+    {
+        var s4 = new[]
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var rb = new RankedBag<int>()
-                {
-                    2
-                };
-                var oc = (System.Collections.ICollection)rb;
-                oc.CopyTo(null !, 0);
-            });
-        }
+            3,
+            5,
+            5,
+            7
+        };
+        var e2 = new[]
+        {
+            0,
+            0
+        };
+        var e3 = new[]
+        {
+            0,
+            3,
+            5
+        };
+        var e5 = new[]
+        {
+            0,
+            3,
+            5,
+            5,
+            0
+        };
+        var d2 = new int[2];
+        var d3 = new int[3];
+        var d4 = new int[4];
+        var d5 = new int[5];
+        var d6 = new int[6];
+        var rb = new RankedBag<int>(s4);
+        rb.CopyTo(d2, 1, 0);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(e2, d2));
+        rb.CopyTo(d3, 1, 2);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(e3, d3));
+        rb.CopyTo(d4, 0, 4);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(s4, d4));
+        rb.CopyTo(d5, 1, 3);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(e5, d5));
+    }
 
-        [Fact]
-        public void CrashRb_ocCopyTo2_ArgumentOutOfRange()
+    [Fact]
+    public void CrashRb_ocCopyTo2_ArgumentNull()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            var rb = new RankedBag<int>()
             {
-                var rb = new RankedBag<int>
-                {
-                    3,
-                    5
-                };
-                var oc = (System.Collections.ICollection)rb;
-                var d2 = new object[2];
-                oc.CopyTo(d2, -1);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_ocCopyTo2A_Argument()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    3,
-                    5
-                };
-                var oc = (System.Collections.ICollection)rb;
-                var d2 = new object[2];
-                oc.CopyTo(d2, 1);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_ocCopyTo2C_Argument()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    3,
-                    7
-                };
-                var oc = (System.Collections.ICollection)rb;
-                var multi = new int[1, 2];
-                oc.CopyTo(multi, 0);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_ocCopyTo2D_Argument()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    5,
-                    7
-                };
-                var oc = (System.Collections.ICollection)rb;
-                var a11 = Array.CreateInstance(typeof(int), new int[] { 1 }, new int[] { 1 });
-                oc.CopyTo(a11, 1);
-            });
-        }
-
-        [Fact]
-        public void UnitRb_ocCopyTo2()
-        {
-            var s4 = new int[]
-            {
-                3,
-                5,
-                5,
-                7
+                2
             };
-            var e2 = new int[]
+            var oc = (System.Collections.ICollection)rb;
+            oc.CopyTo(null, 0);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_ocCopyTo2_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>
             {
-                0,
-                0
-            };
-            var e3 = new int[]
-            {
-                0,
                 3,
                 5
             };
-            var e5 = new int[]
-            {
-                0,
-                3,
-                5,
-                5,
-                0
-            };
-            var e6 = new int[]
-            {
-                0,
-                3,
-                5,
-                5,
-                7,
-                0
-            };
-            var d2 = new int[2];
-            var d3 = new int[3];
-            var d4 = new int[4];
-            var d5 = new int[5];
-            var d6 = new int[6];
-            var rb = new RankedBag<int>(s4);
             var oc = (System.Collections.ICollection)rb;
-            oc.CopyTo(d4, 0);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(s4, d4));
-            oc.CopyTo(d6, 1);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(e6, d6));
-        }
+            var d2 = new object[2];
+            oc.CopyTo(d2, -1);
+        });
+    }
 
-        [Fact]
-        public void UnitRb_GetCount()
+    [Fact]
+    public void CrashRb_ocCopyTo2A_Argument()
+    {
+        Assert.Throws<ArgumentException>(() =>
         {
-            var rb0 = new RankedBag<int>();
-            var rb = new RankedBag<int>(new int[] { 3, 5, 5, 5, 7 });
-            Assert.Equal(0, rb0.GetCount(4));
-            Assert.Equal(0, rb.GetCount(1));
-            Assert.Equal(1, rb.GetCount(3));
-            Assert.Equal(3, rb.GetCount(5));
-            Assert.Equal(1, rb.GetCount(7));
-            Assert.Equal(0, rb.GetCount(9));
-        }
+            var rb = new RankedBag<int>
+            {
+                3,
+                5
+            };
+            var oc = (System.Collections.ICollection)rb;
+            var d2 = new object[2];
+            oc.CopyTo(d2, 1);
+        });
+    }
 
-        [Fact]
-        public void UnitRb_GetDistinctCount()
+    [Fact]
+    public void CrashRb_ocCopyTo2C_Argument()
+    {
+        Assert.Throws<ArgumentException>(() =>
         {
-            var rb0 = new RankedBag<int>();
-            var rb = new RankedBag<int>(new int[] { 3, 5, 5, 5, 7 });
-            Assert.Equal(0, rb0.GetDistinctCount());
-            Assert.Equal(3, rb.GetDistinctCount());
-        }
+            var rb = new RankedBag<int>
+            {
+                3,
+                7
+            };
+            var oc = (System.Collections.ICollection)rb;
+            var multi = new int[1, 2];
+            oc.CopyTo(multi, 0);
+        });
+    }
 
-        [Fact]
-        public void StressRb_Counts()
+    [Fact]
+    public void CrashRb_ocCopyTo2D_Argument()
+    {
+        Assert.Throws<ArgumentException>(() =>
         {
+            var rb = new RankedBag<int>
+            {
+                5,
+                7
+            };
+            var oc = (System.Collections.ICollection)rb;
+            var a11 = Array.CreateInstance(typeof(int), new[] { 1 }, new[] { 1 });
+            oc.CopyTo(a11, 1);
+        });
+    }
+
+    [Fact]
+    public void UnitRb_ocCopyTo2()
+    {
+        var s4 = new[]
+        {
+            3,
+            5,
+            5,
+            7
+        };
+        var e2 = new[]
+        {
+            0,
+            0
+        };
+        var e3 = new[]
+        {
+            0,
+            3,
+            5
+        };
+        var e5 = new[]
+        {
+            0,
+            3,
+            5,
+            5,
+            0
+        };
+        var e6 = new[]
+        {
+            0,
+            3,
+            5,
+            5,
+            7,
+            0
+        };
+        var d2 = new int[2];
+        var d3 = new int[3];
+        var d4 = new int[4];
+        var d5 = new int[5];
+        var d6 = new int[6];
+        var rb = new RankedBag<int>(s4);
+        var oc = (System.Collections.ICollection)rb;
+        oc.CopyTo(d4, 0);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(s4, d4));
+        oc.CopyTo(d6, 1);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(e6, d6));
+    }
+
+    [Fact]
+    public void UnitRb_GetCount()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb = new RankedBag<int>(new[] { 3, 5, 5, 5, 7 });
+        Assert.Equal(0, rb0.GetCount(4));
+        Assert.Equal(0, rb.GetCount(1));
+        Assert.Equal(1, rb.GetCount(3));
+        Assert.Equal(3, rb.GetCount(5));
+        Assert.Equal(1, rb.GetCount(7));
+        Assert.Equal(0, rb.GetCount(9));
+    }
+
+    [Fact]
+    public void UnitRb_GetDistinctCount()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb = new RankedBag<int>(new[] { 3, 5, 5, 5, 7 });
+        Assert.Equal(0, rb0.GetDistinctCount());
+        Assert.Equal(3, rb.GetDistinctCount());
+    }
+
+    [Fact]
+    public void StressRb_Counts()
+    {
 #if STRESS
             int n=136;
 #else
-            int n = 5;
+        var n = 5;
 #endif
-            int reps = 100;
-            for (int order = 4; order <= n; order += 8)
-            {
-                var rb = new RankedBag<int>
-                {
-                    Capacity = order
-                };
-                for (int ix = 1; ix <= reps; ++ix)
-                    rb.Add(ix, ix);
-                for (int ix = 1; ix <= reps; ++ix)
-                    Assert.Equal(ix, rb.GetCount(ix));
-                Assert.Equal((reps + 1) * reps / 2, rb.Count);
-                Assert.Equal(reps, rb.GetDistinctCount());
-            }
-        }
-
-        [Fact]
-        public void UnitRb_IndexOf()
+        var reps = 100;
+        for (var order = 4; order <= n; order += 8)
         {
-            var rb0 = new RankedBag<int>();
             var rb = new RankedBag<int>
             {
-                Capacity = 4
+                Capacity = order
             };
-            foreach (int x in new int[]
-            {
-                3,
-                5,
-                5,
-                7,
-                7
-            }
-
-            )
-                rb.Add(x);
-            Assert.Equal(~0, rb0.IndexOf(9));
-            Assert.Equal(~0, rb.IndexOf(2));
-            Assert.Equal(0, rb.IndexOf(3));
-            Assert.Equal(~1, rb.IndexOf(4));
-            Assert.Equal(1, rb.IndexOf(5));
-            Assert.Equal(~3, rb.IndexOf(6));
-            Assert.Equal(3, rb.IndexOf(7));
-            Assert.Equal(~5, rb.IndexOf(8));
+            for (var ix = 1; ix <= reps; ++ix)
+                rb.Add(ix, ix);
+            for (var ix = 1; ix <= reps; ++ix)
+                Assert.Equal(ix, rb.GetCount(ix));
+            Assert.Equal((reps + 1) * reps / 2, rb.Count);
+            Assert.Equal(reps, rb.GetDistinctCount());
         }
+    }
 
-        [Fact]
-        public void UnitRb_Remove1()
+    [Fact]
+    public void UnitRb_IndexOf()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb = new RankedBag<int>
         {
-            var rb0 = new RankedBag<int>();
-            var rb = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            foreach (int ii in new int[]
-            {
-                3,
-                5,
-                5,
-                7,
-                7,
-                7,
-                9
-            }
+            Capacity = 4
+        };
+        foreach (var x in new[]
+                 {
+                     3,
+                     5,
+                     5,
+                     7,
+                     7
+                 }
 
-            )
-                rb.Add(ii);
-            bool rem0 = rb0.Remove(0);
-            Assert.False(rem0);
-            bool rem2 = rb.Remove(2);
-            Assert.False(rem2);
-            bool rem7 = rb.Remove(7);
-            Assert.True(rem7);
-            Assert.Equal(4, rb.Count);
-            bool rem5 = rb.Remove(5);
-            Assert.True(rem5);
-            Assert.Equal(2, rb.Count);
-            bool rem10 = rb.Remove(10);
-            Assert.False(rem10);
-        }
+                )
+            rb.Add(x);
+        Assert.Equal(~0, rb0.IndexOf(9));
+        Assert.Equal(~0, rb.IndexOf(2));
+        Assert.Equal(0, rb.IndexOf(3));
+        Assert.Equal(~1, rb.IndexOf(4));
+        Assert.Equal(1, rb.IndexOf(5));
+        Assert.Equal(~3, rb.IndexOf(6));
+        Assert.Equal(3, rb.IndexOf(7));
+        Assert.Equal(~5, rb.IndexOf(8));
+    }
 
-        [Fact]
-        public void CrashRb_Remove2_Argument()
+    [Fact]
+    public void UnitRb_Remove1()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb = new RankedBag<int>
         {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>();
-                rb.Remove(1, -1);
-            });
-        }
+            Capacity = 4
+        };
+        foreach (var ii in new[]
+                 {
+                     3,
+                     5,
+                     5,
+                     7,
+                     7,
+                     7,
+                     9
+                 }
 
-        [Fact]
-        public void UnitRb_Remove2()
+                )
+            rb.Add(ii);
+        var rem0 = rb0.Remove(0);
+        Assert.False(rem0);
+        var rem2 = rb.Remove(2);
+        Assert.False(rem2);
+        var rem7 = rb.Remove(7);
+        Assert.True(rem7);
+        Assert.Equal(4, rb.Count);
+        var rem5 = rb.Remove(5);
+        Assert.True(rem5);
+        Assert.Equal(2, rb.Count);
+        var rem10 = rb.Remove(10);
+        Assert.False(rem10);
+    }
+
+    [Fact]
+    public void CrashRb_Remove2_Argument()
+    {
+        Assert.Throws<ArgumentException>(() =>
         {
-            var rb0 = new RankedBag<int>();
-            var rb1 = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            var rb2 = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            var rb3 = new RankedBag<int>
-            {
-                Capacity = 5
-            };
-            foreach (int ii in new int[]
-            {
-                3,
-                5,
-                5,
-                7,
-                7,
-                7,
-                9
-            }
+            var rb = new RankedBag<int>();
+            rb.Remove(1, -1);
+        });
+    }
 
-            )
-                rb1.Add(ii);
-            foreach (int ii in new int[]
-            {
-                3,
-                3,
-                3,
-                5,
-                5,
-                5,
-                7,
-                7,
-                7,
-                9
-            }
-
-            )
-                rb2.Add(ii);
-            for (int ii = 0; ii < 41; ++ii)
-                rb3.Add(ii / 5);
-            var rem0 = rb0.Remove(0, 1);
-            Assert.Equal(0, rem0);
-            var rem2 = rb1.Remove(2, 2);
-            Assert.Equal(0, rem2);
-            var rem70 = rb1.Remove(7, 0);
-            Assert.Equal(0, rem70);
-            var rem7 = rb1.Remove(7, 1);
-            Assert.Equal(1, rem7);
-            Assert.Equal(6, rb1.Count);
-            var rem5 = rb1.Remove(5, 3);
-            Assert.Equal(2, rem5);
-            Assert.Equal(4, rb1.Count);
-            var rem9 = rb1.Remove(10);
-            Assert.False(rem9);
-            var rem53 = rb2.Remove(5, 3);
-            Assert.Equal(3, rem53);
-            var rem33 = rb2.Remove(3, 3);
-            Assert.Equal(3, rem33);
-            var rem99 = rb2.Remove(9, 9);
-            Assert.Equal(1, rem99);
-            Assert.Equal(3, rb2.Count);
-            var rem35 = rb3.Remove(3, 9);
-            Assert.Equal(5, rem35);
-            Assert.Equal(36, rb3.Count);
-            Assert.False(rb3.Contains(3));
-            var rem65 = rb3.Remove(6, Int32.MaxValue);
-            Assert.Equal(5, rem65);
-            Assert.Equal(31, rb3.Count);
-            Assert.False(rb3.Contains(6));
-        }
-
-        [Fact]
-        public void StressRbRemove()
+    [Fact]
+    public void UnitRb_Remove2()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb1 = new RankedBag<int>
         {
+            Capacity = 4
+        };
+        var rb2 = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        var rb3 = new RankedBag<int>
+        {
+            Capacity = 5
+        };
+        foreach (var ii in new[]
+                 {
+                     3,
+                     5,
+                     5,
+                     7,
+                     7,
+                     7,
+                     9
+                 }
+
+                )
+            rb1.Add(ii);
+        foreach (var ii in new[]
+                 {
+                     3,
+                     3,
+                     3,
+                     5,
+                     5,
+                     5,
+                     7,
+                     7,
+                     7,
+                     9
+                 }
+
+                )
+            rb2.Add(ii);
+        for (var ii = 0; ii < 41; ++ii)
+            rb3.Add(ii / 5);
+        var rem0 = rb0.Remove(0, 1);
+        Assert.Equal(0, rem0);
+        var rem2 = rb1.Remove(2, 2);
+        Assert.Equal(0, rem2);
+        var rem70 = rb1.Remove(7, 0);
+        Assert.Equal(0, rem70);
+        var rem7 = rb1.Remove(7, 1);
+        Assert.Equal(1, rem7);
+        Assert.Equal(6, rb1.Count);
+        var rem5 = rb1.Remove(5, 3);
+        Assert.Equal(2, rem5);
+        Assert.Equal(4, rb1.Count);
+        var rem9 = rb1.Remove(10);
+        Assert.False(rem9);
+        var rem53 = rb2.Remove(5, 3);
+        Assert.Equal(3, rem53);
+        var rem33 = rb2.Remove(3, 3);
+        Assert.Equal(3, rem33);
+        var rem99 = rb2.Remove(9, 9);
+        Assert.Equal(1, rem99);
+        Assert.Equal(3, rb2.Count);
+        var rem35 = rb3.Remove(3, 9);
+        Assert.Equal(5, rem35);
+        Assert.Equal(36, rb3.Count);
+        Assert.False(rb3.Contains(3));
+        var rem65 = rb3.Remove(6, Int32.MaxValue);
+        Assert.Equal(5, rem65);
+        Assert.Equal(31, rb3.Count);
+        Assert.False(rb3.Contains(6));
+    }
+
+    [Fact]
+    public void StressRbRemove()
+    {
 #if STRESS
             int m=2, n=50, x1=0, x2=n;
 #else
-            int m = 2, n = 22, x1 = 15, x2 = x1;
+        int m = 2, n = 22, x1 = 15, x2 = x1;
 #endif
-            for (int x = x1; x <= x2; ++x)
-            {
-                var rb = new RankedBag<int>()
-                {
-                    Capacity = 4
-                };
-                var ex = new System.Collections.Generic.List<int>();
-                for (int i = n; i >= 0; --i)
-                {
-                    rb.Add(i, m);
-                    if (i != x)
-                    {
-                        ex.Insert(0, i);
-                        ex.Insert(0, i);
-                    }
-                }
-
-                rb.Remove(x);
-                var isOk = System.Linq.Enumerable.SequenceEqual(ex, rb);
-                if (!isOk)
-                {
-                }
-
-                Assert.True(System.Linq.Enumerable.SequenceEqual(ex, rb));
-#if DEBUG
-                rb.SanityCheck();
-#endif
-            }
-        }
-
-        [Fact]
-        public void CrashRb_RemoveAll_ArgumentNull()
+        for (var x = x1; x <= x2; ++x)
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var rb = new RankedBag<int>();
-                rb.RemoveAll(null);
-            });
-        }
-
-        [Fact]
-        public void UnitRb_RemoveAll()
-        {
-            var rb0 = new RankedBag<int>();
-            var rb = new RankedBag<int>
+            var rb = new RankedBag<int>()
             {
                 Capacity = 4
             };
-            foreach (var ii in new int[]
+            var ex = new System.Collections.Generic.List<int>();
+            for (var i = n; i >= 0; --i)
             {
-                3,
-                5,
-                5,
-                7,
-                7
+                rb.Add(i, m);
+                if (i != x)
+                {
+                    ex.Insert(0, i);
+                    ex.Insert(0, i);
+                }
             }
 
-            )
-                rb.Add(ii);
-            int rem0 = rb0.RemoveAll(new int[] { 2 });
-            Assert.Equal(0, rem0);
-            int rem1 = rb.RemoveAll(new int[] { });
-            Assert.Equal(0, rem1);
-            int rem2 = rb.RemoveAll(new int[] { 2 });
-            Assert.Equal(0, rem0);
-            int rem57 = rb.RemoveAll(new int[] { 5, 7 });
-            Assert.Equal(2, rem57);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 3, 5, 7 }, rb));
-            int rem4 = rb.RemoveAll(rb);
-            Assert.Equal(3, rem4);
-            Assert.Equal(0, rb.Count);
-        }
+            rb.Remove(x);
+            var isOk = System.Linq.Enumerable.SequenceEqual(ex, rb);
+            if (!isOk)
+            {
+            }
 
-        [Fact]
-        public void CrashRb_RemoveAtA_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    1
-                };
-                rb.RemoveAt(-1);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_RemoveAtB_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>();
-                rb.RemoveAt(0);
-            });
-        }
-
-        [Fact]
-        public void UnitRb_RemoveAt()
-        {
-            var rb1 = new RankedBag<int>()
-            {
-                Capacity = 5
-            };
-#if STRESS
-            int n = 500, m = 10;
-#else
-            int n = 50, m = 5;
-#endif
-            for (int i1 = 0; i1 < n; ++i1)
-                rb1.Add(i1);
-            for (int i2 = n - m; i2 >= 0; i2 -= m)
-                rb1.RemoveAt(i2);
-            for (int i3 = 0; i3 < n; ++i3)
-                if (i3 % m == 0)
-                    Assert.False(rb1.Contains(i3));
-                else
-                    Assert.True(rb1.Contains(i3));
-            var rb2 = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            for (int ii = 0; ii < 8; ++ii)
-                rb2.Add(ii);
-            rb2.RemoveAt(3);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 0, 1, 2, 4, 5, 6, 7 }, rb2));
-        }
-
-        [Fact]
-        public void CrashRb_RemoveRangeA_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>();
-                rb.RemoveRange(-1, 0);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_RemoveRangeB_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>();
-                rb.RemoveRange(0, -1);
-            });
-        }
-
-        [Fact]
-        public void CrashRb_RemoveRange_Argument()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    3,
-                    5
-                };
-                rb.RemoveRange(1, 2);
-            });
-        }
-
-        [Fact]
-        public void UnitRb_RemoveRange()
-        {
-            var rb = new RankedBag<int>
-            {
-                Capacity = 7
-            };
-            for (int ii = 0; ii < 20; ++ii)
-                rb.Add(ii);
-            rb.RemoveRange(20, 0);
-            Assert.Equal(20, rb.Count);
-            rb.RemoveRange(12, 4);
-            Assert.Equal(16, rb.Count);
+            Assert.True(System.Linq.Enumerable.SequenceEqual(ex, rb));
 #if DEBUG
             rb.SanityCheck();
 #endif
         }
+    }
 
-        [Fact]
-        public void UnitRb_RemoveWhere()
+    [Fact]
+    public void CrashRb_RemoveAll_ArgumentNull()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
         {
-            var rb0 = new RankedBag<int>();
-            var rb = new RankedBag<int>(new int[] { 3, 4, 5, 5, 6, 6, 7, 7, 8 });
-            rb0.RemoveWhere(IsEven);
-            Assert.Equal(0, rb0.Count);
-            rb.RemoveWhere(IsEven);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 3, 5, 5, 7, 7 }, rb));
-        }
+            var rb = new RankedBag<int>();
+            rb.RemoveAll(null);
+        });
+    }
 
-        [Fact]
-        public void CrashRb_RetainAll_ArgumentNull()
+    [Fact]
+    public void UnitRb_RemoveAll()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb = new RankedBag<int>
         {
-            Assert.Throws<ArgumentNullException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    2
-                };
-                rb.RetainAll(null);
-            });
-        }
+            Capacity = 4
+        };
+        foreach (var ii in new[]
+                 {
+                     3,
+                     5,
+                     5,
+                     7,
+                     7
+                 }
 
-        [Fact]
-        public void UnitRb_RetainAll()
-        {
-            var rb0 = new RankedBag<int>();
-            var rb1 = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            var rb2 = new RankedBag<int>
-            {
-                3,
-                5,
-                7
-            };
-            foreach (int ii in new int[]
-            {
-                3,
-                4,
-                5,
-                5,
-                6,
-                6,
-                6,
-                7,
-                7,
-                8
-            }
+                )
+            rb.Add(ii);
+        var rem0 = rb0.RemoveAll(new[] { 2 });
+        Assert.Equal(0, rem0);
+        var rem1 = rb.RemoveAll(new int[] { });
+        Assert.Equal(0, rem1);
+        var rem2 = rb.RemoveAll(new[] { 2 });
+        Assert.Equal(0, rem0);
+        var rem57 = rb.RemoveAll(new[] { 5, 7 });
+        Assert.Equal(2, rem57);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 3, 5, 7 }, rb));
+        var rem4 = rb.RemoveAll(rb);
+        Assert.Equal(3, rem4);
+        Assert.Equal(0, rb.Count);
+    }
 
-            )
-                rb1.Add(ii);
-            int del0 = rb0.RetainAll(new int[] { 2, 4 });
-            Assert.Equal(0, del0);
-            Assert.Equal(0, rb0.Count);
-            int del1 = rb1.RetainAll(new int[] { 1, 4, 4, 6, 6, 9 });
-            Assert.Equal(7, del1);
-            Assert.True(System.Linq.Enumerable.SequenceEqual(new int[] { 4, 6, 6 }, rb1));
-            int del2 = rb2.RetainAll(new int[] { });
-            Assert.Equal(3, del2);
-            Assert.Equal(0, rb2.Count);
-        }
-
-        [Fact]
-        public void UnitRb_TryGetEQ()
-        {
-            var rb = new RankedBag<string>(StringComparer.OrdinalIgnoreCase)
-            {
-                Capacity = 4
-            };
-            bool r0a = rb.TryGet("AA", out string k0a);
-            bool r0b = rb.TryGet("BB", out string k0b);
-            Assert.False(r0a);
-            Assert.Equal(default(string), k0a);
-            Assert.False(r0b);
-            Assert.Equal(default(string), k0b);
-            for (char cx = 'b'; cx <= 'y'; ++cx)
-            {
-                rb.Add(cx.ToString());
-                rb.Add(Char.ToUpperInvariant(cx).ToString());
-            }
-
-            for (char c1 = 'b'; c1 <= 'y'; ++c1)
-            {
-                bool r1 = rb.TryGet(c1.ToString(), out string k1);
-                Assert.True(r1);
-                Assert.Equal(c1.ToString(), k1);
-            }
-
-            bool r2 = rb.TryGet("A", out string k2);
-            bool r3 = rb.TryGet("z", out string k3);
-            Assert.False(r2);
-            Assert.Equal(default(string), k2);
-            Assert.False(r3);
-            Assert.Equal(default(string), k3);
-        }
-
-        [Fact]
-        public void UnitRb_TryGetLELT()
-        {
-            var rb = new RankedBag<string>(StringComparer.OrdinalIgnoreCase)
-            {
-                Capacity = 4
-            };
-            bool r0a = rb.TryGetLessThanOrEqual("AA", out string k0a);
-            bool r0b = rb.TryGetLessThan("BB", out string k0b);
-            Assert.False(r0a);
-            Assert.Equal(default(string), k0a);
-            Assert.False(r0b);
-            Assert.Equal(default(string), k0b);
-            for (char cx = 'b'; cx <= 'y'; ++cx)
-            {
-                rb.Add(cx.ToString());
-                rb.Add(Char.ToUpperInvariant(cx).ToString());
-            }
-
-            for (char c1 = 'c'; c1 <= 'y'; ++c1)
-            {
-                bool r1a = rb.TryGetLessThanOrEqual(c1.ToString().ToUpper(), out string k1a);
-                bool r1b = rb.TryGetLessThan(c1.ToString(), out string k1b);
-                Assert.True(r1a);
-                Assert.Equal(c1.ToString(), k1a);
-                Assert.True(r1b);
-                Assert.Equal(((char)(c1 - 1)).ToString().ToUpper(), k1b);
-            }
-
-            bool r2a = rb.TryGetLessThanOrEqual("A", out string k2a);
-            bool r2b = rb.TryGetLessThan("a", out string k2b);
-            Assert.False(r2a);
-            Assert.Equal(default(string), k2a);
-            Assert.False(r2b);
-            Assert.Equal(default(string), k2b);
-            bool r3a = rb.TryGetLessThanOrEqual("B", out string k3a);
-            bool r3b = rb.TryGetLessThan("b", out string k3b);
-            Assert.True(r3a);
-            Assert.Equal("b", k3a);
-            Assert.False(r3b);
-            Assert.Equal(default(string), k3b);
-            bool r4a = rb.TryGetLessThanOrEqual("Z", out string k4a);
-            bool r4b = rb.TryGetLessThan("z", out string k4b);
-            Assert.True(r4a);
-            Assert.Equal("Y", k4a);
-            Assert.True(r4b);
-            Assert.Equal("Y", k4b);
-        }
-
-        [Fact]
-        public void UnitRb_TryGetGEGT()
-        {
-            var rb = new RankedBag<string>(StringComparer.OrdinalIgnoreCase)
-            {
-                Capacity = 4
-            };
-            bool r0a = rb.TryGetGreaterThanOrEqual("AA", out string k0a);
-            bool r0b = rb.TryGetGreaterThan("BB", out string k0b);
-            Assert.False(r0a);
-            Assert.Equal(default(string), k0a);
-            Assert.False(r0b);
-            Assert.Equal(default(string), k0b);
-            for (char cx = 'b'; cx <= 'y'; ++cx)
-            {
-                rb.Add(cx.ToString());
-                rb.Add(Char.ToUpperInvariant(cx).ToString());
-            }
-
-            for (char c1 = 'b'; c1 <= 'x'; ++c1)
-            {
-                bool r1a = rb.TryGetGreaterThanOrEqual(c1.ToString().ToUpper(), out string k1a);
-                bool r1b = rb.TryGetGreaterThan(c1.ToString(), out string k1b);
-                Assert.True(r1a);
-                Assert.Equal(c1.ToString(), k1a);
-                Assert.True(r1b);
-                Assert.Equal(((char)(c1 + 1)).ToString(), k1b);
-            }
-
-            bool r2a = rb.TryGetGreaterThanOrEqual("A", out string k2a);
-            bool r2b = rb.TryGetGreaterThan("a", out string k2b);
-            Assert.True(r2a);
-            Assert.Equal("b", k2a);
-            Assert.True(r2b);
-            Assert.Equal("b", k2b);
-            bool r3a = rb.TryGetGreaterThanOrEqual("Y", out string k3a);
-            bool r3b = rb.TryGetGreaterThan("y", out string k3b);
-            Assert.True(r3a);
-            Assert.Equal("y", k3a);
-            Assert.False(r3b);
-            Assert.Equal(default(string), k3b);
-            bool r4a = rb.TryGetGreaterThanOrEqual("Z", out string k4a);
-            bool r4b = rb.TryGetGreaterThan("z", out string k4b);
-            Assert.False(r4a);
-            Assert.Equal(default(string), k4a);
-            Assert.False(r4b);
-            Assert.Equal(default(string), k4b);
-        }
-
-#endregion
-#region Test enumeration
-        [Fact]
-        public void UnitRb_ElementsBetween()
-        {
-            var rb0 = new RankedBag<int>();
-            var rb1 = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            var rb2 = new RankedBag<int>(new int[] { 5, 5, 5, 5, 5 });
-            foreach (var k1 in new int[]
-            {
-                3,
-                4,
-                5,
-                5,
-                6,
-                6,
-                7,
-                7,
-                8
-            }
-
-            )
-                rb1.Add(k1);
-            var d0 = new System.Collections.Generic.List<int>(rb0.ElementsBetween(2, 4));
-            Assert.Equal(0, d0.Count);
-            var d1 = new System.Collections.Generic.List<int>(rb1.ElementsBetween(5, 6));
-            Assert.Equal(4, d1.Count);
-            var d2 = new System.Collections.Generic.List<int>(rb1.ElementsBetween(5, 5));
-            Assert.Equal(2, d2.Count);
-            var d3 = new System.Collections.Generic.List<int>(rb2.ElementsBetween(5, 5));
-            Assert.Equal(5, d3.Count);
-            var d4 = new System.Collections.Generic.List<int>(rb2.ElementsBetween(1, 2));
-            Assert.Equal(0, d4.Count);
-            var d5 = new System.Collections.Generic.List<int>(rb2.ElementsBetween(9, 11));
-            Assert.Equal(0, d5.Count);
-        }
-
-        [Fact]
-        public void UnitRb_ElementsFrom()
-        {
-            var rb0 = new RankedBag<int>();
-            var rb1 = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            var rb2 = new RankedBag<int>(new int[] { 5, 5, 5, 5, 5 });
-            foreach (var i1 in new int[]
-            {
-                3,
-                4,
-                5,
-                5,
-                6,
-                6,
-                7,
-                7,
-                8
-            }
-
-            )
-                rb1.Add(i1);
-            var d0 = new System.Collections.Generic.List<int>(rb0.ElementsFrom(0));
-            Assert.Equal(0, d0.Count);
-            var d1 = new System.Collections.Generic.List<int>(rb1.ElementsFrom(6));
-            Assert.Equal(5, d1.Count);
-            var d2 = new System.Collections.Generic.List<int>(rb1.ElementsFrom(1));
-            Assert.Equal(9, d2.Count);
-            var d3 = new System.Collections.Generic.List<int>(rb2.ElementsFrom(5));
-            Assert.Equal(5, d3.Count);
-            var d5 = new System.Collections.Generic.List<int>(rb2.ElementsFrom(9));
-            Assert.Equal(0, d5.Count);
-        }
-
-        [Fact]
-        public void CrashRb_ElementsBetweenIndexesA_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    0,
-                    1,
-                    2
-                };
-                foreach (var val in rb.ElementsBetweenIndexes(-1, 0))
-                {
-                }
-            });
-        }
-
-        [Fact]
-        public void CrashRb_ElementsBetweenIndexesB_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    0,
-                    1,
-                    2
-                };
-                foreach (var val in rb.ElementsBetweenIndexes(3, 0))
-                {
-                }
-            });
-        }
-
-        [Fact]
-        public void CrashRb_ElementsBetweenIndexesC_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    0,
-                    1,
-                    2
-                };
-                foreach (var val in rb.ElementsBetweenIndexes(0, -1))
-                {
-                }
-            });
-        }
-
-        [Fact]
-        public void CrashRb_ElementsBetweenIndexesD_ArgumentOutOfRange()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    0,
-                    1,
-                    2
-                };
-                foreach (var val in rb.ElementsBetweenIndexes(0, 3))
-                {
-                }
-            });
-        }
-
-        [Fact]
-        public void CrashRb_ElementsBetweenIndexes_Argument()
-        {
-            Assert.Throws<ArgumentException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    0,
-                    1,
-                    2
-                };
-                foreach (var val in rb.ElementsBetweenIndexes(2, 1))
-                {
-                }
-            });
-        }
-
-        [Fact]
-        public void UnitRb_ElementsBetweenIndexes()
-        {
-            int n = 33;
-            var rb = new RankedBag<int>
-            {
-                Capacity = 4
-            };
-            for (int ii = 0; ii < n; ++ii)
-                rb.Add(ii);
-            for (int p1 = 0; p1 < n; ++p1)
-                for (int p2 = p1; p2 < n; ++p2)
-                {
-                    int actual = 0;
-                    foreach (var val in rb.ElementsBetweenIndexes(p1, p2))
-                        actual += val;
-                    int expected = (p2 - p1 + 1) * (p1 + p2) / 2;
-                    Assert.Equal(expected, actual);
-                }
-        }
-
-        [Fact]
-        public void CrashRb_EtorOverflow_InvalidOperation()
-        {
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    Capacity = 4
-                };
-                for (int ii = 0; ii < 10; ++ii)
-                    rb.Add(ii);
-                var etor = rb.GetEnumerator();
-                while (etor.MoveNext())
-                {
-                }
-
-                var val = ((System.Collections.IEnumerator)etor).Current;
-            });
-        }
-
-        [Fact]
-        public void UnitRb_gcGetEnumerator()
+    [Fact]
+    public void CrashRb_RemoveAtA_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
         {
             var rb = new RankedBag<int>
             {
+                1
+            };
+            rb.RemoveAt(-1);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_RemoveAtB_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>();
+            rb.RemoveAt(0);
+        });
+    }
+
+    [Fact]
+    public void UnitRb_RemoveAt()
+    {
+        var rb1 = new RankedBag<int>()
+        {
+            Capacity = 5
+        };
+#if STRESS
+            int n = 500, m = 10;
+#else
+        int n = 50, m = 5;
+#endif
+        for (var i1 = 0; i1 < n; ++i1)
+            rb1.Add(i1);
+        for (var i2 = n - m; i2 >= 0; i2 -= m)
+            rb1.RemoveAt(i2);
+        for (var i3 = 0; i3 < n; ++i3)
+            if (i3 % m == 0)
+                Assert.False(rb1.Contains(i3));
+            else
+                Assert.True(rb1.Contains(i3));
+        var rb2 = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        for (var ii = 0; ii < 8; ++ii)
+            rb2.Add(ii);
+        rb2.RemoveAt(3);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 0, 1, 2, 4, 5, 6, 7 }, rb2));
+    }
+
+    [Fact]
+    public void CrashRb_RemoveRangeA_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>();
+            rb.RemoveRange(-1, 0);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_RemoveRangeB_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>();
+            rb.RemoveRange(0, -1);
+        });
+    }
+
+    [Fact]
+    public void CrashRb_RemoveRange_Argument()
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                3,
                 5
             };
-            var gcBag = ((System.Collections.Generic.ICollection<int>)rb);
-            var gcEtor = gcBag.GetEnumerator();
-            gcEtor.MoveNext();
-            Assert.Equal(5, gcEtor.Current);
+            rb.RemoveRange(1, 2);
+        });
+    }
+
+    [Fact]
+    public void UnitRb_RemoveRange()
+    {
+        var rb = new RankedBag<int>
+        {
+            Capacity = 7
+        };
+        for (var ii = 0; ii < 20; ++ii)
+            rb.Add(ii);
+        rb.RemoveRange(20, 0);
+        Assert.Equal(20, rb.Count);
+        rb.RemoveRange(12, 4);
+        Assert.Equal(16, rb.Count);
+#if DEBUG
+        rb.SanityCheck();
+#endif
+    }
+
+    [Fact]
+    public void UnitRb_RemoveWhere()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb = new RankedBag<int>(new[] { 3, 4, 5, 5, 6, 6, 7, 7, 8 });
+        rb0.RemoveWhere(IsEven);
+        Assert.Equal(0, rb0.Count);
+        rb.RemoveWhere(IsEven);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 3, 5, 5, 7, 7 }, rb));
+    }
+
+    [Fact]
+    public void CrashRb_RetainAll_ArgumentNull()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                2
+            };
+            rb.RetainAll(null);
+        });
+    }
+
+    [Fact]
+    public void UnitRb_RetainAll()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb1 = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        var rb2 = new RankedBag<int>
+        {
+            3,
+            5,
+            7
+        };
+        foreach (var ii in new[]
+                 {
+                     3,
+                     4,
+                     5,
+                     5,
+                     6,
+                     6,
+                     6,
+                     7,
+                     7,
+                     8
+                 }
+
+                )
+            rb1.Add(ii);
+        var del0 = rb0.RetainAll(new[] { 2, 4 });
+        Assert.Equal(0, del0);
+        Assert.Equal(0, rb0.Count);
+        var del1 = rb1.RetainAll(new[] { 1, 4, 4, 6, 6, 9 });
+        Assert.Equal(7, del1);
+        Assert.True(System.Linq.Enumerable.SequenceEqual(new[] { 4, 6, 6 }, rb1));
+        var del2 = rb2.RetainAll(new int[] { });
+        Assert.Equal(3, del2);
+        Assert.Equal(0, rb2.Count);
+    }
+
+    [Fact]
+    public void UnitRb_TryGetEQ()
+    {
+        var rb = new RankedBag<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            Capacity = 4
+        };
+        var r0a = rb.TryGet("AA", out var k0a);
+        var r0b = rb.TryGet("BB", out var k0b);
+        Assert.False(r0a);
+        Assert.Equal(default(string), k0a);
+        Assert.False(r0b);
+        Assert.Equal(default(string), k0b);
+        for (var cx = 'b'; cx <= 'y'; ++cx)
+        {
+            rb.Add(cx.ToString());
+            rb.Add(Char.ToUpperInvariant(cx).ToString());
         }
 
-        [Fact]
-        public void UnitRb_GetEnumerator()
+        for (var c1 = 'b'; c1 <= 'y'; ++c1)
+        {
+            var r1 = rb.TryGet(c1.ToString(), out var k1);
+            Assert.True(r1);
+            Assert.Equal(c1.ToString(), k1);
+        }
+
+        var r2 = rb.TryGet("A", out var k2);
+        var r3 = rb.TryGet("z", out var k3);
+        Assert.False(r2);
+        Assert.Equal(default(string), k2);
+        Assert.False(r3);
+        Assert.Equal(default(string), k3);
+    }
+
+    [Fact]
+    public void UnitRb_TryGetLELT()
+    {
+        var rb = new RankedBag<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            Capacity = 4
+        };
+        var r0a = rb.TryGetLessThanOrEqual("AA", out var k0a);
+        var r0b = rb.TryGetLessThan("BB", out var k0b);
+        Assert.False(r0a);
+        Assert.Equal(default(string), k0a);
+        Assert.False(r0b);
+        Assert.Equal(default(string), k0b);
+        for (var cx = 'b'; cx <= 'y'; ++cx)
+        {
+            rb.Add(cx.ToString());
+            rb.Add(Char.ToUpperInvariant(cx).ToString());
+        }
+
+        for (var c1 = 'c'; c1 <= 'y'; ++c1)
+        {
+            var r1a = rb.TryGetLessThanOrEqual(c1.ToString().ToUpper(), out var k1a);
+            var r1b = rb.TryGetLessThan(c1.ToString(), out var k1b);
+            Assert.True(r1a);
+            Assert.Equal(c1.ToString(), k1a);
+            Assert.True(r1b);
+            Assert.Equal(((char)(c1 - 1)).ToString().ToUpper(), k1b);
+        }
+
+        var r2a = rb.TryGetLessThanOrEqual("A", out var k2a);
+        var r2b = rb.TryGetLessThan("a", out var k2b);
+        Assert.False(r2a);
+        Assert.Equal(default(string), k2a);
+        Assert.False(r2b);
+        Assert.Equal(default(string), k2b);
+        var r3a = rb.TryGetLessThanOrEqual("B", out var k3a);
+        var r3b = rb.TryGetLessThan("b", out var k3b);
+        Assert.True(r3a);
+        Assert.Equal("b", k3a);
+        Assert.False(r3b);
+        Assert.Equal(default(string), k3b);
+        var r4a = rb.TryGetLessThanOrEqual("Z", out var k4a);
+        var r4b = rb.TryGetLessThan("z", out var k4b);
+        Assert.True(r4a);
+        Assert.Equal("Y", k4a);
+        Assert.True(r4b);
+        Assert.Equal("Y", k4b);
+    }
+
+    [Fact]
+    public void UnitRb_TryGetGEGT()
+    {
+        var rb = new RankedBag<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            Capacity = 4
+        };
+        var r0a = rb.TryGetGreaterThanOrEqual("AA", out var k0a);
+        var r0b = rb.TryGetGreaterThan("BB", out var k0b);
+        Assert.False(r0a);
+        Assert.Equal(default(string), k0a);
+        Assert.False(r0b);
+        Assert.Equal(default(string), k0b);
+        for (var cx = 'b'; cx <= 'y'; ++cx)
+        {
+            rb.Add(cx.ToString());
+            rb.Add(Char.ToUpperInvariant(cx).ToString());
+        }
+
+        for (var c1 = 'b'; c1 <= 'x'; ++c1)
+        {
+            var r1a = rb.TryGetGreaterThanOrEqual(c1.ToString().ToUpper(), out var k1a);
+            var r1b = rb.TryGetGreaterThan(c1.ToString(), out var k1b);
+            Assert.True(r1a);
+            Assert.Equal(c1.ToString(), k1a);
+            Assert.True(r1b);
+            Assert.Equal(((char)(c1 + 1)).ToString(), k1b);
+        }
+
+        var r2a = rb.TryGetGreaterThanOrEqual("A", out var k2a);
+        var r2b = rb.TryGetGreaterThan("a", out var k2b);
+        Assert.True(r2a);
+        Assert.Equal("b", k2a);
+        Assert.True(r2b);
+        Assert.Equal("b", k2b);
+        var r3a = rb.TryGetGreaterThanOrEqual("Y", out var k3a);
+        var r3b = rb.TryGetGreaterThan("y", out var k3b);
+        Assert.True(r3a);
+        Assert.Equal("y", k3a);
+        Assert.False(r3b);
+        Assert.Equal(default(string), k3b);
+        var r4a = rb.TryGetGreaterThanOrEqual("Z", out var k4a);
+        var r4b = rb.TryGetGreaterThan("z", out var k4b);
+        Assert.False(r4a);
+        Assert.Equal(default(string), k4a);
+        Assert.False(r4b);
+        Assert.Equal(default(string), k4b);
+    }
+
+    #endregion
+    #region Test enumeration
+    [Fact]
+    public void UnitRb_ElementsBetween()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb1 = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        var rb2 = new RankedBag<int>(new[] { 5, 5, 5, 5, 5 });
+        foreach (var k1 in new[]
+                 {
+                     3,
+                     4,
+                     5,
+                     5,
+                     6,
+                     6,
+                     7,
+                     7,
+                     8
+                 }
+
+                )
+            rb1.Add(k1);
+        var d0 = new System.Collections.Generic.List<int>(rb0.ElementsBetween(2, 4));
+        Assert.Equal(0, d0.Count);
+        var d1 = new System.Collections.Generic.List<int>(rb1.ElementsBetween(5, 6));
+        Assert.Equal(4, d1.Count);
+        var d2 = new System.Collections.Generic.List<int>(rb1.ElementsBetween(5, 5));
+        Assert.Equal(2, d2.Count);
+        var d3 = new System.Collections.Generic.List<int>(rb2.ElementsBetween(5, 5));
+        Assert.Equal(5, d3.Count);
+        var d4 = new System.Collections.Generic.List<int>(rb2.ElementsBetween(1, 2));
+        Assert.Equal(0, d4.Count);
+        var d5 = new System.Collections.Generic.List<int>(rb2.ElementsBetween(9, 11));
+        Assert.Equal(0, d5.Count);
+    }
+
+    [Fact]
+    public void UnitRb_ElementsFrom()
+    {
+        var rb0 = new RankedBag<int>();
+        var rb1 = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        var rb2 = new RankedBag<int>(new[] { 5, 5, 5, 5, 5 });
+        foreach (var i1 in new[]
+                 {
+                     3,
+                     4,
+                     5,
+                     5,
+                     6,
+                     6,
+                     7,
+                     7,
+                     8
+                 }
+
+                )
+            rb1.Add(i1);
+        var d0 = new System.Collections.Generic.List<int>(rb0.ElementsFrom(0));
+        Assert.Equal(0, d0.Count);
+        var d1 = new System.Collections.Generic.List<int>(rb1.ElementsFrom(6));
+        Assert.Equal(5, d1.Count);
+        var d2 = new System.Collections.Generic.List<int>(rb1.ElementsFrom(1));
+        Assert.Equal(9, d2.Count);
+        var d3 = new System.Collections.Generic.List<int>(rb2.ElementsFrom(5));
+        Assert.Equal(5, d3.Count);
+        var d5 = new System.Collections.Generic.List<int>(rb2.ElementsFrom(9));
+        Assert.Equal(0, d5.Count);
+    }
+
+    [Fact]
+    public void CrashRb_ElementsBetweenIndexesA_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                0,
+                1,
+                2
+            };
+            foreach (var val in rb.ElementsBetweenIndexes(-1, 0))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public void CrashRb_ElementsBetweenIndexesB_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                0,
+                1,
+                2
+            };
+            foreach (var val in rb.ElementsBetweenIndexes(3, 0))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public void CrashRb_ElementsBetweenIndexesC_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                0,
+                1,
+                2
+            };
+            foreach (var val in rb.ElementsBetweenIndexes(0, -1))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public void CrashRb_ElementsBetweenIndexesD_ArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                0,
+                1,
+                2
+            };
+            foreach (var val in rb.ElementsBetweenIndexes(0, 3))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public void CrashRb_ElementsBetweenIndexes_Argument()
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            var rb = new RankedBag<int>
+            {
+                0,
+                1,
+                2
+            };
+            foreach (var val in rb.ElementsBetweenIndexes(2, 1))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public void UnitRb_ElementsBetweenIndexes()
+    {
+        var n = 33;
+        var rb = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        for (var ii = 0; ii < n; ++ii)
+            rb.Add(ii);
+        for (var p1 = 0; p1 < n; ++p1)
+        for (var p2 = p1; p2 < n; ++p2)
+        {
+            var actual = 0;
+            foreach (var val in rb.ElementsBetweenIndexes(p1, p2))
+                actual += val;
+            var expected = (p2 - p1 + 1) * (p1 + p2) / 2;
+            Assert.Equal(expected, actual);
+        }
+    }
+
+    [Fact]
+    public void CrashRb_EtorOverflow_InvalidOperation()
+    {
+        Assert.Throws<InvalidOperationException>(() =>
         {
             var rb = new RankedBag<int>
             {
                 Capacity = 4
             };
-            for (int ii = 0; ii < 10; ++ii)
+            for (var ii = 0; ii < 10; ++ii)
                 rb.Add(ii);
             var etor = rb.GetEnumerator();
-            int ix = 0;
             while (etor.MoveNext())
             {
-                int gActual = etor.Current;
-                object oActual = ((System.Collections.IEnumerator)etor).Current;
-                Assert.Equal(ix, gActual);
-                Assert.Equal(ix, oActual);
-                ++ix;
             }
 
-            Assert.Equal(10, ix);
-            int gActualEnd = etor.Current;
-            Assert.Equal(default(int), gActualEnd);
-            bool isValid = etor.MoveNext();
-            Assert.False(isValid);
-        }
+            var val = ((System.Collections.IEnumerator)etor).Current;
+        });
+    }
 
-        [Fact]
-        public void CrashRb_EtorHotUpdate()
+    [Fact]
+    public void UnitRb_gcGetEnumerator()
+    {
+        var rb = new RankedBag<int>
         {
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                var rb = new RankedBag<int>
-                {
-                    Capacity = 4
-                };
-                for (int ii = 0; ii < 10; ++ii)
-                    rb.Add(ii);
-                int n = 0;
-                foreach (int kv in rb)
-                {
-                    if (++n == 2)
-                        rb.Add(49);
-                }
-            });
-        }
+            5
+        };
+        var gcBag = ((System.Collections.Generic.ICollection<int>)rb);
+        var gcEtor = gcBag.GetEnumerator();
+        gcEtor.MoveNext();
+        Assert.Equal(5, gcEtor.Current);
+    }
 
-        [Fact]
-        public void UnitRb_ocCurrent_HotUpdate()
+    [Fact]
+    public void UnitRb_GetEnumerator()
+    {
+        var rb = new RankedBag<int>
         {
-            var rb = new RankedBag<int>
-            {
-                2
-            };
-            System.Collections.ICollection oc = rb;
-            System.Collections.IEnumerator etor = oc.GetEnumerator();
-            bool ok = etor.MoveNext();
-            Assert.True(ok);
-            Assert.Equal(2, etor.Current);
-            rb.Clear();
-            Assert.Equal(2, etor.Current);
-        }
-
-        [Fact]
-        public void UnitRb_EtorCurrentHotUpdate()
+            Capacity = 4
+        };
+        for (var ii = 0; ii < 10; ++ii)
+            rb.Add(ii);
+        var etor = rb.GetEnumerator();
+        var ix = 0;
+        while (etor.MoveNext())
         {
-            var rb1 = new RankedBag<int>
-            {
-                2
-            };
-            var etor1 = rb1.GetEnumerator();
-            Assert.Equal(default(int), etor1.Current);
-            bool ok1 = etor1.MoveNext();
-            Assert.True(ok1);
-            Assert.Equal(2, etor1.Current);
-            rb1.Remove(2);
-            Assert.Equal(2, etor1.Current);
-            var rb2 = new RankedBag<string>
-            {
-                "BB"
-            };
-            var etor2 = rb2.GetEnumerator();
-            Assert.Equal(default(string), etor2.Current);
-            bool ok2 = etor2.MoveNext();
-            Assert.Equal("BB", etor2.Current);
-            rb2.Clear();
-            Assert.Equal("BB", etor2.Current);
+            var gActual = etor.Current;
+            var oActual = ((System.Collections.IEnumerator)etor).Current;
+            Assert.Equal(ix, gActual);
+            Assert.Equal(ix, oActual);
+            ++ix;
         }
 
-        [Fact]
-        public void UnitRb_oReset()
+        Assert.Equal(10, ix);
+        var gActualEnd = etor.Current;
+        Assert.Equal(default(int), gActualEnd);
+        var isValid = etor.MoveNext();
+        Assert.False(isValid);
+    }
+
+    [Fact]
+    public void CrashRb_EtorHotUpdate()
+    {
+        Assert.Throws<InvalidOperationException>(() =>
         {
             var rb = new RankedBag<int>
             {
                 Capacity = 4
             };
-            var ia = new int[]
+            for (var ii = 0; ii < 10; ++ii)
+                rb.Add(ii);
+            var n = 0;
+            foreach (var kv in rb)
             {
-                1,
-                2,
-                2,
-                5,
-                8,
-                8,
-                9
-            };
-            foreach (var x in ia)
-                rb.Add(x);
-            var etor = rb.GetEnumerator();
-            int ix1 = 0;
-            while (etor.MoveNext())
-            {
-                Assert.Equal(ia[ix1], etor.Current);
-                ++ix1;
+                if (++n == 2)
+                    rb.Add(49);
             }
-
-            Assert.Equal(ia.Length, ix1);
-            ((System.Collections.IEnumerator)etor).Reset();
-            int ix2 = 0;
-            while (etor.MoveNext())
-            {
-                Assert.Equal(ia[ix2], etor.Current);
-                ++ix2;
-            }
-
-            Assert.Equal(ia.Length, ix2);
-        }
-#endregion
+        });
     }
-#endif
+
+    [Fact]
+    public void UnitRb_ocCurrent_HotUpdate()
+    {
+        var rb = new RankedBag<int>
+        {
+            2
+        };
+        System.Collections.ICollection oc = rb;
+        var etor = oc.GetEnumerator();
+        var ok = etor.MoveNext();
+        Assert.True(ok);
+        Assert.Equal(2, etor.Current);
+        rb.Clear();
+        Assert.Equal(2, etor.Current);
+    }
+
+    [Fact]
+    public void UnitRb_EtorCurrentHotUpdate()
+    {
+        var rb1 = new RankedBag<int>
+        {
+            2
+        };
+        var etor1 = rb1.GetEnumerator();
+        Assert.Equal(default(int), etor1.Current);
+        var ok1 = etor1.MoveNext();
+        Assert.True(ok1);
+        Assert.Equal(2, etor1.Current);
+        rb1.Remove(2);
+        Assert.Equal(2, etor1.Current);
+        var rb2 = new RankedBag<string>
+        {
+            "BB"
+        };
+        var etor2 = rb2.GetEnumerator();
+        Assert.Equal(default(string), etor2.Current);
+        var ok2 = etor2.MoveNext();
+        Assert.Equal("BB", etor2.Current);
+        rb2.Clear();
+        Assert.Equal("BB", etor2.Current);
+    }
+
+    [Fact]
+    public void UnitRb_oReset()
+    {
+        var rb = new RankedBag<int>
+        {
+            Capacity = 4
+        };
+        var ia = new[]
+        {
+            1,
+            2,
+            2,
+            5,
+            8,
+            8,
+            9
+        };
+        foreach (var x in ia)
+            rb.Add(x);
+        var etor = rb.GetEnumerator();
+        var ix1 = 0;
+        while (etor.MoveNext())
+        {
+            Assert.Equal(ia[ix1], etor.Current);
+            ++ix1;
+        }
+
+        Assert.Equal(ia.Length, ix1);
+        ((System.Collections.IEnumerator)etor).Reset();
+        var ix2 = 0;
+        while (etor.MoveNext())
+        {
+            Assert.Equal(ia[ix2], etor.Current);
+            ++ix2;
+        }
+
+        Assert.Equal(ia.Length, ix2);
+    }
+    #endregion
 }
+#endif

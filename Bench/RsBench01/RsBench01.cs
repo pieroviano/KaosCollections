@@ -10,65 +10,64 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Kaos.Collections;
 
-namespace BenchApp
+namespace BenchApp;
+
+class RsBench01
 {
-    class RsBench01
+    static int division = 1, divisionCount = 10;
+    static bool IsCull (int x) => x % divisionCount < division;
+
+    static void Main()
     {
-        static int division = 1, divisionCount = 10;
-        static bool IsCull (int x) => x % divisionCount < division;
+        var maxN = 500000;
+        var watch = new Stopwatch();
+        var isPass1 = true;
 
-        static void Main()
+        Console.WriteLine ("Removals in Thousands,Set Size in Thousands,RankedSet,SortedSet");
+
+        for (var n = maxN/10; n <= maxN;)
         {
-            int maxN = 500000;
-            var watch = new Stopwatch();
-            bool isPass1 = true;
+            var c1 = new RankedSet<int>();
+            for (var i = 0; i < n; ++i) c1.Add (i);
+            watch.Reset(); watch.Start();
+            c1.RemoveWhere (IsCull);
+            var c1Time = watch.ElapsedMilliseconds;
+            var c1Count = c1.Count; c1.Clear();
 
-            Console.WriteLine ("Removals in Thousands,Set Size in Thousands,RankedSet,SortedSet");
+            var c2 = new SortedSet<int>();
+            for (var i = 0; i < n; ++i) c2.Add (i);
+            watch.Reset(); watch.Start();
+            c2.RemoveWhere (IsCull);
+            var c2Time = watch.ElapsedMilliseconds;
+            var c2Count = c2.Count; c2.Clear();
 
-            for (int n = maxN/10; n <= maxN;)
+            var removes = n * division / divisionCount;
+            if (c1Count != n-removes || c2Count != n-removes)
+                Console.WriteLine ($"*** ERROR *** {c1Count}, {c2Count}");
+
+            if (isPass1)
+                isPass1 = false;
+            else
             {
-                var c1 = new RankedSet<int>();
-                for (int i = 0; i < n; ++i) c1.Add (i);
-                watch.Reset(); watch.Start();
-                c1.RemoveWhere (IsCull);
-                var c1Time = watch.ElapsedMilliseconds;
-                int c1Count = c1.Count; c1.Clear();
-
-                var c2 = new SortedSet<int>();
-                for (int i = 0; i < n; ++i) c2.Add (i);
-                watch.Reset(); watch.Start();
-                c2.RemoveWhere (IsCull);
-                var c2Time = watch.ElapsedMilliseconds;
-                int c2Count = c2.Count; c2.Clear();
-
-                int removes = n * division / divisionCount;
-                if (c1Count != n-removes || c2Count != n-removes)
-                    Console.WriteLine ($"*** ERROR *** {c1Count}, {c2Count}");
-
-                if (isPass1)
-                    isPass1 = false;
-                else
-                {
-                    Console.WriteLine ($"{removes/1000},{n/1000},{c1Time},{c2Time}");
-                    n += maxN/10;
-                }
+                Console.WriteLine ($"{removes/1000},{n/1000},{c1Time},{c2Time}");
+                n += maxN/10;
             }
         }
-
-        /* Output:
-
-        Removals in Thousands,Set Size in Thousands,RankedSet,SortedSet
-        5,50,5,1068
-        10,100,8,5264
-        15,150,13,12531
-        20,200,16,21113
-        25,250,20,23936
-        30,300,24,51612
-        35,350,28,59628
-        40,400,32,85661
-        45,450,36,91218
-        50,500,40,107109
-
-        */
     }
+
+    /* Output:
+
+    Removals in Thousands,Set Size in Thousands,RankedSet,SortedSet
+    5,50,5,1068
+    10,100,8,5264
+    15,150,13,12531
+    20,200,16,21113
+    25,250,20,23936
+    30,300,24,51612
+    35,350,28,59628
+    40,400,32,85661
+    45,450,36,91218
+    50,500,40,107109
+
+    */
 }

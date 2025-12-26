@@ -9,27 +9,26 @@
 using System;
 using Kaos.Collections;
 
-namespace BenchApp
+namespace BenchApp;
+
+public class RdBench03
 {
-    public class RdBench03
+    static RankedDictionary<Guid,int> tree;
+
+    static void Main (string[] args)
     {
-        static RankedDictionary<Guid,int> tree;
-
-        static void Main (string[] args)
+        foreach (var reps in new[] { 100, 1000, 10000, 100000, 1000000, 10000000, 20000000, 40000000 })
         {
-            foreach (var reps in new int[] { 100, 1000, 10000, 100000, 1000000, 10000000, 20000000, 40000000 })
-            {
-                tree = new RankedDictionary<Guid,int>();
+            tree = new RankedDictionary<Guid,int>();
 
-                for (int ii = 0; ii < reps; ++ii)
-                    tree.Add (Guid.NewGuid(), ii);
+            for (var ii = 0; ii < reps; ++ii)
+                tree.Add (Guid.NewGuid(), ii);
 
-                Console.WriteLine (reps);
+            Console.WriteLine (reps);
 #if DEBUG
-                Console.WriteLine (tree.GetTreeStatsText());
+            Console.WriteLine (tree.GetTreeStatsText());
 #endif
-            }
-
         }
+
     }
 }

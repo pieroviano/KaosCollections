@@ -11,128 +11,138 @@ using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using Xunit.Abstractions;
+
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 #if TEST_BCL
 using System.Collections.Generic;
 #else
 #endif
 
-namespace Kaos.Test.Collections
-{
-    public partial class TestRs : IClassFixture<BinaryFormatterEnableFixture>
-    {
-        [Fact]
-        public void CrashRsz_ArgumentNull()
-        {
-            try
-            {
-                var set = new StudentSet();
-                ((ISerializable)set).GetObjectData(null !, new StreamingContext());
-                Assert.Fail("Expected exception not thrown.");
-            }
-            catch (ArgumentNullException)
-            {
-                Console.WriteLine("OK");
-            }
-        }
+namespace Kaos.Test.Collections;
 
-        [Fact]
-        public void CrashRsz_NullCB()
+public partial class TestRs
+{
+    private readonly ITestOutputHelper testOutputHelper;
+
+    public TestRs(ITestOutputHelper testOutputHelper)
+    {
+        this.testOutputHelper = testOutputHelper;
+    }
+
+    [Fact]
+    public void CrashRsz_ArgumentNull()
+    {
+        try
         {
-            try
-            {
-                var set = new StudentSet(null, new StreamingContext());
-                ((IDeserializationCallback)set).OnDeserialization(null);
-                Assert.Fail("Expected exception not thrown.");
-            }
-            catch (SerializationException)
-            {
-                Console.WriteLine("OK");
-            }
+            var set = new StudentSet();
+            ((ISerializable)set).GetObjectData(null, new StreamingContext());
+            Assert.Fail("Expected exception not thrown.");
         }
+        catch (ArgumentNullException)
+        {
+            testOutputHelper.WriteLine("OK");
+        }
+    }
+
+    [Fact]
+    public void CrashRsz_NullCB()
+    {
+        try
+        {
+            var set = new StudentSet(null, new StreamingContext());
+            ((IDeserializationCallback)set).OnDeserialization(null);
+            Assert.Fail("Expected exception not thrown.");
+        }
+        catch (SerializationException)
+        {
+            testOutputHelper.WriteLine("OK");
+        }
+    }
 
 #if !TEST_BCL
-        [Fact]
-        public void CrashRsz_BadCount()
+    [Fact]
+    public void CrashRsz_BadCount()
+    {
+        try
         {
-            try
+            var fileName = @"Targets\SetBadCount.bin";
+            IFormatter formatter = new BinaryFormatter();
+            using (var fs = new FileStream(fileName, FileMode.Open))
             {
-                string fileName = @"Targets\SetBadCount.bin";
-                IFormatter formatter = new BinaryFormatter();
-                using (var fs = new FileStream(fileName, FileMode.Open))
-                {
-                    var set = (StudentSet)formatter.Deserialize(fs);
-                }
+                var set = (StudentSet)formatter.Deserialize(fs);
+            }
 
-                Assert.Fail("Expected exception not thrown.");
-            }
-            catch (SerializationException)
-            {
-                Console.WriteLine("OK");
-            }
+            Assert.Fail("Expected exception not thrown.");
         }
-
-        [Fact]
-        public void CrashRsz_MissingItems()
+        catch (SerializationException)
         {
-            try
-            {
-                string fileName = @"Targets\SetMissingItems.bin";
-                IFormatter formatter = new BinaryFormatter();
-                using (var fs = new FileStream(fileName, FileMode.Open))
-                {
-                    var set = (StudentSet)formatter.Deserialize(fs);
-                }
-
-                Assert.Fail("Expected exception not thrown.");
-            }
-            catch (SerializationException)
-            {
-                Console.WriteLine("OK");
-            }
+            testOutputHelper.WriteLine("OK");
         }
+    }
+
+    [Fact]
+    public void CrashRsz_MissingItems()
+    {
+        try
+        {
+            var fileName = @"Targets\SetMissingItems.bin";
+            IFormatter formatter = new BinaryFormatter();
+            using (var fs = new FileStream(fileName, FileMode.Open))
+            {
+                var set = (StudentSet)formatter.Deserialize(fs);
+            }
+
+            Assert.Fail("Expected exception not thrown.");
+        }
+        catch (SerializationException)
+        {
+            testOutputHelper.WriteLine("OK");
+        }
+    }
 
 #endif
-        [Fact]
-        public void UnitRsz_Serialization()
+    [Fact]
+    public void UnitRsz_Serialization()
+    {
+        var fileName = "SetOfStudents.bin";
+        var set1 = new StudentSet
         {
-            string fileName = "SetOfStudents.bin";
-            var set1 = new StudentSet();
-            set1.Add(new Student("Floyd"));
-            set1.Add(new Student("Irene"));
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream(fileName, FileMode.Create))
-            {
-                formatter.Serialize(fs, set1);
-            }
-
-            var set2 = new StudentSet();
-            using (var fs = new FileStream(fileName, FileMode.Open))
-            {
-                set2 = (StudentSet)formatter.Deserialize(fs);
-            }
-
-            Assert.Equal(2, set2.Count);
+            new Student("Floyd"),
+            new Student("Irene")
+        };
+        IFormatter formatter = new BinaryFormatter();
+        using (var fs = new FileStream(fileName, FileMode.Create))
+        {
+            formatter.Serialize(fs, set1);
         }
 
-        [Fact]
-        public void UnitRsz_BadSerialization()
+        var set2 = new StudentSet();
+        using (var fs = new FileStream(fileName, FileMode.Open))
         {
-            string fileName = "SetOfBadStudents.bin";
-            var set1 = new BadStudentSet();
-            set1.Add(new Student("Orville"));
-            IFormatter formatter = new BinaryFormatter();
-            using (var fs = new FileStream(fileName, FileMode.Create))
-            {
-                formatter.Serialize(fs, set1);
-            }
-
-            var set2 = new BadStudentSet();
-            using (var fs = new FileStream(fileName, FileMode.Open))
-            {
-                set2 = (BadStudentSet)formatter.Deserialize(fs);
-            }
-
-            Assert.Equal(1, set2.Count);
+            set2 = (StudentSet)formatter.Deserialize(fs);
         }
+
+        Assert.Equal(2, set2.Count);
+    }
+
+    [Fact]
+    public void UnitRsz_BadSerialization()
+    {
+        var fileName = "SetOfBadStudents.bin";
+        var set1 = new BadStudentSet { new Student("Orville") };
+        IFormatter formatter = new BinaryFormatter();
+        using (var fs = new FileStream(fileName, FileMode.Create))
+        {
+            formatter.Serialize(fs, set1);
+        }
+
+        var set2 = new BadStudentSet();
+        using (var fs = new FileStream(fileName, FileMode.Open))
+        {
+            set2 = (BadStudentSet)formatter.Deserialize(fs);
+        }
+
+        Assert.Equal(1, set2.Count);
     }
 }

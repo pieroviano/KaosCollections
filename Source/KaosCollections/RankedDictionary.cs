@@ -6,11 +6,18 @@
 // MIT License - Use and redistribute freely
 //
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+// ReSharper disable NotResolvedInText
+#pragma warning disable CS8603 // Possible null reference return.
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
 
 namespace Kaos.Collections;
 
@@ -90,10 +97,10 @@ internal
     IDeserializationCallback
 {
     [NonSerialized]
-    private KeyCollection keys;
+    private KeyCollection? keys;
 
     [NonSerialized]
-    private ValueCollection values;
+    private ValueCollection? values;
 
     #region Constructors
 
@@ -200,7 +207,7 @@ internal
     /// To override sorting based on the default comparer,
     /// supply an alternate comparer when constructing the dictionary.
     /// </remarks>
-    public IComparer<TKey> Comparer
+    public IComparer<TKey>? Comparer
         => keyComparer;
 
     /// <summary>Gets the number of elements in the dictionary.</summary>
@@ -265,12 +272,12 @@ internal
 
     /// <summary>Gets the maximum key in the dictionary per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
-    public TKey MaxKey
+    public TKey? MaxKey
         => Count == 0 ? default : rightmostLeaf.GetKey(rightmostLeaf.KeyCount - 1);
 
     /// <summary>Gets the minimum key in the dictionary per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
-    public TKey MinKey
+    public TKey? MinKey
         => Count == 0 ? default : leftmostLeaf.Key0;
 
     /// <summary>Indicates that this collection may be modified.</summary>
@@ -383,7 +390,7 @@ internal
         if (Count > array.Length - index)
             throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
 
-        for (var leaf = (PairLeaf<TValue>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>)leaf.rightLeaf)
+        for (var leaf = (PairLeaf<TValue>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
             for (var leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
                 array[index++] = new KeyValuePair<TKey, TValue>(leaf.GetKey(leafIndex), leaf.GetValue(leafIndex));
     }
@@ -460,7 +467,7 @@ internal
     /// </remarks>
     /// <exception cref="ArgumentNullException">When <em>match</em> is <b>null</b>.</exception>
     public int RemoveWhereElement(Predicate<KeyValuePair<TKey, TValue>> match)
-        => RemoveWhere2<TValue>(match);
+        => RemoveWhere2(match);
 
     /// <summary>Gets the value associated with the supplied key.</summary>
     /// <param name="key">The key of the value to get.</param>
@@ -476,7 +483,7 @@ internal
     /// <code source="..\Bench\RdExample01\RdExample01.cs" lang="cs" region="TryGetValue" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>key</em> is <b>null</b>.</exception>
-    public bool TryGetValue(TKey key, out TValue value)
+    public bool TryGetValue(TKey key, out TValue? value)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));
@@ -500,7 +507,7 @@ internal
 
     /// <summary>Gets or sets the value associated with the supplied key.</summary>
     /// <exception cref="ArgumentNullException">When <em>key</em> is <b>null</b>.</exception>
-    object IDictionary.this[object key]
+    object? IDictionary.this[object key]
     {
         get
         {
@@ -532,9 +539,9 @@ internal
                 StageBump();
                 var path = new NodeVector(this, (TKey)key);
                 if (path.IsFound)
-                    ((PairLeaf<TValue>)path.TopNode).SetValue(path.TopIndex, (TValue)value);
+                    ((PairLeaf<TValue?>)path.TopNode).SetValue(path.TopIndex, (TValue?)value);
                 else
-                    Add2(path, (TKey)key, (TValue)value);
+                    Add2(path, (TKey)key, (TValue?)value);
             }
             catch (InvalidCastException)
             {
@@ -575,7 +582,7 @@ internal
     /// <exception cref="ArgumentException">When an element with the same key already exists in the Dictionary.</exception>
     /// <exception cref="ArgumentException">When <em>key</em> is not a TKey.</exception>
     /// <exception cref="ArgumentException">When <em>value</em> is not a TValue.</exception>
-    void IDictionary.Add(object key, object value)
+    void IDictionary.Add(object key, object? value)
     {
         if (key == null)
             throw new ArgumentNullException(nameof(key));
@@ -632,7 +639,7 @@ internal
         if (!(array is KeyValuePair<TKey, TValue>[]) && array.GetType() != typeof(Object[]))
             throw new ArgumentException("Target array type is not compatible with the type of items in the collection.", nameof(array));
 
-        for (var leaf = (PairLeaf<TValue>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>)leaf.rightLeaf)
+        for (var leaf = (PairLeaf<TValue>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
             for (var leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
             {
                 array.SetValue(new KeyValuePair<TKey, TValue>(leaf.GetKey(leafIndex), leaf.GetValue(leafIndex)), index);
@@ -664,7 +671,7 @@ internal
 
     #region ISerializable implementation and support
 
-    private SerializationInfo serializationInfo;
+    private SerializationInfo? serializationInfo;
 
     /// <summary>Initializes a new dictionary instance that contains serialized data.</summary>
     /// <param name="info">The object that contains the information required to serialize the dictionary.</param>
@@ -685,20 +692,20 @@ internal
         info.AddValue("Comparer", Comparer, typeof(IComparer<TKey>));
         info.AddValue("Stage", stage);
 
-        var keys = new TKey[Count];
-        Keys.CopyTo(keys, 0);
-        info.AddValue("Keys", keys, typeof(TKey[]));
+        var keysValue = new TKey[Count];
+        Keys.CopyTo(keysValue, 0);
+        info.AddValue("Keys", keysValue, typeof(TKey[]));
 
-        var values = new TValue[Count];
-        Values.CopyTo(values, 0);
-        info.AddValue("Values", values, typeof(TValue[]));
+        var value = new TValue[Count];
+        Values.CopyTo(value, 0);
+        info.AddValue("Values", value, typeof(TValue[]));
     }
 
     /// <summary>Implements the deserialization callback and raises the deserialization event when completed.</summary>
     /// <param name="sender">The source of the deserialization event.</param>
     /// <exception cref="ArgumentNullException">When <em>sender</em> is <b>null</b>.</exception>
     /// <exception cref="SerializationException">When the associated <em>SerializationInfo</em> is invalid.</exception>
-    protected virtual void OnDeserialization(object sender)
+    protected virtual void OnDeserialization(object? sender)
     {
         if (keyComparer != null)
             return;  // Owner did the fixups.
@@ -706,25 +713,25 @@ internal
         if (serializationInfo == null)
             throw new SerializationException("Missing information.");
 
-        keyComparer = (IComparer<TKey>)serializationInfo.GetValue("Comparer", typeof(IComparer<TKey>));
+        keyComparer = (IComparer<TKey>?)serializationInfo.GetValue("Comparer", typeof(IComparer<TKey>));
         var storedCount = serializationInfo.GetInt32("Count");
         stage = serializationInfo.GetInt32("Stage");
 
-        var keys = (TKey[])serializationInfo.GetValue("Keys", typeof(TKey[]));
-        if (keys == null)
+        var keysValue = (TKey[]?)serializationInfo.GetValue("Keys", typeof(TKey[]));
+        if (keysValue == null)
             throw new SerializationException("Missing Keys.");
 
-        var values = (TValue[])serializationInfo.GetValue("Values", typeof(TValue[]));
-        if (values == null)
+        var value = (TValue[]?)serializationInfo.GetValue("Values", typeof(TValue[]));
+        if (value == null)
             throw new SerializationException("Missing Values.");
 
-        if (keys.Length != values.Length)
+        if (keysValue.Length != value.Length)
             throw new SerializationException("Mismatched key/value count.");
 
-        for (var ix = 0; ix < keys.Length; ++ix)
-            Add(keys[ix], values[ix]);
+        for (var ix = 0; ix < keysValue.Length; ++ix)
+            Add(keysValue[ix], value[ix]);
 
-        if (storedCount != keys.Length)
+        if (storedCount != keysValue.Length)
             throw new SerializationException("Mismatched count.");
 
         serializationInfo = null;
@@ -741,7 +748,7 @@ internal
     /// <param name="sender">The source of the deserialization event.</param>
     /// <exception cref="ArgumentNullException">When <em>sender</em> is <b>null</b>.</exception>
     /// <exception cref="SerializationException">When the associated <em>SerializationInfo</em> is invalid.</exception>
-    void IDeserializationCallback.OnDeserialization(Object sender)
+    void IDeserializationCallback.OnDeserialization(Object? sender)
         => OnDeserialization(sender);
 
     #endregion
@@ -789,7 +796,7 @@ internal
                 continue;
             }
 
-            leaf = (PairLeaf<TValue>)leaf.rightLeaf;
+            leaf = (PairLeaf<TValue>?)leaf.rightLeaf;
             if (leaf == null)
                 yield break;
 
@@ -828,7 +835,7 @@ internal
                 continue;
             }
 
-            leaf = (PairLeaf<TValue>)leaf.rightLeaf;
+            leaf = (PairLeaf<TValue>?)leaf.rightLeaf;
             if (leaf == null)
                 yield break;
 
@@ -870,7 +877,7 @@ internal
         do
         {
             if (index >= leaf.KeyCount)
-            { index = 0; leaf = (PairLeaf<TValue>)leaf.rightLeaf; }
+            { index = 0; leaf = (PairLeaf<TValue>?)leaf.rightLeaf; }
 
             yield return leaf.GetPair(index);
             StageCheck(stageFreeze);
@@ -906,7 +913,7 @@ internal
     /// <returns>The index of the element if found; otherwise -1.</returns>
     /// <remarks>This is a O(<em>n</em>) operation.</remarks>
     public int IndexOfValue(TValue value)
-        => ContainsValue2<TValue>(value);
+        => ContainsValue2(value);
 
     /// <summary>
     /// Removes all elements with keys in the supplied collection from the dictionary.
@@ -922,7 +929,7 @@ internal
 
         StageBump();
         if (Count > 0)
-            if (other == Keys)
+            if (ReferenceEquals(other, Keys))
             {
                 result = Count;
                 Clear();
@@ -958,16 +965,16 @@ internal
     /// <param name="getKey">The key to use for comparison.</param>
     /// <param name="keyValuePair">The actual element if found; otherwise contains defaults.</param>
     /// <returns><b>true</b> if element with key greater than <em>getKey</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGetGreaterThan(TKey getKey, out KeyValuePair<TKey, TValue> keyValuePair)
+    public bool TryGetGreaterThan(TKey getKey, out KeyValuePair<TKey, TValue?> keyValuePair)
     {
         TryGetGT(getKey, out var leaf, out var index);
         if (leaf == null)
         {
-            keyValuePair = new KeyValuePair<TKey, TValue>(default, default);
+            keyValuePair = new KeyValuePair<TKey, TValue?>(default, default);
             return false;
         }
 
-        keyValuePair = new KeyValuePair<TKey, TValue>(leaf.GetKey(index), ((PairLeaf<TValue>)leaf).GetValue(index));
+        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue>?)leaf).GetValue(index));
         return true;
     }
 
@@ -975,16 +982,16 @@ internal
     /// <param name="getKey">The key to use for comparison.</param>
     /// <param name="keyValuePair">The actual element if found; otherwise contains defaults.</param>
     /// <returns><b>true</b> if element with key greater than or equal to <em>getKey</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGetGreaterThanOrEqual(TKey getKey, out KeyValuePair<TKey, TValue> keyValuePair)
+    public bool TryGetGreaterThanOrEqual(TKey getKey, out KeyValuePair<TKey, TValue?> keyValuePair)
     {
         TryGetGE(getKey, out var leaf, out var index);
         if (leaf == null)
         {
-            keyValuePair = new KeyValuePair<TKey, TValue>(default, default);
+            keyValuePair = new KeyValuePair<TKey, TValue?>(default, default);
             return false;
         }
 
-        keyValuePair = new KeyValuePair<TKey, TValue>(leaf.GetKey(index), ((PairLeaf<TValue>)leaf).GetValue(index));
+        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue>?)leaf).GetValue(index));
         return true;
     }
 
@@ -992,16 +999,16 @@ internal
     /// <param name="getKey">The key to use for comparison.</param>
     /// <param name="keyValuePair">The actual element if found; otherwise contains defaults.</param>
     /// <returns><b>true</b> if element with key less than or equal to <em>getKey</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGetLessThan(TKey getKey, out KeyValuePair<TKey, TValue> keyValuePair)
+    public bool TryGetLessThan(TKey getKey, out KeyValuePair<TKey, TValue?> keyValuePair)
     {
         TryGetLT(getKey, out var leaf, out var index);
         if (leaf == null)
         {
-            keyValuePair = new KeyValuePair<TKey, TValue>(default, default);
+            keyValuePair = new KeyValuePair<TKey, TValue?>(default, default);
             return false;
         }
 
-        keyValuePair = new KeyValuePair<TKey, TValue>(leaf.GetKey(index), ((PairLeaf<TValue>)leaf).GetValue(index));
+        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue>?)leaf).GetValue(index));
         return true;
     }
 
@@ -1009,16 +1016,16 @@ internal
     /// <param name="getKey">The key to use for comparison.</param>
     /// <param name="keyValuePair">The actual element if found; otherwise contains defaults.</param>
     /// <returns><b>true</b> if element with key less than or equal to <em>getKey</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGetLessThanOrEqual(TKey getKey, out KeyValuePair<TKey, TValue> keyValuePair)
+    public bool TryGetLessThanOrEqual(TKey getKey, out KeyValuePair<TKey, TValue?> keyValuePair)
     {
         TryGetLE(getKey, out var leaf, out var index);
         if (leaf == null)
         {
-            keyValuePair = new KeyValuePair<TKey, TValue>(default, default);
+            keyValuePair = new KeyValuePair<TKey, TValue?>(default, default);
             return false;
         }
 
-        keyValuePair = new KeyValuePair<TKey, TValue>(leaf.GetKey(index), ((PairLeaf<TValue>)leaf).GetValue(index));
+        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue>?)leaf).GetValue(index));
         return true;
     }
 
@@ -1037,7 +1044,7 @@ internal
     /// This is a O(log <em>n</em>) operation.
     /// </para>
     /// </remarks>
-    public bool TryGetValueAndIndex(TKey key, out TValue value, out int index)
+    public bool TryGetValueAndIndex(TKey key, out TValue? value, out int index)
     {
         index = FindEdgeForIndex(key, out var leaf, out var leafIx, leftEdge: true);
         if (index < 0)
@@ -1052,7 +1059,7 @@ internal
             leafIx = 0;
         }
 
-        value = ((PairLeaf<TValue>)leaf).GetValue(leafIx);
+        value = ((PairLeaf<TValue>?)leaf).GetValue(leafIx);
         return true;
     }
 
@@ -1078,13 +1085,13 @@ internal
     /// <param name="index">The zero-based index of the element to get.</param>
     /// <returns>The element at <em>index</em>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    public KeyValuePair<TKey, TValue> ElementAtOrDefault(int index)
+    public KeyValuePair<TKey, TValue?> ElementAtOrDefault(int index)
     {
         if (index < 0 || index >= Count)
-            return new KeyValuePair<TKey, TValue>(default, default);
+            return new KeyValuePair<TKey, TValue?>(default, default);
 
         var leaf = (PairLeaf<TValue>)Find(index, out var leafIndex);
-        return new KeyValuePair<TKey, TValue>(leaf.GetKey(leafIndex), leaf.GetValue(index));
+        return new KeyValuePair<TKey, TValue?>(leaf.GetKey(leafIndex), leaf.GetValue(index));
     }
 
     /// <summary>Gets the element with the minimum key in the dictionary per the comparer.</summary>
@@ -1208,7 +1215,7 @@ internal
 
         /// <summary>Gets the value of the element at the current position.</summary>
         /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
-        object IDictionaryEnumerator.Value
+        object? IDictionaryEnumerator.Value
         {
             get
             {
