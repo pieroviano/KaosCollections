@@ -6,5 +6,6 @@
 		<VersionSuffix Condition="'$(Configuration)'=='Release'">0</VersionSuffix>
 		<SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
 		<LangVersion>latest</LangVersion>
+		<NoWarn>CS8632;CS8749;CS8765</NoWarn>
 	</PropertyGroup>
 </Project>
