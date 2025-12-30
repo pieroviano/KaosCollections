@@ -121,7 +121,7 @@
     <Net30LinqBridgeVersion>1.6.0</Net30LinqBridgeVersion>
     <Net35ActionsVersion>1.4.0</Net35ActionsVersion>
     <Net35BuffersVersion>1.0.0</Net35BuffersVersion>
-    <Net35ThreadingTasksVersion>4.2.0</Net35ThreadingTasksVersion>
+    <Net35ThreadingTasksVersion>1.4.0</Net35ThreadingTasksVersion>
     <Net35ThredingTasksVersion>1.4.0</Net35ThredingTasksVersion>
     <Net35TypeInfoVersion>1.5.0</Net35TypeInfoVersion>
     <Net4xAsyncBridgeVersion>1.5.0</Net4xAsyncBridgeVersion>
