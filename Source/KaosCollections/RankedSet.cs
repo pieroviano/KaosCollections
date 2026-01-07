@@ -3,7 +3,7 @@
 // File:    RankedSet.cs
 //
 // Copyright © 2009-2021 Kasey Osborn (github.com/kaosborn)
-// MIT License - Use and redistribute freely
+// MIT? License - Use and redistribute freely
 //
 
 #pragma warning disable CS8766
@@ -62,24 +62,22 @@ namespace Kaos.Collections;
 /// <para>This program shows some basic operations of this class.</para>
 /// <code source="..\Bench\RsExample01\RsExample01.cs" lang="cs" />
 /// <para>Next is an example showing binary serialization round tripped.</para>
-/// <para>Note: Serialization is not supported in .NET Standard 1.0.</para>
+/// <para>Note: Serialization is not supported in .NET? Standard 1.0.</para>
 /// <code source="..\Bench\RsExample05\RsExample05.cs" lang="cs" />
 /// </example>
 [DebuggerTypeProxy(typeof(ICollectionDebugView<>))]
 [DebuggerDisplay("Count = {Count}")]
 [Serializable]
 #if PUBLIC
-public
+public partial class RankedSet<T> : Btree<T?>
 #else
-internal
+internal partial class RankedSet<T> : Btree<T?>
 #endif
-    partial class RankedSet<T> :
-    Btree<T>
 {
     #region Constructors
 
     /// <summary>Initializes a new set instance that uses the default item comparer.</summary>
-    public RankedSet() : base(Comparer<T>.Default, new Leaf())
+    public RankedSet() : base(Comparer<T?>.Default, new Leaf())
     { }
 
     /// <summary>Initializes a new set instance that uses the supplied comparer.</summary>
@@ -89,7 +87,7 @@ internal
     /// <code source="..\Bench\RsExample01\RsExample01.cs" lang="cs" />
     /// </example>
     /// <exception cref="InvalidOperationException">When <em>comparer</em> is <b>null</b> and no other comparer available.</exception>
-    public RankedSet(IComparer<T>? comparer) : base(comparer, new Leaf())
+    public RankedSet(IComparer<T?>? comparer) : base(comparer, new Leaf())
     { }
 
     /// <summary>Initializes a new set instance that contains items copied from the supplied collection.</summary>
@@ -98,7 +96,7 @@ internal
     /// This constructor is a O(<em>n</em> log <em>n</em>) operation, where <em>n</em> is the number of items.
     /// </remarks>
     /// <exception cref="ArgumentNullException">When <em>collection</em> is <b>null</b>.</exception>
-    public RankedSet(IEnumerable<T> collection) : this(collection, Comparer<T>.Default)
+    public RankedSet(IEnumerable<T?> collection) : this(collection, Comparer<T?>.Default)
     { }
 
     /// <summary>Initializes a new set instance that contains items copied from the supplied collection.</summary>
@@ -109,7 +107,7 @@ internal
     /// </remarks>
     /// <exception cref="ArgumentNullException">When <em>collection</em> is <b>null</b>.</exception>
     /// <exception cref="InvalidOperationException">When <em>comparer</em> is <b>null</b> and no other comparer available.</exception>
-    public RankedSet(IEnumerable<T> collection, IComparer<T>? comparer) : this(comparer)
+    public RankedSet(IEnumerable<T?> collection, IComparer<T?>? comparer) : this(comparer)
     {
         if (collection == null)
             throw new ArgumentNullException(nameof(collection));
@@ -127,7 +125,7 @@ internal
     /// To override sorting based on the default comparer,
     /// supply an alternate comparer when constructing the set.
     /// </remarks>
-    public IComparer<T>? Comparer
+    public IComparer<T?>? Comparer
         => keyComparer;
 
     /// <summary>Gets the number of items in the set.</summary>
@@ -136,7 +134,7 @@ internal
         => root.Weight;
 
     /// <summary>Indicates that the collection is not read-only.</summary>
-    bool ICollection<T>.IsReadOnly
+    bool ICollection<T?>.IsReadOnly
         => false;
 
     /// <summary>Indicates that the collection is not thread safe.</summary>
@@ -163,7 +161,7 @@ internal
 
     /// <summary>Adds an item to the set.</summary>
     /// <param name="item">The item to add.</param>
-    void ICollection<T>.Add(T item)
+    void ICollection<T?>.Add(T? item)
         => Add(item);
 
     /// <summary>Adds an item to the set and returns a success indicator.</summary>
@@ -176,7 +174,7 @@ internal
     /// <para>This is a O(log <em>n</em>) operation.</para>
     /// </remarks>
     /// <exception cref="ArgumentException">When no comparer is available.</exception>
-    public bool Add(T item)
+    public bool Add(T? item)
     {
         if (Comparer == null)
         {
@@ -198,7 +196,7 @@ internal
     /// <param name="item">The item to locate.</param>
     /// <returns><b>true</b> if <em>item</em> is contained in the set; otherwise <b>false</b>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    public bool Contains(T item)
+    public bool Contains(T? item)
     {
         var _ = Find(item, out var index);
         return index >= 0;
@@ -219,7 +217,7 @@ internal
     /// <exception cref="ArgumentNullException">When <em>array</em> is <b>null</b>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero.</exception>
     /// <exception cref="ArgumentException">When not enough space is available for the copy.</exception>
-    public void CopyTo(T[] array, int index)
+    public void CopyTo(T?[] array, int index)
         => CopyKeysTo1(array, index, Count);
 
     /// <summary>Copies a supplied number of items to a compatible array, starting at the supplied position.</summary>
@@ -243,7 +241,7 @@ internal
     /// <param name="item">The item to remove.</param>
     /// <returns><b>true</b> if <em>item</em> was found and removed; otherwise <b>false</b>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
-    public bool Remove(T item)
+    public bool Remove(T? item)
     {
         var path = new NodeVector(this, item);
         if (!path.IsFound)
@@ -289,7 +287,7 @@ internal
     /// <code source="..\Bench\RsExample01\RsExample01.cs" lang="cs"/>
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>match</em> is <b>null</b>.</exception>
-    public int RemoveWhere(Predicate<T> match)
+    public int RemoveWhere(Predicate<T?> match)
         => RemoveWhere2(match);
 
     #endregion
@@ -306,7 +304,7 @@ internal
     /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public void ExceptWith(IEnumerable<T> other)
+    public void ExceptWith(IEnumerable<T?> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
@@ -326,7 +324,7 @@ internal
     /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public void IntersectWith(IEnumerable<T> other)
+    public void IntersectWith(IEnumerable<T?> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
@@ -365,12 +363,12 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool IsProperSubsetOf(IEnumerable<T> other)
+    public bool IsProperSubsetOf(IEnumerable<T?> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
 
-        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
+        var oSet = other as RankedSet<T?> ?? new RankedSet<T?>(other, Comparer);
 
         if (Count >= oSet.Count)
             return false;
@@ -389,12 +387,12 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool IsProperSupersetOf(IEnumerable<T> other)
+    public bool IsProperSupersetOf(IEnumerable<T?> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
 
-        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
+        var oSet = other as RankedSet<T?> ?? new RankedSet<T?>(other, Comparer);
 
         if (Count <= oSet.Count)
             return false;
@@ -413,12 +411,12 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool IsSubsetOf(IEnumerable<T> other)
+    public bool IsSubsetOf(IEnumerable<T?> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
 
-        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
+        var oSet = other as RankedSet<T?> ?? new RankedSet<T?>(other, Comparer);
 
         if (Count > oSet.Count)
             return false;
@@ -437,7 +435,7 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool IsSupersetOf(IEnumerable<T> other)
+    public bool IsSupersetOf(IEnumerable<T?> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
@@ -456,7 +454,7 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool Overlaps(IEnumerable<T> other)
+    public bool Overlaps(IEnumerable<T?> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
@@ -501,12 +499,12 @@ internal
     /// <code source="..\Bench\RsExample03\RsExample03.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public bool SetEquals(IEnumerable<T> other)
+    public bool SetEquals(IEnumerable<T?> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
 
-        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
+        var oSet = other as RankedSet<T?> ?? new RankedSet<T?>(other, Comparer);
 
         if (Count != oSet.Count)
             return false;
@@ -524,12 +522,12 @@ internal
     /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public void SymmetricExceptWith(IEnumerable<T> other)
+    public void SymmetricExceptWith(IEnumerable<T?> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
 
-        var oSet = other as RankedSet<T> ?? new RankedSet<T>(other, Comparer);
+        var oSet = other as RankedSet<T?> ?? new RankedSet<T?>(other, Comparer);
         if (oSet.Count == 0)
             return;
 
@@ -579,7 +577,7 @@ internal
     /// <code source="..\Bench\RsExample04\RsExample04.cs" lang="cs" />
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>other</em> is <b>null</b>.</exception>
-    public void UnionWith(IEnumerable<T> other)
+    public void UnionWith(IEnumerable<T?> other)
     {
         if (other == null)
             throw new ArgumentNullException(nameof(other));
@@ -598,7 +596,7 @@ internal
     /// <summary>Initializes a new set instance that contains serialized data.</summary>
     /// <param name="info">The object that contains the information required to serialize the set.</param>
     /// <param name="context">The structure that contains the source and destination of the serialized stream.</param>
-    protected RankedSet(SerializationInfo info, StreamingContext context) : base(new Btree<T>.Leaf())
+    protected RankedSet(SerializationInfo info, StreamingContext context) : base(new Btree<T?>.Leaf())
         => this.serializationInfo = info;
 
     /// <summary>Returns the data needed to serialize the set.</summary>
@@ -611,7 +609,7 @@ internal
             throw new ArgumentNullException(nameof(info));
 
         info.AddValue("Count", Count);
-        info.AddValue("Comparer", Comparer, typeof(IComparer<T>));
+        info.AddValue("Comparer", Comparer, typeof(IComparer<T?>));
         info.AddValue("Stage", stage);
 
         var items = new T[Count];
@@ -631,7 +629,7 @@ internal
         if (serializationInfo == null)
             throw new SerializationException("Missing information.");
 
-        keyComparer = (IComparer<T>?)serializationInfo.GetValue("Comparer", typeof(IComparer<T>));
+        keyComparer = (IComparer<T?>?)serializationInfo.GetValue("Comparer", typeof(IComparer<T?>));
         var storedCount = serializationInfo.GetInt32("Count");
         stage = serializationInfo.GetInt32("Stage");
 
@@ -671,7 +669,7 @@ internal
     /// <returns>The item at <em>index</em>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or not less than the number of items.</exception>
-    public T ElementAt(int index)
+    public T? ElementAt(int index)
     {
         if (index < 0 || index >= Count)
             throw new ArgumentOutOfRangeException(nameof(index), "Argument was out of the range of valid values.");
@@ -697,7 +695,7 @@ internal
     /// <returns>The minimum item in the set.</returns>
     /// <remarks>This is a O(1) operation.</remarks>
     /// <exception cref="InvalidOperationException">When <see cref="Count"/> is zero.</exception>
-    public T First()
+    public T? First()
     {
         if (Count == 0)
             throw new InvalidOperationException("Sequence contains no elements.");
@@ -709,7 +707,7 @@ internal
     /// <returns>The maximum item in the set.</returns>
     /// <remarks>This is a O(1) operation.</remarks>
     /// <exception cref="InvalidOperationException">When <see cref="Count"/> is zero.</exception>
-    public T Last()
+    public T? Last()
     {
         if (Count == 0)
             throw new InvalidOperationException("Sequence contains no elements.");
@@ -720,7 +718,7 @@ internal
     /// <summary>Returns an IEnumerable that iterates thru the set in reverse order.</summary>
     /// <returns>An enumerator that reverse iterates thru the set.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public ICollectionEnumerator<T> Reverse()
+    public ICollectionEnumerator<T?> Reverse()
         => new Enumerator(this, isReverse: true);
 
     #endregion
@@ -742,7 +740,7 @@ internal
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public IEnumerable<T> ElementsBetween(T lower, T upper)
+    public IEnumerable<T?> ElementsBetween(T? lower, T? upper)
     {
         var stageFreeze = stage;
         var leaf = Find(lower, out var index);
@@ -789,7 +787,7 @@ internal
     /// <exception cref="ArgumentOutOfRangeException">When <em>upperIndex</em> is less than zero or not less than <see cref="Count"/>.</exception>
     /// <exception cref="ArgumentException">When <em>lowerIndex</em> and <em>upperIndex</em> do not denote a valid range of indexes.</exception>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public IEnumerable<T> ElementsBetweenIndexes(int lowerIndex, int upperIndex)
+    public IEnumerable<T?> ElementsBetweenIndexes(int lowerIndex, int upperIndex)
     {
         if (lowerIndex < 0 || lowerIndex >= Count)
             throw new ArgumentOutOfRangeException(nameof(lowerIndex), "Argument was out of the range of valid values.");
@@ -830,7 +828,7 @@ internal
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public IEnumerable<T> ElementsFrom(T lower)
+    public IEnumerable<T?> ElementsFrom(T? lower)
     {
         var stageFreeze = stage;
         var leaf = Find(lower, out var index);
@@ -870,7 +868,7 @@ internal
     /// This is a O(log <em>n</em>) operation.
     /// </para>
     /// </remarks>
-    public int IndexOf(T item)
+    public int IndexOf(T? item)
         => FindEdgeForIndex(item, out var _, out var _, leftEdge: true);
 
     /// <summary>Removes the item at the supplied index from the set.</summary>
@@ -898,7 +896,7 @@ internal
     /// <see cref="Remove"/> operation followed by an
     /// <see cref="Add"/> operation.
     /// </remarks>
-    public bool Replace(T item)
+    public bool Replace(T? item)
     {
         var path = new NodeVector(this, item);
         if (!path.IsFound)
@@ -915,7 +913,7 @@ internal
     /// <remarks>
     /// This operation is an optimized alternative to performing the implicit operations separately.
     /// </remarks>
-    public bool Replace(T item, bool addIfMissing)
+    public bool Replace(T? item, bool addIfMissing)
     {
         var path = new NodeVector(this, item);
         if (!path.IsFound)
@@ -938,7 +936,7 @@ internal
     /// <code source="..\Bench\RxExample01\RxExample01.cs" lang="cs" region="RsSkip" />
     /// </example>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public ICollectionEnumerator<T> Skip(int count)
+    public ICollectionEnumerator<T?> Skip(int count)
         => new Enumerator(this, count);
 
     /// <summary>
@@ -947,7 +945,7 @@ internal
     /// <param name="predicate">The condition to test for.</param>
     /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public ICollectionEnumerator<T> SkipWhile(Func<T, bool> predicate)
+    public ICollectionEnumerator<T?> SkipWhile(Func<T?, bool> predicate)
         => new Enumerator(this, predicate);
 
     /// <summary>
@@ -956,7 +954,7 @@ internal
     /// <param name="predicate">The condition to test for.</param>
     /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    public ICollectionEnumerator<T> SkipWhile(Func<T, int, bool> predicate)
+    public ICollectionEnumerator<T?> SkipWhile(Func<T?, int, bool> predicate)
         => new Enumerator(this, predicate);
 
     /// <summary>Gets the actual item for the supplied search item.</summary>
@@ -966,7 +964,7 @@ internal
     ///     otherwise it will be loaded with the default for its type.
     /// </param>
     /// <returns><b>true</b> if <em>getItem</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGet(T getItem, out T? item)
+    public bool TryGet(T? getItem, out T? item)
     {
         var leaf = Find(getItem, out var index);
         if (index < 0)
@@ -983,7 +981,7 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item greater than <em>getItem</em> is found; otherwise <b>false</b>.</returns>
-    public bool TryGetGreaterThan(T getItem, out T? item)
+    public bool TryGetGreaterThan(T? getItem, out T? item)
     {
         TryGetGT(getItem, out var leaf, out var index);
         if (leaf == null)
@@ -1002,7 +1000,7 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item greater than or equal to <em>getItem</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetGreaterThanOrEqual(T getItem, out T? item)
+    public bool TryGetGreaterThanOrEqual(T? getItem, out T? item)
     {
         TryGetGE(getItem, out var leaf, out var index);
         if (leaf == null)
@@ -1021,7 +1019,7 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item less than <em>item</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetLessThan(T getItem, out T? item)
+    public bool TryGetLessThan(T? getItem, out T? item)
     {
         TryGetLT(getItem, out var leaf, out var index);
         if (leaf == null)
@@ -1034,7 +1032,7 @@ internal
     /// <param name="getItem">The item to use for comparison.</param>
     /// <param name="item">The actual item if found; otherwise the default.</param>
     /// <returns><b>true</b> if item less than or equal to <em>item</em> found; otherwise <b>false</b>.</returns>
-    public bool TryGetLessThanOrEqual(T getItem, out T? item)
+    public bool TryGetLessThanOrEqual(T? getItem, out T? item)
     {
         TryGetLE(getItem, out var leaf, out var index);
         if (leaf == null)
@@ -1052,19 +1050,19 @@ internal
     /// <example>
     /// <code source="..\Bench\RsExample06\RsExample06.cs" lang="cs" />
     /// </example>
-    public static IEqualityComparer<RankedSet<T>> CreateSetComparer()
+    public static IEqualityComparer<RankedSet<T?>> CreateSetComparer()
         => CreateSetComparer(null);
 
     /// <summary>Returns an equality comparer using a supplied comparer that can be used to create a collection that contains sets.</summary>
     /// <param name="memberEqualityComparer">Used for creating the returned comparer.</param>
     /// <returns>An equality comparer for creating a collection of sets.</returns>
-    public static IEqualityComparer<RankedSet<T>> CreateSetComparer(IEqualityComparer<T>? memberEqualityComparer)
+    public static IEqualityComparer<RankedSet<T?>> CreateSetComparer(IEqualityComparer<T?>? memberEqualityComparer)
         => new RankedSetEqualityComparer(memberEqualityComparer);
 
-    private bool HasEqualComparer(RankedSet<T> other)
+    private bool HasEqualComparer(RankedSet<T?> other)
         => Comparer != null && (ReferenceEquals(Comparer, other.Comparer) || Comparer.Equals(other.Comparer));
 
-    private static bool RankedSetEquals(RankedSet<T>? set1, RankedSet<T>? set2, IComparer<T> comparer)
+    private static bool RankedSetEquals(RankedSet<T?>? set1, RankedSet<T?>? set2, IComparer<T?> comparer)
     {
         if (set1 == null)
             return set2 == null;
@@ -1099,12 +1097,14 @@ internal
 
     /// <summary>Returns an enumerator that iterates thru the set.</summary>
     /// <returns>An enumerator that iterates thru the set in sorted order.</returns>
-    public ICollectionEnumerator<T> GetEnumerator()
+    public ICollectionEnumerator<T?> GetEnumerator()
         => new Enumerator(this);
 
     /// <summary>Returns an enumerator that iterates thru the set.</summary>
     /// <returns>An enumerator that iterates thru the set in sorted order.</returns>
-    IEnumerator<T> IEnumerable<T>.GetEnumerator()
+#pragma warning disable CS8616 // Nullability of reference types in return type doesn't match implemented member.
+    IEnumerator<T?> IEnumerable<T?>.GetEnumerator()
+#pragma warning restore CS8616 // Nullability of reference types in return type doesn't match implemented member.
         => new Enumerator(this);
 
     /// <summary>Returns an enumerator that iterates thru the collection.</summary>
@@ -1114,20 +1114,20 @@ internal
 
     /// <summary>Enumerates the items of a <see cref="RankedSet{T}"/> in sort order.</summary>
     [DebuggerTypeProxy(typeof(IEnumerableDebugView<>))]
-    public struct Enumerator : IEnumerator<T>, ICollectionEnumerator<T>
+    public struct Enumerator : IEnumerator<T?>, ICollectionEnumerator<T?>
     {
         private readonly KeyEnumerator etor;
 
-        internal Enumerator(RankedSet<T> set, bool isReverse = false)
+        internal Enumerator(RankedSet<T?> set, bool isReverse = false)
             => etor = new KeyEnumerator(set, isReverse);
 
-        internal Enumerator(RankedSet<T> set, int count)
+        internal Enumerator(RankedSet<T?> set, int count)
             => etor = new KeyEnumerator(set, count);
 
-        internal Enumerator(RankedSet<T> set, Func<T, bool> predicate)
+        internal Enumerator(RankedSet<T?> set, Func<T?, bool> predicate)
             => etor = new KeyEnumerator(set, predicate);
 
-        internal Enumerator(RankedSet<T> set, Func<T, int, bool> predicate)
+        internal Enumerator(RankedSet<T?> set, Func<T?, int, bool> predicate)
             => etor = new KeyEnumerator(set, predicate);
 
         /// <summary>Gets the item at the current position.</summary>
@@ -1162,7 +1162,7 @@ internal
 
         /// <summary>Gets an iterator for this collection.</summary>
         /// <returns>An iterator for this collection.</returns>
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<T?> GetEnumerator()
             => this;
 
         /// <summary>Gets an iterator for this collection.</summary>
@@ -1179,7 +1179,7 @@ internal
         /// <code source="..\Bench\RxExample01\RxExample01.cs" lang="cs" region="RsSkip" />
         /// </example>
         /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-        public ICollectionEnumerator<T> Skip(int count)
+        public ICollectionEnumerator<T?> Skip(int count)
         {
             etor.Bypass(count);
             return this;
@@ -1191,7 +1191,7 @@ internal
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-        public ICollectionEnumerator<T> SkipWhile(Func<T, bool> predicate)
+        public ICollectionEnumerator<T?> SkipWhile(Func<T?, bool> predicate)
         {
             etor.BypassKey(predicate);
             return this;
@@ -1203,7 +1203,7 @@ internal
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-        public ICollectionEnumerator<T> SkipWhile(Func<T, int, bool> predicate)
+        public ICollectionEnumerator<T?> SkipWhile(Func<T?, int, bool> predicate)
         {
             etor.BypassKey(predicate);
             return this;

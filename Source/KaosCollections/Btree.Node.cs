@@ -24,20 +24,20 @@ internal
     /// <exclude />
     private protected abstract class Node
     {
-        protected readonly List<T> keys;
+        protected readonly List<T?> keys;
 
         public Node(int keyCapacity)
-            => this.keys = new List<T>(keyCapacity);
+            => this.keys = new List<T?>(keyCapacity);
 
         public abstract int Weight { get; }
 
         public int KeyCount => keys.Count;
-        public T Key0 => keys[0];
+        public T? Key0 => keys[0];
 
-        public void AddKey(T key) => keys.Add(key);
-        public T GetKey(int index) => keys[index];
+        public void AddKey(T? key) => keys.Add(key);
+        public T? GetKey(int index) => keys[index];
         public int Search(T key) => keys.BinarySearch(key);
-        public int Search(T key, IComparer<T>? comparer) => keys.BinarySearch(key, comparer);
+        public int Search(T key, IComparer<T?>? comparer) => keys.BinarySearch(key, comparer);
         public void SetKey(int index, T key) => keys[index] = key;
         public void RemoveKey(int index) => keys.RemoveAt(index);
         public void RemoveKeys(int index, int count) => keys.RemoveRange(index, count);

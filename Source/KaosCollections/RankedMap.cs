@@ -37,15 +37,14 @@ namespace Kaos.Collections;
 [DebuggerDisplay("Count = {Count}")]
 [Serializable]
 #if PUBLIC
-    public
+public partial class RankedMap<TKey, TValue> :
 #else
-internal
+internal partial class RankedMap<TKey, TValue> :
 #endif
-    partial class RankedMap<TKey, TValue> :
     Btree<TKey>,
-    ICollection<KeyValuePair<TKey, TValue>>,
+    ICollection<KeyValuePair<TKey, TValue?>>,
     ICollection,
-    IReadOnlyCollection<KeyValuePair<TKey, TValue>>,
+    IReadOnlyCollection<KeyValuePair<TKey, TValue?>>,
     ISerializable,
     IDeserializationCallback
 {
@@ -58,7 +57,7 @@ internal
     #region Constructors
 
     /// <summary>Initializes a new map instance using the default key comparer.</summary>
-    public RankedMap() : base(Comparer<TKey>.Default, new PairLeaf<TValue>())
+    public RankedMap() : base(Comparer<TKey>.Default, new PairLeaf<TValue?>())
     { }
 
     /// <summary>Initializes a new map instance using the supplied key comparer.</summary>
@@ -78,13 +77,13 @@ internal
     /// <code source="..\Bench\RmExample01\RmExample01.cs" lang="cs" region="Ctor1" />
     /// </example>
     /// <exception cref="InvalidOperationException">When <em>comparer</em> is <b>null</b> and no other comparer available.</exception>
-    public RankedMap(IComparer<TKey> comparer) : base(comparer, new PairLeaf<TValue>())
+    public RankedMap(IComparer<TKey> comparer) : base(comparer, new PairLeaf<TValue?>())
     { }
 
     /// <summary>Initializes a new map instance that contains key/value pairs copied from the supplied map and sorted by the default comparer.</summary>
     /// <param name="map">The map to be copied.</param>
     /// <exception cref="ArgumentNullException">When <em>map</em> is <b>null</b>.</exception>
-    public RankedMap(ICollection<KeyValuePair<TKey, TValue>> map) : this(map, Comparer<TKey>.Default)
+    public RankedMap(ICollection<KeyValuePair<TKey, TValue?>> map) : this(map, Comparer<TKey>.Default)
     { }
 
     /// <summary>Initializes a new map instance that contains key/value pairs copied from the supplied map and sorted by the supplied comparer.</summary>
@@ -92,7 +91,7 @@ internal
     /// <param name="comparer">Comparison operator for keys.</param>
     /// <exception cref="ArgumentNullException">When <em>map</em> is <b>null</b>.</exception>
     /// <exception cref="InvalidOperationException">When <em>comparer</em> is <b>null</b> and no other comparer available.</exception>
-    public RankedMap(ICollection<KeyValuePair<TKey, TValue>> map, IComparer<TKey> comparer) : this(comparer)
+    public RankedMap(ICollection<KeyValuePair<TKey, TValue?>> map, IComparer<TKey> comparer) : this(comparer)
     {
         if (map == null)
             throw new ArgumentNullException(nameof(map));
@@ -175,7 +174,7 @@ internal
         => Count == 0 ? default : leftmostLeaf.Key0;
 
     /// <summary>Indicates that this collection may be modified.</summary>
-    bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
+    bool ICollection<KeyValuePair<TKey, TValue?>>.IsReadOnly
         => false;
 
     #endregion
@@ -209,7 +208,7 @@ internal
     /// <summary>Adds an element with the supplied key/value pair.</summary>
     /// <param name="keyValuePair">Contains the key and value of the element to add.</param>
     /// <exception cref="ArgumentException">When an element containing <em>key</em> has already been added.</exception>
-    void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> keyValuePair)
+    void ICollection<KeyValuePair<TKey, TValue?>>.Add(KeyValuePair<TKey, TValue?> keyValuePair)
     {
         var path = new NodeVector(this, keyValuePair.Key, leftEdge: false);
         Add2(path, keyValuePair.Key, keyValuePair.Value);
@@ -234,33 +233,33 @@ internal
         if (key == null)
             throw new ArgumentNullException(nameof(key));
 
-        var _ = (PairLeaf<TValue>)Find(key, out var index);
+        var _ = (PairLeaf<TValue?>)Find(key, out var index);
         return index >= 0;
     }
 
     /// <summary>Determines whether the map contains the supplied key/value pair.</summary>
     /// <param name="keyValuePair">The key/value pair to locate.</param>
     /// <returns><b>true</b> if <em>keyValuePair</em> is contained in the map; otherwise <b>false</b>.</returns>
-    bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> keyValuePair)
+    bool ICollection<KeyValuePair<TKey, TValue?>>.Contains(KeyValuePair<TKey, TValue?> keyValuePair)
     {
         if (FindEdgeLeft(keyValuePair.Key, out var leaf, out var index))
         {
-            PairLeaf<TValue>? pairLeaf;
+            PairLeaf<TValue?>? pairLeaf;
             if (index < leaf.KeyCount)
-                pairLeaf = (PairLeaf<TValue>)leaf;
+                pairLeaf = (PairLeaf<TValue?>)leaf;
             else
             {
-                pairLeaf = (PairLeaf<TValue>?)leaf.rightLeaf;
+                pairLeaf = (PairLeaf<TValue?>?)leaf.rightLeaf;
                 index = 0;
             }
             do
             {
-                if (EqualityComparer<TValue>.Default.Equals(keyValuePair.Value, pairLeaf.GetValue(index)))
+                if (EqualityComparer<TValue?>.Default.Equals(keyValuePair.Value, pairLeaf.GetValue(index)))
                     return true;
 
                 if (++index >= pairLeaf.KeyCount)
                 {
-                    pairLeaf = (PairLeaf<TValue>?)pairLeaf.rightLeaf;
+                    pairLeaf = (PairLeaf<TValue?>?)pairLeaf.rightLeaf;
                     if (pairLeaf == null)
                         break;
                     index = 0;
@@ -284,7 +283,7 @@ internal
     /// <exception cref="ArgumentNullException">When <em>array</em> is <b>null</b>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero.</exception>
     /// <exception cref="ArgumentException">When not enough space is given for the copy.</exception>
-    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int index)
+    public void CopyTo(KeyValuePair<TKey, TValue?>[] array, int index)
     {
         if (array == null)
             throw new ArgumentNullException(nameof(array));
@@ -295,9 +294,9 @@ internal
         if (Count > array.Length - index)
             throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.");
 
-        for (var leaf = (PairLeaf<TValue>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
+        for (var leaf = (PairLeaf<TValue?>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue?>?)leaf.rightLeaf)
             for (var leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
-                array[index++] = new KeyValuePair<TKey, TValue>(leaf.GetKey(leafIndex), leaf.GetValue(leafIndex));
+                array[index++] = new KeyValuePair<TKey, TValue?>(leaf.GetKey(leafIndex), leaf.GetValue(leafIndex));
     }
 
     /// <summary>Copies the elements of the map to an array, starting at the supplied array index.</summary>
@@ -324,13 +323,13 @@ internal
         if (Count > array.Length - index)
             throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
 
-        if (!(array is KeyValuePair<TKey, TValue>[]) && array.GetType() != typeof(Object[]))
+        if (!(array is KeyValuePair<TKey, TValue?>[]) && array.GetType() != typeof(Object[]))
             throw new ArgumentException("Target array type is not compatible with the type of items in the collection.", nameof(array));
 
-        for (var leaf = (PairLeaf<TValue>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
+        for (var leaf = (PairLeaf<TValue?>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue?>?)leaf.rightLeaf)
             for (var leafIndex = 0; leafIndex < leaf.KeyCount; ++leafIndex)
             {
-                array.SetValue(new KeyValuePair<TKey, TValue>(leaf.GetKey(leafIndex), leaf.GetValue(leafIndex)), index);
+                array.SetValue(new KeyValuePair<TKey, TValue?>(leaf.GetKey(leafIndex), leaf.GetValue(leafIndex)), index);
                 ++index;
             }
     }
@@ -340,13 +339,13 @@ internal
     /// <returns>The element at <em>index</em>.</returns>
     /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or greater than or equal to the number of keys.</exception>
-    public KeyValuePair<TKey, TValue> ElementAt(int index)
+    public KeyValuePair<TKey, TValue?> ElementAt(int index)
     {
         if (index < 0 || index >= Count)
             throw new ArgumentOutOfRangeException(nameof(index), "Argument is out of the range of valid values.");
 
-        var leaf = (PairLeaf<TValue>)Find(index, out var leafIndex);
-        return new KeyValuePair<TKey, TValue>(leaf.GetKey(leafIndex), leaf.GetValue(leafIndex));
+        var leaf = (PairLeaf<TValue?>)Find(index, out var leafIndex);
+        return new KeyValuePair<TKey, TValue?>(leaf.GetKey(leafIndex), leaf.GetValue(leafIndex));
     }
 
     /// <summary>Gets the key/value pair at the supplied index or the default if the index is out of range.</summary>
@@ -358,7 +357,7 @@ internal
         if (index < 0 || index >= Count)
             return new KeyValuePair<TKey, TValue?>(default, default);
 
-        var leaf = (PairLeaf<TValue>)Find(index, out var leafIndex);
+        var leaf = (PairLeaf<TValue?>)Find(index, out var leafIndex);
         return new KeyValuePair<TKey, TValue?>(leaf.GetKey(leafIndex), leaf.GetValue(index));
     }
 
@@ -392,7 +391,7 @@ internal
     public int IndexOfValue(TValue value)
     {
         var result = 0;
-        for (var leaf = (PairLeaf<TValue>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
+        for (var leaf = (PairLeaf<TValue?>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue?>?)leaf.rightLeaf)
         {
             var ix = leaf.IndexOfValue(value);
             if (ix >= 0)
@@ -451,23 +450,23 @@ internal
     /// <param name="keyValuePair">Contains key and value of elements to find and remove.</param>
     /// <returns><b>true</b> if any elements were removed; otherwise <b>false</b>.</returns>
     /// <remarks>No operation is taken unless both key and value match.</remarks>
-    bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> keyValuePair)
+    bool ICollection<KeyValuePair<TKey, TValue?>>.Remove(KeyValuePair<TKey, TValue?> keyValuePair)
     {
         var path = new NodeVector(this, keyValuePair.Key, leftEdge: true);
         if (!path.IsFound)
             return false;
 
         int leafLoss = 0, treeLoss = 0;
-        var leaf = (PairLeaf<TValue>?)path.TopNode;
+        var leaf = (PairLeaf<TValue?>?)path.TopNode;
         var ix = path.TopIndex;
         if (ix >= (leaf?.KeyCount ?? 0))
         {
-            ix = 0; leaf = (PairLeaf<TValue>?)path.TraverseRight();
+            ix = 0; leaf = (PairLeaf<TValue?>?)path.TraverseRight();
         }
 
         for (; ; )
         {
-            if (EqualityComparer<TValue>.Default.Equals(keyValuePair.Value, leaf.GetValue(ix)))
+            if (EqualityComparer<TValue?>.Default.Equals(keyValuePair.Value, leaf.GetValue(ix)))
                 ++leafLoss;
             else if (leafLoss != 0)
             {
@@ -509,7 +508,7 @@ internal
         void endOfLeaf()
         {
             if (leafLoss == 0)
-            { ix = 0; leaf = (PairLeaf<TValue>?)path.TraverseRight(); }
+            { ix = 0; leaf = (PairLeaf<TValue?>?)path.TraverseRight(); }
             else
             {
                 leaf.Truncate(ix - leafLoss);
@@ -522,7 +521,7 @@ internal
                     leaf = null;
                 }
                 else if (!IsUnderflow(leaf.KeyCount))
-                { ix = 0; leaf = (PairLeaf<TValue>?)path.TraverseRight(); }
+                { ix = 0; leaf = (PairLeaf<TValue?>?)path.TraverseRight(); }
                 else
                 {
                     var path2 = new NodeVector(path, path.Height);
@@ -530,14 +529,14 @@ internal
                     { ix = leaf.KeyCount; path2.Balance(); }
                     else
                     {
-                        ix = 0; leaf = (PairLeaf<TValue>?)path.TraverseLeft();
+                        ix = 0; leaf = (PairLeaf<TValue?>?)path.TraverseLeft();
                         path2.Balance();
                         if (leaf != null)
-                            leaf = (PairLeaf<TValue>?)path.TraverseRight();
+                            leaf = (PairLeaf<TValue?>?)path.TraverseRight();
                         else
                         {
                             path = NodeVector.CreateFromIndex(this, 0);
-                            leaf = (PairLeaf<TValue>?)path.TopNode;
+                            leaf = (PairLeaf<TValue?>?)path.TopNode;
                         }
                     }
                 }
@@ -623,7 +622,7 @@ internal
     /// where <em>m</em> is the number of elements removed and <em>n</em> is <see cref="Count"/>.
     /// </remarks>
     /// <exception cref="ArgumentNullException">When <em>match</em> is <b>null</b>.</exception>
-    public int RemoveWhereElement(Predicate<KeyValuePair<TKey, TValue>> match)
+    public int RemoveWhereElement(Predicate<KeyValuePair<TKey, TValue?>> match)
         => RemoveWhere2(match);
 
     /// <summary>Gets an element with the least key greater than the supplied key.</summary>
@@ -639,7 +638,7 @@ internal
             return false;
         }
 
-        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue>)leaf).GetValue(index));
+        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue?>)leaf).GetValue(index));
         return true;
     }
 
@@ -656,7 +655,7 @@ internal
             return false;
         }
 
-        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue>)leaf).GetValue(index));
+        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue?>)leaf).GetValue(index));
         return true;
     }
 
@@ -673,7 +672,7 @@ internal
             return false;
         }
 
-        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue>)leaf).GetValue(index));
+        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue?>)leaf).GetValue(index));
         return true;
     }
 
@@ -690,7 +689,7 @@ internal
             return false;
         }
 
-        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue>)leaf).GetValue(index));
+        keyValuePair = new KeyValuePair<TKey, TValue?>(leaf.GetKey(index), ((PairLeaf<TValue?>)leaf).GetValue(index));
         return true;
     }
 
@@ -703,7 +702,7 @@ internal
     /// <summary>Initializes a new map instance that contains serialized data.</summary>
     /// <param name="info">The object that contains the information required to serialize the map.</param>
     /// <param name="context">The structure that contains the source and destination of the serialized stream.</param>
-    protected RankedMap(SerializationInfo info, StreamingContext context) : base(new PairLeaf<TValue>())
+    protected RankedMap(SerializationInfo info, StreamingContext context) : base(new PairLeaf<TValue?>())
         => this.serializationInfo = info;
 
     /// <summary>Returns the data needed to serialize the map.</summary>
@@ -797,11 +796,11 @@ internal
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-    public IEnumerable<KeyValuePair<TKey, TValue>> ElementsBetween(TKey lower, TKey upper)
+    public IEnumerable<KeyValuePair<TKey, TValue?>> ElementsBetween(TKey lower, TKey upper)
     {
         var stageFreeze = stage;
         FindEdgeLeft(lower, out var leaf, out var index);
-        var pairLeaf = (PairLeaf<TValue>)leaf;
+        var pairLeaf = (PairLeaf<TValue?>)leaf;
 
         for (; ; )
         {
@@ -816,7 +815,7 @@ internal
                 continue;
             }
 
-            pairLeaf = (PairLeaf<TValue>?)pairLeaf.rightLeaf;
+            pairLeaf = (PairLeaf<TValue?>?)pairLeaf.rightLeaf;
             if (pairLeaf == null)
                 yield break;
 
@@ -837,12 +836,12 @@ internal
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-    public IEnumerable<KeyValuePair<TKey, TValue>> ElementsFrom(TKey lower)
+    public IEnumerable<KeyValuePair<TKey, TValue?>> ElementsFrom(TKey lower)
     {
 
         var stageFreeze = stage;
         FindEdgeLeft(lower, out var leaf, out var index);
-        var pairLeaf = (PairLeaf<TValue>)leaf;
+        var pairLeaf = (PairLeaf<TValue?>)leaf;
 
         for (; ; )
         {
@@ -854,7 +853,7 @@ internal
                 continue;
             }
 
-            pairLeaf = (PairLeaf<TValue>?)pairLeaf.rightLeaf;
+            pairLeaf = (PairLeaf<TValue?>?)pairLeaf.rightLeaf;
             if (pairLeaf == null)
                 yield break;
 
@@ -879,7 +878,7 @@ internal
     /// <exception cref="ArgumentOutOfRangeException">When <em>upperIndex</em> is less than zero or not less than the number of elements.</exception>
     /// <exception cref="ArgumentException">When <em>lowerIndex</em> and <em>upperIndex</em> do not denote a valid range of elements in the map.</exception>
     /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-    public IEnumerable<KeyValuePair<TKey, TValue>> ElementsBetweenIndexes(int lowerIndex, int upperIndex)
+    public IEnumerable<KeyValuePair<TKey, TValue?>> ElementsBetweenIndexes(int lowerIndex, int upperIndex)
     {
         if (lowerIndex < 0 || lowerIndex >= Count)
             throw new ArgumentOutOfRangeException(nameof(lowerIndex), "Argument was out of the range of valid values.");
@@ -892,11 +891,11 @@ internal
             throw new ArgumentException("Arguments were out of the range of valid values.");
 
         var stageFreeze = stage;
-        var leaf = (PairLeaf<TValue>)Find(lowerIndex, out var index);
+        var leaf = (PairLeaf<TValue?>)Find(lowerIndex, out var index);
         do
         {
             if (index >= leaf.KeyCount)
-            { index = 0; leaf = (PairLeaf<TValue>?)leaf.rightLeaf; }
+            { index = 0; leaf = (PairLeaf<TValue?>?)leaf.rightLeaf; }
 
             yield return leaf.GetPair(index);
             StageCheck(stageFreeze);
@@ -909,25 +908,25 @@ internal
     /// <returns>The element with the lowest sorted key in the map.</returns>
     /// <remarks>This is a O(1) operation.</remarks>
     /// <exception cref="InvalidOperationException">When <see cref="Count"/> is zero.</exception>
-    public KeyValuePair<TKey, TValue> First()
+    public KeyValuePair<TKey, TValue?> First()
     {
         if (Count == 0)
             throw new InvalidOperationException("Sequence contains no elements.");
 
-        return new KeyValuePair<TKey, TValue>(leftmostLeaf.Key0, ((PairLeaf<TValue>)leftmostLeaf).GetValue(0));
+        return new KeyValuePair<TKey, TValue?>(leftmostLeaf.Key0, ((PairLeaf<TValue?>)leftmostLeaf).GetValue(0));
     }
 
     /// <summary>Gets the element with the highest sorted key in the map.</summary>
     /// <returns>The element with the highest sorted key in the map.</returns>
     /// <remarks>This is a O(1) operation.</remarks>
     /// <exception cref="InvalidOperationException">When <see cref="Count"/> is zero.</exception>
-    public KeyValuePair<TKey, TValue> Last()
+    public KeyValuePair<TKey, TValue?> Last()
     {
         if (Count == 0)
             throw new InvalidOperationException("Sequence contains no elements.");
 
         var ix = rightmostLeaf.KeyCount - 1;
-        return new KeyValuePair<TKey, TValue>(rightmostLeaf.GetKey(ix), ((PairLeaf<TValue>)rightmostLeaf).GetValue(ix));
+        return new KeyValuePair<TKey, TValue?>(rightmostLeaf.GetKey(ix), ((PairLeaf<TValue?>)rightmostLeaf).GetValue(ix));
     }
 
     /// <summary>Returns an enumerator that iterates thru the map in reverse order.</summary>
@@ -954,7 +953,7 @@ internal
     /// <param name="predicate">The condition to test for.</param>
     /// <returns>Remaining elements after the first element that does not satisfy the supplied condition.</returns>
     /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-    public Enumerator SkipWhile(Func<KeyValuePair<TKey, TValue>, bool> predicate)
+    public Enumerator SkipWhile(Func<KeyValuePair<TKey, TValue?>, bool> predicate)
         => new Enumerator(this, predicate);
 
     /// <summary>
@@ -963,7 +962,7 @@ internal
     /// <param name="predicate">The condition to test for.</param>
     /// <returns>Remaining elements after the first element that does not satisfy the supplied condition.</returns>
     /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-    public Enumerator SkipWhile(Func<KeyValuePair<TKey, TValue>, int, bool> predicate)
+    public Enumerator SkipWhile(Func<KeyValuePair<TKey, TValue?>, int, bool> predicate)
         => new Enumerator(this, predicate);
 
     /// <summary>Gets an enumerator that iterates thru the map.</summary>
@@ -973,7 +972,7 @@ internal
 
     /// <summary>Gets an enumerator that iterates thru the map.</summary>
     /// <returns>An enumerator for the map.</returns>
-    IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
+    IEnumerator<KeyValuePair<TKey, TValue?>> IEnumerable<KeyValuePair<TKey, TValue?>>.GetEnumerator()
         => new Enumerator(this);
 
     /// <summary>Gets an enumerator that iterates thru the collection.</summary>
@@ -983,25 +982,25 @@ internal
 
     /// <summary>Enumerates the sorted key/value pairs of a <see cref="RankedMap{TKey,TValue}"/>.</summary>
     [DebuggerTypeProxy(typeof(IEnumerableDebugView<,>))]
-    public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>
+    public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue?>>, IEnumerable<KeyValuePair<TKey, TValue?>>
     {
-        private readonly PairEnumerator<TValue> etor;
+        private readonly PairEnumerator<TValue?> etor;
 
         /// <summary>Make an iterator that will loop thru the collection in order.</summary>
         /// <param name="map">Collection containing these key/value pairs.</param>
         /// <param name="isReverse">Supply <b>true</b> to iterate from last to first.</param>
         /// <param name="nonGeneric">Supply <b>true</b> to indicate object Current should return DictionaryEntry values.</param>
-        internal Enumerator(RankedMap<TKey, TValue> map, bool isReverse = false, bool nonGeneric = false)
-            => etor = new PairEnumerator<TValue>(map, isReverse, nonGeneric);
+        internal Enumerator(RankedMap<TKey, TValue?> map, bool isReverse = false, bool nonGeneric = false)
+            => etor = new PairEnumerator<TValue?>(map, isReverse, nonGeneric);
 
-        internal Enumerator(RankedMap<TKey, TValue> map, int count)
-            => etor = new PairEnumerator<TValue>(map, count);
+        internal Enumerator(RankedMap<TKey, TValue?> map, int count)
+            => etor = new PairEnumerator<TValue?>(map, count);
 
-        internal Enumerator(RankedMap<TKey, TValue> map, Func<KeyValuePair<TKey, TValue>, bool> predicate)
-            => etor = new PairEnumerator<TValue>(map, predicate);
+        internal Enumerator(RankedMap<TKey, TValue?> map, Func<KeyValuePair<TKey, TValue?>, bool> predicate)
+            => etor = new PairEnumerator<TValue?>(map, predicate);
 
-        internal Enumerator(RankedMap<TKey, TValue> map, Func<KeyValuePair<TKey, TValue>, int, bool> predicate)
-            => etor = new PairEnumerator<TValue>(map, predicate);
+        internal Enumerator(RankedMap<TKey, TValue?> map, Func<KeyValuePair<TKey, TValue?>, int, bool> predicate)
+            => etor = new PairEnumerator<TValue?>(map, predicate);
 
         /// <summary>Gets the element at the current position.</summary>
         /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
@@ -1019,7 +1018,7 @@ internal
         }
 
         /// <summary>Gets the key/value pair at the current position of the enumerator.</summary>
-        public KeyValuePair<TKey, TValue> Current
+        public KeyValuePair<TKey, TValue?> Current
             => etor.CurrentPairOrDefault;
 
         /// <summary>Advances the enumerator to the next element in the map.</summary>
@@ -1038,7 +1037,7 @@ internal
 
         /// <summary>Gets an iterator for this collection.</summary>
         /// <returns>An iterator for this collection.</returns>
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        public IEnumerator<KeyValuePair<TKey, TValue?>> GetEnumerator()
             => this;
 
         /// <summary>Gets an iterator for this collection.</summary>
@@ -1067,7 +1066,7 @@ internal
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining elements after the first element that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-        public Enumerator SkipWhile(Func<KeyValuePair<TKey, TValue>, bool> predicate)
+        public Enumerator SkipWhile(Func<KeyValuePair<TKey, TValue?>, bool> predicate)
         {
             etor.BypassPair(predicate);
             return this;
@@ -1079,7 +1078,7 @@ internal
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining elements after the first element that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the map was modified after the enumerator was created.</exception>
-        public Enumerator SkipWhile(Func<KeyValuePair<TKey, TValue>, int, bool> predicate)
+        public Enumerator SkipWhile(Func<KeyValuePair<TKey, TValue?>, int, bool> predicate)
         {
             etor.BypassPair(predicate);
             return this;

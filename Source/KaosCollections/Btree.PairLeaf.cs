@@ -24,32 +24,32 @@ internal
     /// <exclude />
     private protected sealed class PairLeaf<TValue> : Leaf
     {
-        private readonly List<TValue> values;
+        private readonly List<TValue?> values;
 
         /// <summary>Create a siblingless leaf.</summary>
         /// <param name="capacity">The initial number of elements the page can store.</param>
         public PairLeaf(int capacity = 0) : base(capacity)
-            => this.values = new List<TValue>(capacity);
+            => this.values = new List<TValue?>(capacity);
 
         /// <summary>Splice this leaf to right of <paramref name="leftLeaf"/>.</summary>
         /// <param name="leftLeaf">Provides linked list insert point.</param>
         /// <param name="capacity">The initial number of elements the page can store.</param>
-        public PairLeaf(PairLeaf<TValue> leftLeaf, int capacity) : base(leftLeaf, capacity)
-            => this.values = new List<TValue>(capacity);
+        public PairLeaf(PairLeaf<TValue?> leftLeaf, int capacity) : base(leftLeaf, capacity)
+            => this.values = new List<TValue?>(capacity);
 
         public int ValueCount
             => values.Count;
 
-        public KeyValuePair<T, TValue> GetPair(int index)
-            => new KeyValuePair<T, TValue>(keys[index], values[index]);
+        public KeyValuePair<T, TValue?> GetPair(int index)
+            => new KeyValuePair<T, TValue?>(keys[index], values[index]);
 
-        public TValue GetValue(int index)
+        public TValue? GetValue(int index)
             => values[index];
 
-        public int IndexOfValue(TValue value)
+        public int IndexOfValue(TValue? value)
             => values.IndexOf(value);
 
-        public void SetValue(int index, TValue value)
+        public void SetValue(int index, TValue? value)
             => values[index] = value;
 
         public void CopyPairLeft(int index, int offset)
@@ -58,24 +58,24 @@ internal
             keys[index - offset] = keys[index];
         }
 
-        public void Add(T key, TValue value)
+        public void Add(T key, TValue? value)
         {
             AddKey(key);
             values.Add(value);
         }
 
-        public void Add(PairLeaf<TValue> source, int sourceStart, int sourceStop)
+        public void Add(PairLeaf<TValue?> source, int sourceStart, int sourceStop)
         {
             for (var ix = sourceStart; ix < sourceStop; ++ix)
                 Add(source.GetKey(ix), source.GetValue(ix));
         }
 
-        public void CopyValuesTo(TValue[] array, int index, int count)
+        public void CopyValuesTo(TValue?[] array, int index, int count)
             => values.CopyTo(0, array, index, count);
 
         public override void Coalesce()
         {
-            var right = (PairLeaf<TValue>?)rightLeaf;
+            var right = (PairLeaf<TValue?>?)rightLeaf;
             for (var ix = 0; ix < (right?.values.Count ?? 0); ++ix)
             {
                 if (right != null)
@@ -96,7 +96,7 @@ internal
 
         public override void MoveLeft(int count)
         {
-            var right = (PairLeaf<TValue>?)rightLeaf;
+            var right = (PairLeaf<TValue?>?)rightLeaf;
             for (var ix = 0; ix < count; ++ix)
             {
                 if (right != null)

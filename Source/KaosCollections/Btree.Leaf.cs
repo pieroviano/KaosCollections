@@ -33,11 +33,11 @@ internal
         /// <param name="leftLeaf">Provides linked list insert point.</param>
         /// <param name="capacity">The initial number of elements the page can store.</param>
         /// <remarks>Caller must fixup rightLeaf field.</remarks>
-        public Leaf(Leaf leftLeaf, int capacity) : base(capacity)
+        public Leaf(Leaf? leftLeaf, int capacity) : base(capacity)
         {
             // Doubly linked list insertion.
-            rightLeaf = leftLeaf.rightLeaf;
-            leftLeaf.rightLeaf = this;
+            rightLeaf = leftLeaf?.rightLeaf;
+            leftLeaf?.rightLeaf = this;
             this.leftLeaf = leftLeaf;
         }
 

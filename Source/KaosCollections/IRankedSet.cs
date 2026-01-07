@@ -23,9 +23,9 @@ namespace Kaos.Collections;
 // ReSharper disable once UnusedMember.Global
 // ReSharper disable once PossibleInterfaceMemberAmbiguity
 public interface IRankedSet<T> :
-    ISet<T>,
+    ISet<T?>,
     ICollection,
-    IReadOnlyCollection<T>,
+    IReadOnlyCollection<T?>,
     ISerializable,
     IDeserializationCallback
 {
@@ -34,7 +34,7 @@ public interface IRankedSet<T> :
     /// To override sorting based on the default comparer,
     /// supply an alternate comparer when constructing the set.
     /// </remarks>
-    IComparer<T>? Comparer { get; }
+    IComparer<T?>? Comparer { get; }
 
     /// <summary>Gets the maximum item in the set per the comparer.</summary>
     /// <remarks>This is a O(1) operation.</remarks>
@@ -105,7 +105,7 @@ public interface IRankedSet<T> :
     /// <code source="..\Bench\RsExample01\RsExample01.cs" lang="cs"/>
     /// </example>
     /// <exception cref="ArgumentNullException">When <em>match</em> is <b>null</b>.</exception>
-    int RemoveWhere(Predicate<T> match);
+    int RemoveWhere(Predicate<T?> match);
 
     /// <summary>Gets the item at the supplied index.</summary>
     /// <param name="index">The zero-based index of the item to get.</param>
@@ -135,7 +135,7 @@ public interface IRankedSet<T> :
     /// <summary>Returns an IEnumerable that iterates thru the set in reverse order.</summary>
     /// <returns>An enumerator that reverse iterates thru the set.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    ICollectionEnumerator<T> Reverse();
+    ICollectionEnumerator<T?> Reverse();
 
     /// <summary>Returns an enumerator that iterates over a range with the supplied bounds.</summary>
     /// <param name="lower">Minimum item value of the range.</param>
@@ -152,7 +152,7 @@ public interface IRankedSet<T> :
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    IEnumerable<T> ElementsBetween(T lower, T upper);
+    IEnumerable<T?> ElementsBetween(T lower, T upper);
 
     /// <summary>Returns an enumerator that iterates over a range with the supplied index bounds.</summary>
     /// <param name="lowerIndex">Minimum index of the range.</param>
@@ -171,7 +171,7 @@ public interface IRankedSet<T> :
     /// <exception cref="ArgumentOutOfRangeException">When <em>upperIndex</em> is less than zero or not less than &lt;see cref="Count"/&gt;.</exception>
     /// <exception cref="ArgumentException">When <em>lowerIndex</em> and <em>upperIndex</em> do not denote a valid range of indexes.</exception>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    IEnumerable<T> ElementsBetweenIndexes(int lowerIndex, int upperIndex);
+    IEnumerable<T?> ElementsBetweenIndexes(int lowerIndex, int upperIndex);
 
     /// <summary>Returns an enumerator that iterates over a range with the supplied lower bound.</summary>
     /// <param name="lower">Minimum of the range.</param>
@@ -186,7 +186,7 @@ public interface IRankedSet<T> :
     /// </para>
     /// </remarks>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    IEnumerable<T> ElementsFrom(T lower);
+    IEnumerable<T?> ElementsFrom(T lower);
 
     /// <summary>Gets the index of the supplied item.</summary>
     /// <param name="item">The item to find.</param>
@@ -242,7 +242,7 @@ public interface IRankedSet<T> :
     /// <code source="..\Bench\RxExample01\RxExample01.cs" lang="cs" region="RsSkip" />
     /// </example>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    ICollectionEnumerator<T> Skip(int count);
+    ICollectionEnumerator<T?> Skip(int count);
 
     /// <summary>
     /// Bypasses elements as long as a supplied condition is true and yields the remaining items.
@@ -250,7 +250,7 @@ public interface IRankedSet<T> :
     /// <param name="predicate">The condition to test for.</param>
     /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    ICollectionEnumerator<T> SkipWhile(Func<T, bool> predicate);
+    ICollectionEnumerator<T?> SkipWhile(Func<T?, bool> predicate);
 
     /// <summary>
     /// Bypasses elements as long as a supplied index-based condition is true and yields the remaining items.
@@ -258,7 +258,7 @@ public interface IRankedSet<T> :
     /// <param name="predicate">The condition to test for.</param>
     /// <returns>Remaining items after the first item that does not satisfy the supplied condition.</returns>
     /// <exception cref="InvalidOperationException">When the set was modified after the enumerator was created.</exception>
-    ICollectionEnumerator<T> SkipWhile(Func<T, int, bool> predicate);
+    ICollectionEnumerator<T?> SkipWhile(Func<T?, int, bool> predicate);
 
     /// <summary>Gets the actual item for the supplied search item.</summary>
     /// <param name="getItem">The item to find.</param>
@@ -295,5 +295,5 @@ public interface IRankedSet<T> :
 
     /// <summary>Returns an enumerator that iterates thru the set.</summary>
     /// <returns>An enumerator that iterates thru the set in sorted order.</returns>
-    new ICollectionEnumerator<T> GetEnumerator();
+    new ICollectionEnumerator<T?> GetEnumerator();
 }

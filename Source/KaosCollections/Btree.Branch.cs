@@ -23,25 +23,25 @@ internal
     /// <exclude />
     private protected sealed class Branch : Node
     {
-        private readonly List<Node> childNodes;
+        private readonly List<Node?> childNodes;
         private int weight;
 
         public Branch(int keyCapacity) : base(keyCapacity)
-            => this.childNodes = new List<Node>(keyCapacity + 1);
+            => this.childNodes = new List<Node?>(keyCapacity + 1);
 
-        public Branch(int keyCapacity, Node child, int weight = 0) : base(keyCapacity)
+        public Branch(int keyCapacity, Node? child, int weight = 0) : base(keyCapacity)
         {
-            this.childNodes = new List<Node>(keyCapacity + 1) { child };
+            this.childNodes = new List<Node?>(keyCapacity + 1) { child };
             this.weight = weight;
         }
 
         public int ChildCount
             => childNodes.Count;
 
-        public Node Child0
+        public Node? Child0
             => childNodes[0];
 
-        public Node GetChild(int childIndex)
+        public Node? GetChild(int childIndex)
             => childNodes[childIndex];
 
         /// <summary>Number of elements in child leaves.</summary>
@@ -78,7 +78,7 @@ internal
             keys.RemoveRange(index, count);
         }
 
-        public void Add(Node node)
+        public void Add(Node? node)
             => childNodes.Add(node);
 
         public void Add(T key, Node node)

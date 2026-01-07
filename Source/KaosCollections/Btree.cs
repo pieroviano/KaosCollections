@@ -32,10 +32,10 @@ internal
     private const int DefaultOrder = 128;
     private const int MaximumOrder = 256;
 
-    private protected Node root;
-    private protected Leaf rightmostLeaf;
-    private protected Leaf leftmostLeaf;
-    private protected IComparer<T>? keyComparer;
+    private protected Node? root;
+    private protected Leaf? rightmostLeaf;
+    private protected Leaf? leftmostLeaf;
+    private protected IComparer<T?>? keyComparer;
     private protected int maxKeyCount;
     private protected int stage;
 
@@ -45,9 +45,9 @@ internal
         root = rightmostLeaf = leftmostLeaf = startLeaf;
     }
 
-    private protected Btree(IComparer<T>? comparer, Leaf startLeaf) : this(startLeaf)
+    private protected Btree(IComparer<T?>? comparer, Leaf startLeaf) : this(startLeaf)
     {
-        keyComparer = comparer ?? Comparer<T>.Default;
+        keyComparer = comparer ?? Comparer<T?>.Default;
     }
 
     #region Nonpublic common methods
@@ -82,9 +82,9 @@ internal
                 "Destination array is not long enough to copy all the items in the collection. Check array index and length.");
         }
 
-        if (count > root.Weight)
+        if (count > (root?.Weight??0))
         {
-            count = root.Weight;
+            count = (root?.Weight??0);
         }
 
         var stopIx = index + count;
@@ -124,7 +124,7 @@ internal
 
         if (array is T[] genericArray)
         {
-            CopyKeysTo1(genericArray, index, root.Weight);
+            CopyKeysTo1(genericArray, index, (root?.Weight ?? 0));
             return;
         }
 
@@ -133,7 +133,7 @@ internal
             throw new ArgumentOutOfRangeException(nameof(index), "Non-negative number required.");
         }
 
-        if (root.Weight > array.Length - index)
+        if (root?.Weight > array.Length - index)
         {
             throw new ArgumentException(
                 "Destination array is not long enough to copy all the items in the collection. Check array index and length.");
@@ -164,13 +164,18 @@ internal
     /// <param name="key">Target of search.</param>
     /// <param name="index">When found, holds index of returned Leaf; else ~index of nearest greater key.</param>
     /// <returns>Leaf holding target (found or not).</returns>
-    private protected Leaf Find(T key, out int index)
+    private protected Leaf? Find(T key, out int index)
     {
+        index = -1;
         //  Unfold on default comparer for 5% speed improvement.
         if (ReferenceEquals(keyComparer, Comparer<T>.Default))
         {
             for (var node = root; ;)
             {
+                if (node == null)
+                {
+                    break;
+                }
                 index = node.Search(key);
 
                 if (node is Branch branch)
@@ -187,6 +192,10 @@ internal
         {
             for (var node = root; ;)
             {
+                if (node == null)
+                {
+                    break;
+                }
                 index = node.Search(key, keyComparer);
 
                 if (node is Branch branch)
@@ -199,15 +208,17 @@ internal
                 }
             }
         }
+
+        return null;
     }
 
     /// <summary>Perform traverse to leaf at index.</summary>
     /// <param name="treeIndex">Index of collection.</param>
     /// <param name="leafIndex">Leaf index of result.</param>
     /// <returns>Leaf holding item.</returns>
-    private protected Node Find(int treeIndex, out int leafIndex)
+    private protected Node? Find(int treeIndex, out int leafIndex)
     {
-        Debug.Assert(treeIndex < root.Weight);
+        Debug.Assert(treeIndex < (root?.Weight??0));
         var node = root;
         leafIndex = treeIndex;
         while (node is Branch branch)
@@ -215,6 +226,10 @@ internal
             for (var ix = 0; ; ++ix)
             {
                 var child = branch.GetChild(ix);
+                if (child == null)
+                {
+                    break;
+                }
                 var cw = child.Weight;
                 if (cw > leafIndex)
                 {
@@ -229,13 +244,17 @@ internal
         return node;
     }
 
-    private protected int FindEdgeForIndex(T key, out Leaf leaf, out int leafIndex, bool leftEdge = false)
+    private protected int FindEdgeForIndex(T key, out Leaf? leaf, out int leafIndex, bool leftEdge = false)
     {
         var isFound = false;
         var treeIndex = 0;
-
+        leafIndex = -1;
         for (var node = root; ;)
         {
+            if (node == null)
+            {
+                break;
+            }
             var hi = node.KeyCount;
             if (leftEdge)
             {
@@ -292,7 +311,12 @@ internal
                 {
                     for (var ix = 0; ix < hi; ++ix)
                     {
-                        treeIndex += branch.GetChild(ix).Weight;
+                        var child = branch.GetChild(ix);
+                        if (child == null)
+                        {
+                            break;
+                        }
+                        treeIndex += child.Weight;
                     }
                 }
                 else
@@ -300,7 +324,12 @@ internal
                     treeIndex += branch.Weight;
                     for (var ix = hi; ix <= branch.KeyCount; ++ix)
                     {
-                        treeIndex -= branch.GetChild(ix).Weight;
+                        var child = branch.GetChild(ix);
+                        if (child == null)
+                        {
+                            break;
+                        }
+                        treeIndex -= child.Weight;
                     }
                 }
 
@@ -313,14 +342,22 @@ internal
                 return isFound ? treeIndex + hi : ~(treeIndex + hi);
             }
         }
+
+        leaf = null;
+        return -1;
     }
 
-    private protected bool FindEdgeLeft(T key, out Leaf leaf, out int leafIndex)
+    private protected bool FindEdgeLeft(T key, out Leaf? leaf, out int leafIndex)
     {
         var isFound = false;
 
+        leafIndex = -1;
         for (var node = root; ;)
         {
+            if (node == null)
+            {
+                break;
+            }
             var hi = node.KeyCount;
             for (var lo = 0; lo != hi;)
             {
@@ -355,14 +392,23 @@ internal
                 return isFound;
             }
         }
+
+        leaf = null;
+        return false;
     }
 
-    private protected bool FindEdgeRight(T key, out Leaf leaf, out int leafIndex)
+    private protected bool FindEdgeRight(T? key, out Leaf? leaf, out int leafIndex)
     {
         var isFound = false;
 
+        leaf = null;
+        leafIndex = -1;
         for (var node = root; ;)
         {
+            if (node == null)
+            {
+                break;
+            }
             var hi = node.KeyCount;
             for (var lo = 0; lo != hi;)
             {
@@ -397,6 +443,8 @@ internal
                 return isFound;
             }
         }
+
+        return false;
     }
 
     private protected int GetCount2(T key)
@@ -413,12 +461,14 @@ internal
     private protected int GetDistinctCount2()
     {
         var result = 0;
-        if (root.Weight > 0)
+        if (root?.Weight > 0)
         {
             var leaf = leftmostLeaf;
             var leafIndex = 0;
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             for (var currentKey = leaf.Key0; ;)
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             {
                 ++result;
                 if (leafIndex < leaf.KeyCount - 1)
@@ -433,7 +483,7 @@ internal
                 }
 
                 FindEdgeRight(currentKey, out leaf, out leafIndex);
-                if (leafIndex >= leaf.KeyCount)
+                if (leafIndex >= leaf?.KeyCount)
                 {
                     leaf = leaf.rightLeaf;
                     if (leaf == null)
@@ -444,6 +494,10 @@ internal
                     leafIndex = 0;
                 }
 
+                if (leaf == null)
+                {
+                    break;
+                }
                 currentKey = leaf.GetKey(leafIndex);
             }
         }
@@ -451,7 +505,7 @@ internal
         return result;
     }
 
-    [NonSerialized] private object syncRoot = null!;
+    [NonSerialized] private object? syncRoot;
 
     private protected object GetSyncRoot()
     {
@@ -466,8 +520,8 @@ internal
     private protected void Initialize()
     {
         StageBump();
-        leftmostLeaf.Truncate(0);
-        leftmostLeaf.rightLeaf = null;
+        leftmostLeaf?.Truncate(0);
+        leftmostLeaf?.rightLeaf = null;
         root = rightmostLeaf = leftmostLeaf;
     }
 
@@ -479,7 +533,7 @@ internal
         path.Balance();
     }
 
-    private protected int Remove2(T item, int count)
+    private protected int Remove2(T? item, int count)
     {
         if (count <= 0)
         {
@@ -624,22 +678,22 @@ internal
 
                 if (j1 == 0)
                 {
-                    bh2.RemoveChildRange2(0, ix2 - ix1);
+                    bh2?.RemoveChildRange2(0, ix2 - ix1);
                 }
                 else
                 {
-                    bh2.RemoveChildRange1(ix1, ix2 - ix1 - j2);
+                    bh2?.RemoveChildRange1(ix1, ix2 - ix1 - j2);
                 }
 
                 for (; ; )
                 {
-                    bh2.AdjustWeight(deltaW1 + deltaW2);
+                    bh2?.AdjustWeight(deltaW1 + deltaW2);
                     if (--level < 0)
                     {
                         break;
                     }
 
-                    bh2 = (Branch)path2.GetNode(level);
+                    bh2 = (Branch?)path2.GetNode(level);
                 }
 
                 break;
@@ -647,9 +701,17 @@ internal
 
             if (j1 != 0)
             {
-                for (var ix = ix1 + 1; ix <= bh1.KeyCount; ++ix)
+                if (bh1 != null)
                 {
-                    deltaW1 -= bh1.GetChild(ix).Weight;
+                    for (var ix = ix1 + 1; ix <= bh1.KeyCount; ++ix)
+                    {
+                        var child = bh1.GetChild(ix);
+                        if (child == null)
+                        {
+                            break;
+                        }
+                        deltaW1 -= child.Weight;
+                    }
                 }
 
                 bh1.RemoveChildRange1(ix1, bh1.KeyCount - ix1);
@@ -867,7 +929,7 @@ internal
 
     private protected void TryGetLT(T key, out Leaf? leaf, out int index)
     {
-        var _ = FindEdgeLeft(key, out leaf, out index);
+        _ = FindEdgeLeft(key, out leaf, out index);
         if (--index < 0)
         {
             leaf = null;
@@ -878,7 +940,7 @@ internal
     {
         if (FindEdgeLeft(key, out leaf, out index))
         {
-            if (index >= leaf.KeyCount)
+            if (index >= leaf?.KeyCount)
             {
                 leaf = leaf.rightLeaf;
                 index = 0;
@@ -893,7 +955,7 @@ internal
     private protected void TryGetGT(T key, out Leaf? leaf, out int index)
     {
         var _ = FindEdgeRight(key, out leaf, out index);
-        if (index >= leaf.KeyCount)
+        if (index >= leaf?.KeyCount)
         {
             leaf = leaf.rightLeaf;
             index = 0;
@@ -903,7 +965,7 @@ internal
     private protected void TryGetGE(T key, out Leaf? leaf, out int index)
     {
         var _ = FindEdgeLeft(key, out leaf, out index);
-        if (index >= leaf.KeyCount)
+        if (index >= leaf?.KeyCount)
         {
             leaf = leaf.rightLeaf;
             index = 0;
@@ -935,8 +997,8 @@ internal
 
         path.IncrementPathWeight();
 
-        var leaf = (Leaf)path.TopNode;
-        if (leaf.KeyCount < maxKeyCount)
+        var leaf = (Leaf?)path.TopNode;
+        if (leaf?.KeyCount < maxKeyCount)
         {
             leaf.InsertKey(path.TopIndex, item);
             return true;
@@ -986,7 +1048,7 @@ internal
 
     private protected IEnumerable<T> Distinct2()
     {
-        if (root.Weight == 0)
+        if ((root?.Weight??0) == 0)
         {
             yield break;
         }
@@ -994,51 +1056,54 @@ internal
         var stageFreeze = stage;
         var ix = 0;
         var leaf = leftmostLeaf;
-        for (var key = leaf.Key0; ;)
+        if (leaf != null)
         {
-            yield return key;
-            StageCheck(stageFreeze);
-
-            if (++ix < leaf.KeyCount)
+            for (var key = leaf.Key0;;)
             {
-                var nextKey = leaf.GetKey(ix);
-                if (keyComparer != null && keyComparer.Compare(key, nextKey) != 0)
-                {
-                    key = nextKey;
-                    continue;
-                }
-            }
+                yield return key;
+                StageCheck(stageFreeze);
 
-            FindEdgeRight(key, out leaf, out ix);
-            if (ix >= leaf.KeyCount)
-            {
-                leaf = leaf.rightLeaf;
-                if (leaf == null)
+                if (++ix < leaf.KeyCount)
                 {
-                    yield break;
+                    var nextKey = leaf.GetKey(ix);
+                    if (keyComparer != null && keyComparer.Compare(key, nextKey) != 0)
+                    {
+                        key = nextKey;
+                        continue;
+                    }
                 }
 
-                ix = 0;
-            }
+                FindEdgeRight(key, out leaf, out ix);
+                if (ix >= leaf.KeyCount)
+                {
+                    leaf = leaf.rightLeaf;
+                    if (leaf == null)
+                    {
+                        yield break;
+                    }
 
-            key = leaf.GetKey(ix);
+                    ix = 0;
+                }
+
+                key = leaf.GetKey(ix);
+            }
         }
     }
 
-    private protected int RemoveAll2(IEnumerable<T> other)
+    private protected int RemoveAll2(IEnumerable<T?> other)
     {
         var removed = 0;
-        if (root.Weight > 0)
+        if ((root?.Weight??0) > 0)
         {
             StageBump();
             if (ReferenceEquals(other, this))
             {
-                removed = root.Weight;
+                removed = (root?.Weight ?? 0);
                 Initialize();
             }
             else
             {
-                var oBag = other as RankedBag<T> ?? new RankedBag<T>(other, keyComparer);
+                var oBag = other as RankedBag<T?> ?? new RankedBag<T?>(other, keyComparer);
                 if (oBag.Count > 0)
                 {
                     foreach (var oKey in oBag.Distinct())
@@ -1064,11 +1129,11 @@ internal
 
     #region Nonpublic pair methods
 
-    private protected void Add2<TValue>(NodeVector path, T key, TValue value)
+    private protected void Add2<TValue>(NodeVector path, T key, TValue? value)
     {
         StageBump();
 
-        var leaf = (PairLeaf<TValue>)path.TopNode;
+        var leaf = (PairLeaf<TValue?>)path.TopNode;
         var pathIndex = path.TopIndex;
 
         path.IncrementPathWeight();
@@ -1079,7 +1144,7 @@ internal
         }
 
         // Leaf is full so right split a new leaf.
-        var newLeaf = new PairLeaf<TValue>(leaf, maxKeyCount);
+        var newLeaf = new PairLeaf<TValue?>(leaf, maxKeyCount);
 
         if (newLeaf.rightLeaf != null)
         {
@@ -1118,14 +1183,14 @@ internal
         path.Promote(newLeaf.Key0, newLeaf, newLeaf.rightLeaf == null);
     }
 
-    private protected int ContainsValue2<TValue>(TValue value)
+    private protected int ContainsValue2<TValue>(TValue? value)
     {
         var result = 0;
 
         if (value != null)
         {
-            var comparer = EqualityComparer<TValue>.Default;
-            for (var leaf = (PairLeaf<TValue>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
+            var comparer = EqualityComparer<TValue?>.Default;
+            for (var leaf = (PairLeaf<TValue?>?)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue?>?)leaf.rightLeaf)
             {
                 for (var vix = 0; vix < leaf.ValueCount; ++vix)
                 {
@@ -1140,7 +1205,7 @@ internal
         }
         else
         {
-            for (var leaf = (PairLeaf<TValue>)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
+            for (var leaf = (PairLeaf<TValue?>?)leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue?>?)leaf.rightLeaf)
             {
                 for (var vix = 0; vix < leaf.ValueCount; ++vix)
                 {
@@ -1157,7 +1222,7 @@ internal
         return -1;
     }
 
-    private protected int RemoveWhere2<V>(Predicate<KeyValuePair<T, V>> match)
+    private protected int RemoveWhere2<V>(Predicate<KeyValuePair<T, V?>> match)
     {
         if (match == null)
         {
@@ -1181,7 +1246,7 @@ internal
                 }
             }
 
-            var isMatch = match(new KeyValuePair<T, V>(leaf.GetKey(ix), leaf.GetValue(ix)));
+            var isMatch = match(new KeyValuePair<T, V?>(leaf.GetKey(ix), leaf.GetValue(ix)));
             StageCheck(stageFreeze);
             if (isMatch)
             {
@@ -1294,7 +1359,7 @@ internal
                 throw new ArgumentOutOfRangeException("Must be between " + MinimumOrder + " and " + MaximumOrder + ".");
             }
 
-            if (root.Weight == 0 && value is >= MinimumOrder and <= MaximumOrder)
+            if ((root?.Weight??0) == 0 && value is >= MinimumOrder and <= MaximumOrder)
             {
                 maxKeyCount = value - 1;
             }

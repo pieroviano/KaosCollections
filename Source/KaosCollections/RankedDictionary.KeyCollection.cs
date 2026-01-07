@@ -16,11 +16,10 @@ using System.Diagnostics;
 
 namespace Kaos.Collections;
 #if PUBLIC
-    public
+public partial class RankedDictionary<TKey, TValue>
 #else
-internal
+internal partial class RankedDictionary<TKey, TValue>
 #endif
-    partial class RankedDictionary<TKey, TValue>
 {
     /// <summary>
     /// Represents a collection of keys of a <see cref="RankedDictionary{TKey,TValue}"/>.
@@ -57,7 +56,7 @@ internal
         ICollection,
         IReadOnlyCollection<TKey>
     {
-        private readonly RankedDictionary<TKey, TValue> tree;
+        private readonly RankedDictionary<TKey, TValue?> tree;
 
         #region Constructors
 
@@ -65,7 +64,7 @@ internal
         /// <param name="dictionary">Dictionary containing these keys.</param>
         /// <remarks>This is a O(1) operation.</remarks>
         /// <exception cref="ArgumentNullException">When <em>dictionary</em> is <b>null</b>.</exception>
-        public KeyCollection(RankedDictionary<TKey, TValue> dictionary)
+        public KeyCollection(RankedDictionary<TKey, TValue?> dictionary)
         {
             if (dictionary == null)
 #pragma warning disable IDE0016
@@ -356,16 +355,16 @@ internal
         {
             private readonly KeyEnumerator etor;
 
-            internal Enumerator(RankedDictionary<TKey, TValue> dary, bool isReverse = false)
+            internal Enumerator(RankedDictionary<TKey, TValue?> dary, bool isReverse = false)
                 => etor = new KeyEnumerator(dary, isReverse);
 
-            internal Enumerator(RankedDictionary<TKey, TValue> dary, int count)
+            internal Enumerator(RankedDictionary<TKey, TValue?> dary, int count)
                 => etor = new KeyEnumerator(dary, count);
 
-            internal Enumerator(RankedDictionary<TKey, TValue> dary, Func<TKey, bool> predicate)
+            internal Enumerator(RankedDictionary<TKey, TValue?> dary, Func<TKey, bool> predicate)
                 => etor = new KeyEnumerator(dary, predicate);
 
-            internal Enumerator(RankedDictionary<TKey, TValue> dary, Func<TKey, int, bool> predicate)
+            internal Enumerator(RankedDictionary<TKey, TValue?> dary, Func<TKey, int, bool> predicate)
                 => etor = new KeyEnumerator(dary, predicate);
 
             /// <summary>Gets the key at the current position.</summary>

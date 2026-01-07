@@ -16,11 +16,10 @@ using System.Diagnostics;
 
 namespace Kaos.Collections;
 #if PUBLIC
-    public
+public partial class RankedDictionary<TKey, TValue>
 #else
-internal
+internal partial class RankedDictionary<TKey, TValue>
 #endif
-    partial class RankedDictionary<TKey, TValue>
 {
     /// <summary>
     /// Represents a collection of values of a <see cref="RankedDictionary{TKey,TValue}"/>.
@@ -52,11 +51,11 @@ internal
     [DebuggerTypeProxy(typeof(ICollectionValuesDebugView<,>))]
     [DebuggerDisplay("Count = {Count}")]
     public sealed class ValueCollection :
-        ICollection<TValue>,
+        ICollection<TValue?>,
         ICollection,
-        IReadOnlyCollection<TValue>
+        IReadOnlyCollection<TValue?>
     {
-        private readonly RankedDictionary<TKey, TValue> tree;
+        private readonly RankedDictionary<TKey, TValue?> tree;
 
         #region Constructors
 
@@ -64,7 +63,7 @@ internal
         /// <param name="dictionary">Dictionary containing these keys.</param>
         /// <remarks>This is a O(1) operation.</remarks>
         /// <exception cref="ArgumentNullException">When <em>dictionary</em> is <b>null</b>.</exception>
-        public ValueCollection(RankedDictionary<TKey, TValue> dictionary)
+        public ValueCollection(RankedDictionary<TKey, TValue?> dictionary)
         {
             if (dictionary == null)
 #pragma warning disable IDE0016
@@ -83,7 +82,7 @@ internal
             => tree.Count;
 
         /// <summary>Indicates that the collection is read-only.</summary>
-        bool ICollection<TValue>.IsReadOnly
+        bool ICollection<TValue?>.IsReadOnly
             => true;
 
         /// <summary>Indicates that the collection is not thread safe.</summary>
@@ -100,18 +99,18 @@ internal
 
         /// <summary>This implementation always throws a <see cref="NotSupportedException" />.</summary>
         /// <param name="value">The object to add.</param>
-        void ICollection<TValue>.Add(TValue value)
+        void ICollection<TValue?>.Add(TValue? value)
             => throw new NotSupportedException();
 
         /// <summary>This implementation always throws a <see cref="NotSupportedException" />.</summary>
-        void ICollection<TValue>.Clear()
+        void ICollection<TValue?>.Clear()
             => throw new NotSupportedException();
 
         /// <summary>Determines whether the dictionary contains the supplied value.</summary>
         /// <param name="value">The value to locate.</param>
         /// <returns><b>true</b> if <em>value</em> is contained in the dictionary; otherwise <b>false</b>.</returns>
         /// <remarks>This is a O(<em>n</em>) operation.</remarks>
-        bool ICollection<TValue>.Contains(TValue value)
+        bool ICollection<TValue?>.Contains(TValue? value)
             => tree.ContainsValue2(value) >= 0;
 
         /// <summary>Copies values to a supplied array, starting as the supplied position.</summary>
@@ -120,7 +119,7 @@ internal
         /// <exception cref="ArgumentNullException">When <em>array</em> is <b>null</b>.</exception>
         /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero.</exception>
         /// <exception cref="ArgumentException">When not enough space is given for the copy.</exception>
-        public void CopyTo(TValue[] array, int index)
+        public void CopyTo(TValue?[] array, int index)
         {
             if (array == null)
                 throw new ArgumentNullException(nameof(array));
@@ -131,7 +130,9 @@ internal
             if (Count > array.Length - index)
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
 
-            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            for (var leaf = (PairLeaf<TValue?>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue?>?)leaf.rightLeaf)
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             {
                 leaf.CopyValuesTo(array, index, leaf.ValueCount);
                 index += leaf.ValueCount;
@@ -158,8 +159,10 @@ internal
             if (Count > array.Length - index)
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
 
-            for (var leaf = (PairLeaf<TValue>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue>?)leaf.rightLeaf)
-                for (var ix = 0; ix < leaf.KeyCount; ++ix)
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            for (var leaf = (PairLeaf<TValue?>)tree.leftmostLeaf; leaf != null; leaf = (PairLeaf<TValue?>?)leaf.rightLeaf)
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+            for (var ix = 0; ix < leaf.KeyCount; ++ix)
                 {
                     array.SetValue(leaf.GetValue(ix), index);
                     ++index;
@@ -169,7 +172,7 @@ internal
         /// <summary>This implementation always throws a <see cref="NotSupportedException"/>.</summary>
         /// <param name="value">The value to remove.</param>
         /// <returns><b>true</b> if the object was removed; otherwise <b>false</b>.</returns>
-        bool ICollection<TValue>.Remove(TValue value)
+        bool ICollection<TValue?>.Remove(TValue? value)
             => throw new NotSupportedException();
 
         #endregion
@@ -181,7 +184,7 @@ internal
         /// <returns>The value at <em>index</em>.</returns>
         /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
         /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or not less than the number of items.</exception>
-        public TValue this[int index]
+        public TValue? this[int index]
             => ElementAt(index);
 
         /// <summary>Gets the value at the supplied index.</summary>
@@ -189,13 +192,17 @@ internal
         /// <returns>The value at <em>index</em>.</returns>
         /// <remarks>This is a O(log <em>n</em>) operation.</remarks>
         /// <exception cref="ArgumentOutOfRangeException">When <em>index</em> is less than zero or greater than or equal to the number of keys.</exception>
-        public TValue ElementAt(int index)
+        public TValue? ElementAt(int index)
         {
             if (index < 0 || index >= Count)
                 throw new ArgumentOutOfRangeException(nameof(index), "Argument is out of the range of valid values.");
 
-            var leaf = (PairLeaf<TValue>)tree.Find(index, out var leafIndex);
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            var leaf = (PairLeaf<TValue?>)tree.Find(index, out var leafIndex);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return leaf.GetValue(leafIndex);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         /// <summary>Gets the value at the supplied index or the default if the index is out of range.</summary>
@@ -207,20 +214,28 @@ internal
             if (index < 0 || index >= Count)
                 return default;
 
-            var leaf = (PairLeaf<TValue>)tree.Find(index, out var leafIndex);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            var leaf = (PairLeaf<TValue?>)tree.Find(index, out var leafIndex);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             return leaf.GetValue(leafIndex);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         /// <summary>Gets the value of the element with the minimum key in the dictionary per the comparer.</summary>
         /// <returns>The value of the element with the minimum key.</returns>
         /// <remarks>This is a O(1) operation.</remarks>
         /// <exception cref="InvalidOperationException">When <see cref="Count"/> is zero.</exception>
-        public TValue First()
+        public TValue? First()
         {
             if (Count == 0)
                 throw new InvalidOperationException("Sequence contains no elements.");
 
-            return ((PairLeaf<TValue>)tree.leftmostLeaf).GetValue(0);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            return ((PairLeaf<TValue?>)tree.leftmostLeaf).GetValue(0);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
         /// <summary>Gets the index of the first element with the supplied value.</summary>
@@ -236,12 +251,16 @@ internal
         /// <returns>The value of the element with the maximum key.</returns>
         /// <remarks>This is a O(1) operation.</remarks>
         /// <exception cref="InvalidOperationException">When <see cref="Count"/> is zero.</exception>
-        public TValue Last()
+        public TValue? Last()
         {
             if (Count == 0)
                 throw new InvalidOperationException("Sequence contains no elements.");
 
-            return ((PairLeaf<TValue>)tree.rightmostLeaf).GetValue(tree.rightmostLeaf.KeyCount - 1);
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            return ((PairLeaf<TValue?>)tree.rightmostLeaf).GetValue(tree.rightmostLeaf.KeyCount - 1);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
         }
 
         /// <summary>Bypasses a supplied number of values and yields the remaining values.</summary>
@@ -262,7 +281,7 @@ internal
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining values after the first value that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the dictionary was modified after the enumerator was created.</exception>
-        public Enumerator SkipWhile(Func<TValue, bool> predicate)
+        public Enumerator SkipWhile(Func<TValue?, bool> predicate)
             => new Enumerator(tree, predicate);
 
         /// <summary>
@@ -271,7 +290,7 @@ internal
         /// <param name="predicate">The condition to test for.</param>
         /// <returns>Remaining values after the first value that does not satisfy the supplied condition.</returns>
         /// <exception cref="InvalidOperationException">When the dictionary was modified after the enumerator was created.</exception>
-        public Enumerator SkipWhile(Func<TValue, int, bool> predicate)
+        public Enumerator SkipWhile(Func<TValue?, int, bool> predicate)
             => new Enumerator(tree, predicate);
 
         /// <summary>Returns an enumerator that iterates thru the dictionary values in reverse key order.</summary>
@@ -291,7 +310,7 @@ internal
 
         /// <summary>Gets an enumerator that iterates thru the collection.</summary>
         /// <returns>An enumerator for the collection.</returns>
-        IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator()
+        IEnumerator<TValue?> IEnumerable<TValue?>.GetEnumerator()
             => new Enumerator(tree);
 
         /// <summary>Gets an enumerator that iterates through the collection.</summary>
@@ -302,21 +321,21 @@ internal
         /// <summary>Enumerates the items of a <see cref="RankedDictionary{TKey,TValue}.ValueCollection"/> in key sort order.</summary>
         [DebuggerTypeProxy(typeof(IEnumerableValuesDebugView<,>))]
         // ReSharper disable once MemberHidesStaticFromOuterClass
-        public readonly struct Enumerator : IEnumerator<TValue>, IEnumerable<TValue>
+        public readonly struct Enumerator : IEnumerator<TValue?>, IEnumerable<TValue?>
         {
-            private readonly ValueEnumerator<TValue> etor;
+            private readonly ValueEnumerator<TValue?> etor;
 
-            internal Enumerator(RankedDictionary<TKey, TValue> dary, bool isReverse = false)
-                => etor = new ValueEnumerator<TValue>(dary, isReverse);
+            internal Enumerator(RankedDictionary<TKey, TValue?> dary, bool isReverse = false)
+                => etor = new ValueEnumerator<TValue?>(dary, isReverse);
 
-            internal Enumerator(RankedDictionary<TKey, TValue> dary, int count)
-                => etor = new ValueEnumerator<TValue>(dary, count);
+            internal Enumerator(RankedDictionary<TKey, TValue?> dary, int count)
+                => etor = new ValueEnumerator<TValue?>(dary, count);
 
-            internal Enumerator(RankedDictionary<TKey, TValue> dary, Func<TValue, bool> predicate)
-                => etor = new ValueEnumerator<TValue>(dary, predicate);
+            internal Enumerator(RankedDictionary<TKey, TValue?> dary, Func<TValue?, bool> predicate)
+                => etor = new ValueEnumerator<TValue?>(dary, predicate);
 
-            internal Enumerator(RankedDictionary<TKey, TValue> dary, Func<TValue, int, bool> predicate)
-                => etor = new ValueEnumerator<TValue>(dary, predicate);
+            internal Enumerator(RankedDictionary<TKey, TValue?> dary, Func<TValue?, int, bool> predicate)
+                => etor = new ValueEnumerator<TValue?>(dary, predicate);
 
             /// <summary>Gets the value at the current position.</summary>
             /// <exception cref="InvalidOperationException">When the enumerator is not active.</exception>
@@ -331,7 +350,7 @@ internal
             }
 
             /// <summary>Gets the value at the current position of the enumerator.</summary>
-            public TValue Current
+            public TValue? Current
                 => etor.CurrentValueOrDefault;
 
             /// <summary>Advances the enumerator to the next value in the collection.</summary>
@@ -350,7 +369,7 @@ internal
 
             /// <summary>Gets an iterator for this collection.</summary>
             /// <returns>An iterator for this collection.</returns>
-            public IEnumerator<TValue> GetEnumerator()
+            public IEnumerator<TValue?> GetEnumerator()
                 => this;
 
             /// <summary>Gets an iterator for this collection.</summary>
@@ -379,7 +398,7 @@ internal
             /// <param name="predicate">The condition to test for.</param>
             /// <returns>Remaining values after the first value that does not satisfy the supplied condition.</returns>
             /// <exception cref="InvalidOperationException">When the dictionary was modified after the enumerator was created.</exception>
-            public Enumerator SkipWhile(Func<TValue, bool> predicate)
+            public Enumerator SkipWhile(Func<TValue?, bool> predicate)
             {
                 etor.BypassValue(predicate);
                 return this;
@@ -391,7 +410,7 @@ internal
             /// <param name="predicate">The condition to test for.</param>
             /// <returns>Remaining values after the first value that does not satisfy the supplied condition.</returns>
             /// <exception cref="InvalidOperationException">When the dictionary was modified after the enumerator was created.</exception>
-            public Enumerator SkipWhile(Func<TValue, int, bool> predicate)
+            public Enumerator SkipWhile(Func<TValue?, int, bool> predicate)
             {
                 etor.BypassValue(predicate);
                 return this;

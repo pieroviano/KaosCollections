@@ -16,11 +16,10 @@ using System.Diagnostics;
 
 namespace Kaos.Collections;
 #if PUBLIC
-    public
+public partial class RankedMap<TKey, TValue>
 #else
-internal
+internal partial class RankedMap<TKey, TValue>
 #endif
-    partial class RankedMap<TKey, TValue>
 {
     /// <summary>
     /// Represents a collection of keys of a <see cref="RankedMap{TKey,TValue}"/>.
@@ -32,7 +31,7 @@ internal
         ICollection,
         IReadOnlyCollection<TKey>
     {
-        private readonly RankedMap<TKey, TValue> tree;
+        private readonly RankedMap<TKey, TValue?> tree;
 
         #region Constructors
 
@@ -40,7 +39,7 @@ internal
         /// <param name="map">Map containing these keys.</param>
         /// <remarks>This is a O(1) operation.</remarks>
         /// <exception cref="ArgumentNullException">When <em>map</em> is <b>null</b>.</exception>
-        public KeyCollection(RankedMap<TKey, TValue> map)
+        public KeyCollection(RankedMap<TKey, TValue?> map)
         {
             if (map == null)
 #pragma warning disable IDE0016
@@ -165,7 +164,7 @@ internal
             if (index < 0 || index >= Count)
                 throw new ArgumentOutOfRangeException(nameof(index), "out of range");
 
-            var leaf = (PairLeaf<TValue>)tree.Find(index, out var leafIndex);
+            var leaf = (PairLeaf<TValue?>)tree.Find(index, out var leafIndex);
             return leaf.GetKey(leafIndex);
         }
 
@@ -178,7 +177,7 @@ internal
             if (index < 0 || index >= Count)
                 return default;
 
-            var leaf = (PairLeaf<TValue>)tree.Find(index, out var leafIndex);
+            var leaf = (PairLeaf<TValue?>)tree.Find(index, out var leafIndex);
             return leaf.GetKey(leafIndex);
         }
 
@@ -355,16 +354,16 @@ internal
         {
             private readonly KeyEnumerator etor;
 
-            internal Enumerator(RankedMap<TKey, TValue> map, bool isReverse = false)
+            internal Enumerator(RankedMap<TKey, TValue?> map, bool isReverse = false)
                 => etor = new KeyEnumerator(map, isReverse);
 
-            internal Enumerator(RankedMap<TKey, TValue> map, int count)
+            internal Enumerator(RankedMap<TKey, TValue?> map, int count)
                 => etor = new KeyEnumerator(map, count);
 
-            internal Enumerator(RankedMap<TKey, TValue> map, Func<TKey, bool> predicate)
+            internal Enumerator(RankedMap<TKey, TValue?> map, Func<TKey, bool> predicate)
                 => etor = new KeyEnumerator(map, predicate);
 
-            internal Enumerator(RankedMap<TKey, TValue> map, Func<TKey, int, bool> predicate)
+            internal Enumerator(RankedMap<TKey, TValue?> map, Func<TKey, int, bool> predicate)
                 => etor = new KeyEnumerator(map, predicate);
 
             /// <summary>Gets the key at the current position.</summary>

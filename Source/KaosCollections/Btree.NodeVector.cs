@@ -26,19 +26,19 @@ internal
     /// <exclude />
     private protected class NodeVector
     {
-        private readonly Btree<T> tree;
+        private readonly Btree<T?>? tree;
         private readonly List<int> indexStack;
-        private readonly List<Node> nodeStack;
+        private readonly List<Node?> nodeStack;
 
         #region Constructors
 
         /// <summary>Make an empty path.</summary>
         /// <param name="tree">Target of path.</param>
-        public NodeVector(Btree<T> tree)
+        public NodeVector(Btree<T?>? tree)
         {
             this.tree = tree;
             this.indexStack = new List<int>();
-            this.nodeStack = new List<Node>();
+            this.nodeStack = new List<Node?>();
         }
 
         /// <summary>Make a copy with indexes of zero.</summary>
@@ -56,18 +56,28 @@ internal
         /// <summary>Perform search and store the result.</summary>
         /// <param name="tree">Tree to search.</param>
         /// <param name="key">Value to find.</param>
-        public NodeVector(Btree<T> tree, T key) : this(tree)
+        public NodeVector(Btree<T?> tree, T key) : this(tree)
         {
             for (var node = tree.root; ;)
             {
+                if (node == null)
+                {
+                    break;
+                }
+
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
                 this.nodeStack.Add(node);
-                var ix = ReferenceEquals(tree.keyComparer, Comparer<T>.Default) ? node.Search(key)
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+                var ix = ReferenceEquals(tree.keyComparer, Comparer<T>.Default)
+                    ? node.Search(key)
                     : node.Search(key, tree.keyComparer);
                 if (node is Branch branch)
                 {
                     ix = (ix < 0) ? ~ix : ix + 1;
                     this.indexStack.Add(ix);
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
                     node = branch.GetChild(ix);
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
                 }
                 else
                 {
@@ -78,10 +88,14 @@ internal
             }
         }
 
-        public NodeVector(Btree<T> tree, T key, bool leftEdge) : this(tree)
+        public NodeVector(Btree<T?> tree, T? key, bool leftEdge) : this(tree)
         {
             for (var node = tree.root; ;)
             {
+                if (node == null)
+                {
+                    break;
+                }
                 var hi = node.KeyCount;
                 if (leftEdge)
                     for (var lo = 0; lo != hi;)
@@ -119,9 +133,13 @@ internal
                     }
 
                 this.indexStack.Add(hi);
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
                 this.nodeStack.Add(node);
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
                 if (node is Branch branch)
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
                     node = branch.GetChild(hi);
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
                 else
                     return;
             }
@@ -146,8 +164,8 @@ internal
 
             var result = new NodeVector(path, path.Height);
             var level = path.Height - 1;
-            var leaf = (Leaf)result.nodeStack[level];
-            var rix = leaf.KeyCount - result.indexStack[level];
+            var leaf = (Leaf?)result.nodeStack[level];
+            var rix = (leaf?.KeyCount ?? 0) - result.indexStack[level];
             if (rix >= offset)
             {
                 result.indexStack[level] += offset;
@@ -157,11 +175,11 @@ internal
             offset -= rix;
             while (--level >= 0)
             {
-                var bh = (Branch)result.nodeStack[level];
-                for (var ix = result.indexStack[level] + 1; ix <= bh.KeyCount;)
+                var bh = (Branch?)result.nodeStack[level];
+                for (var ix = result.indexStack[level] + 1; ix <= bh?.KeyCount;)
                 {
                     var node = bh.GetChild(ix);
-                    var wt = node.Weight;
+                    var wt = (node?.Weight ?? 0);
                     if (wt < offset)
                     { ++ix; offset -= wt; }
                     else
@@ -176,7 +194,7 @@ internal
                             return result;
                         }
                         ix = 0;
-                        bh = (Branch)node;
+                        bh = (Branch?)node;
                     }
                 }
             }
@@ -185,9 +203,11 @@ internal
 
         public static NodeVector CreateFromIndex(Btree<T> tree, int index)
         {
-            Debug.Assert(index <= tree.root.Weight);
+            Debug.Assert(index <= tree.root?.Weight);
 
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             var path = new NodeVector(tree);
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
             if (index == 0)
                 for (var n0 = tree.root; ;)
                 {
@@ -199,9 +219,13 @@ internal
                     else
                         return path;
                 }
-            else if (index >= tree.root.Weight)
+            else if (index >= tree.root?.Weight)
                 for (var n0 = tree.root; ;)
                 {
+                    if (n0 == null)
+                    {
+                        break;
+                    }
                     path.indexStack.Add(n0.KeyCount);
                     path.nodeStack.Add(n0);
 
@@ -218,6 +242,10 @@ internal
                     Debug.Assert(ix <= node.KeyCount);
 
                     var child = branch.GetChild(ix);
+                    if (child == null)
+                    {
+                        break;
+                    }
                     var cw = child.Weight;
                     if (cw > index)
                     {
@@ -240,7 +268,7 @@ internal
 
         public bool IsFound { get; private set; }
 
-        public Node TopNode
+        public Node? TopNode
             => nodeStack[indexStack.Count - 1];
 
         public int TopIndex
@@ -253,14 +281,20 @@ internal
 
         #region Methods
 
-        public Node GetNode(int level)
+        public Node? GetNode(int level)
             => nodeStack[level];
 
         public int GetIndex(int level)
             => indexStack[level];
 
         public T LeftKey
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8603 // Possible null reference return.
             => ((Leaf)TopNode).GetKey(TopIndex - 1);
+#pragma warning restore CS8603 // Possible null reference return.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
         public int GetTreeIndex()
         {
@@ -268,16 +302,28 @@ internal
             var result = indexStack[level];
             while (--level >= 0)
             {
-                var branch = (Branch)nodeStack[level];
+                var branch = (Branch?)nodeStack[level];
                 var ix = indexStack[level];
-                if (ix <= branch.ChildCount >> 1)
+                if (branch != null && ix <= branch.ChildCount >> 1)
                     while (--ix >= 0)
-                        result += branch.GetChild(ix).Weight;
+                    {
+                        var child = branch.GetChild(ix);
+                        if (child == null)
+                        {
+                            break;
+                        }
+                        result += child.Weight;
+                    }
                 else
                 {
-                    result += branch.Weight;
-                    for (var ii = branch.ChildCount; --ii >= ix;)
-                        result -= branch.GetChild(ii).Weight;
+                    if (branch != null)
+                    {
+                        result += branch.Weight;
+                        for (var ii = branch.ChildCount; --ii >= ix;)
+                        {
+                            result -= branch.GetChild(ii)?.Weight ?? 0;
+                        }
+                    }
                 }
             }
             return result;
@@ -289,31 +335,40 @@ internal
             {
                 Debug.Assert(level >= 0, "One-sided tilt");
                 if (indexStack[level] == 0)
-                    ((Branch)nodeStack[level]).AdjustWeight(-delta);
+                    ((Branch?)nodeStack[level])?.AdjustWeight(-delta);
                 else if (level >= indexStack.Count - 2)
                     return;
                 else
-                    for (var bh = (Branch)((Branch)nodeStack[level]).GetChild(indexStack[level] - 1); ;)
+                    for (var bh = (Branch?)((Branch?)nodeStack[level])?.GetChild(indexStack[level] - 1); ;)
                     {
-                        bh.AdjustWeight(+delta);
+                        bh?.AdjustWeight(+delta);
                         if (++level >= indexStack.Count - 2)
                             return;
-                        bh = (Branch)bh.GetChild(bh.KeyCount);
+                        bh = (Branch?)bh?.GetChild(bh.KeyCount);
                     }
             }
         }
 
         /// <summary>Get nearest key where left child path taken.</summary>
         /// <remarks>On entry, top of path refers to a branch.</remarks>
-        public T GetPivot()
+        public T? GetPivot()
         {
             Debug.Assert(TopNode is Branch);
             for (var level = indexStack.Count - 2; ; --level)
             {
                 Debug.Assert(level >= 0);
                 if (indexStack[level] > 0)
-                    return nodeStack[level].GetKey(indexStack[level] - 1);
+                {
+                    var node = nodeStack[level];
+                    if (node == null)
+                    {
+                        break;
+                    }
+                    return node.GetKey(indexStack[level] - 1);
+                }
             }
+
+            return default;
         }
 
         /// <summary>Set nearest key where left child path taken.</summary>
@@ -321,11 +376,13 @@ internal
         public void SetPivot(T key)
         {
             for (var level = indexStack.Count - 2; level >= 0; --level)
+            {
                 if (indexStack[level] > 0)
                 {
-                    nodeStack[level].SetKey(indexStack[level] - 1, key);
+                    nodeStack[level]?.SetKey(indexStack[level] - 1, key);
                     return;
                 }
+            }
         }
 
         public void SetPivot(T key, int level)
@@ -333,7 +390,7 @@ internal
             for (; ; )
                 if (indexStack[--level] > 0)
                 {
-                    nodeStack[level].SetKey(indexStack[level] - 1, key);
+                    nodeStack[level]?.SetKey(indexStack[level] - 1, key);
                     break;
                 }
         }
@@ -359,7 +416,7 @@ internal
         /// <summary>Adjust tree path to node to the left.</summary>
         public Node? TraverseLeft()
         {
-            Node node;
+            Node? node;
             var height = indexStack.Count;
             while (indexStack.Count > 1)
             {
@@ -369,7 +426,11 @@ internal
                 if (ix >= 0)
                     for (indexStack[indexStack.Count - 1] = ix; ;)
                     {
-                        node = ((Branch)node).GetChild(ix);
+                        node = ((Branch?)node)?.GetChild(ix);
+                        if (node == null)
+                        {
+                            break;
+                        }
                         ix = node.KeyCount;
                         Push(node, ix);
                         if (indexStack.Count >= height)
@@ -400,12 +461,16 @@ internal
                 node = TopNode;
                 var newIndex = TopIndex + 1;
 
-                if (newIndex < ((Branch)node).ChildCount)
+                if (newIndex < ((Branch?)node)?.ChildCount)
                 {
                     indexStack[indexStack.Count - 1] = newIndex;
                     node = ((Branch)node).GetChild(newIndex);
                     for (; ; )
                     {
+                        if (node == null)
+                        {
+                            break;
+                        }
                         Push(node, 0);
                         if (indexStack.Count >= height)
                             break;
@@ -421,19 +486,19 @@ internal
         public void ChangePathWeight(int delta)
         {
             for (var level = Height - 2; level >= 0; --level)
-                ((Branch)nodeStack[level]).AdjustWeight(delta);
+                ((Branch?)nodeStack[level])?.AdjustWeight(delta);
         }
 
         public void DecrementPathWeight()
         {
             for (var level = Height - 2; level >= 0; --level)
-                ((Branch)nodeStack[level]).DecrementWeight();
+                ((Branch?)nodeStack[level])?.DecrementWeight();
         }
 
         public void IncrementPathWeight()
         {
             for (var level = Height - 2; level >= 0; --level)
-                ((Branch)nodeStack[level]).IncrementWeight();
+                ((Branch?)nodeStack[level])?.IncrementWeight();
         }
 
         // Leaf or branch has been split so insert the new anchor into a branch.
@@ -444,82 +509,116 @@ internal
                 if (Height == 1)
                 {
                     // Graft new root.
-                    Debug.Assert(tree.root == TopNode);
-                    tree.root = new Branch(tree.maxKeyCount, TopNode, TopNode.Weight + newNode.Weight);
-                    ((Branch)tree.root).Add(key, newNode);
+                    Debug.Assert(tree?.root == TopNode);
+                    if (TopNode != null)
+                    {
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+                        tree?.root = new Branch(tree.maxKeyCount, TopNode, TopNode.Weight + newNode.Weight);
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+                    }
+
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    ((Branch?)tree?.root).Add(key, newNode);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+#pragma warning restore CS8604 // Possible null reference argument.
                     break;
                 }
 
                 Pop();
-                var branch = (Branch)TopNode;
+                var branch = (Branch?)TopNode;
                 var branchIndex = TopIndex;
 
-                if (branch.KeyCount < tree.maxKeyCount)
+                if (branch?.KeyCount < tree?.maxKeyCount)
                 {
                     // Typical case where branch has room.
+#pragma warning disable CS8604 // Possible null reference argument.
                     branch.InsertKey(branchIndex, key);
+#pragma warning restore CS8604 // Possible null reference argument.
                     branch.Insert(branchIndex + 1, newNode);
                     break;
                 }
 
                 // Branch is full so right split a new branch.
-                var newBranch = new Branch(tree.maxKeyCount);
-                var splitIndex = isAppend ? branch.KeyCount - 1 : (branch.KeyCount + 1) / 2;
-
-                if (branchIndex < splitIndex)
+                var newBranch = new Branch(tree?.maxKeyCount??0);
+                if (branch != null)
                 {
-                    // Split branch with left-side insert.
-                    for (var ix = splitIndex; ; ++ix)
+                    var splitIndex = isAppend ? branch.KeyCount - 1 : (branch.KeyCount + 1) / 2;
+
+                    if (branchIndex < splitIndex)
                     {
-                        newBranch.AdjustWeight(+branch.GetChild(ix).Weight);
-                        if (ix >= branch.KeyCount)
+                        // Split branch with left-side insert.
+                        for (var ix = splitIndex; ; ++ix)
                         {
-                            newBranch.Add(branch.GetChild(ix));
-                            break;
+                            var child = branch.GetChild(ix);
+                            if (child == null)
+                            {
+                                break;
+                            }
+                            newBranch.AdjustWeight(+child.Weight);
+                            if (ix >= branch.KeyCount)
+                            {
+                                newBranch.Add(branch.GetChild(ix));
+                                break;
+                            }
+#pragma warning disable CS8604 // Possible null reference argument.
+                            newBranch.Add(branch.GetKey(ix), branch.GetChild(ix));
+#pragma warning restore CS8604 // Possible null reference argument.
                         }
-                        newBranch.Add(branch.GetKey(ix), branch.GetChild(ix));
+
+                        var newPromotion = branch.GetKey(splitIndex - 1);
+                        branch.Truncate(splitIndex - 1);
+#pragma warning disable CS8604 // Possible null reference argument.
+                        branch.InsertKey(branchIndex, key);
+#pragma warning restore CS8604 // Possible null reference argument.
+                        branch.Insert(branchIndex + 1, newNode);
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                        key = newPromotion;
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+                        branch.AdjustWeight(-newBranch.Weight);
                     }
-
-                    var newPromotion = branch.GetKey(splitIndex - 1);
-                    branch.Truncate(splitIndex - 1);
-                    branch.InsertKey(branchIndex, key);
-                    branch.Insert(branchIndex + 1, newNode);
-                    key = newPromotion;
-                    branch.AdjustWeight(-newBranch.Weight);
-                }
-                else
-                {
-                    // Split branch with right-side insert (or cascade promote).
-                    var leftIndex = splitIndex;
-                    newBranch.AdjustWeight(newNode.Weight);
-
-                    if (branchIndex > splitIndex)
+                    else
                     {
-                        for (; ; )
+                        // Split branch with right-side insert (or cascade promote).
+                        var leftIndex = splitIndex;
+                        newBranch.AdjustWeight(newNode.Weight);
+
+                        if (branchIndex > splitIndex)
                         {
+                            for (; ; )
+                            {
+                                ++leftIndex;
+                                newBranch.Add(branch.GetChild(leftIndex));
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                                newBranch.AdjustWeight(+branch.GetChild(leftIndex).Weight);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                                if (leftIndex >= branchIndex)
+                                    break;
+                                newBranch.AddKey(branch.GetKey(leftIndex));
+                            }
+                            newBranch.AddKey(key);
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+                            key = branch.GetKey(splitIndex);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+                        }
+
+                        newBranch.Add(newNode);
+
+                        while (leftIndex < branch.KeyCount)
+                        {
+                            newBranch.AddKey(branch.GetKey(leftIndex));
                             ++leftIndex;
                             newBranch.Add(branch.GetChild(leftIndex));
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                             newBranch.AdjustWeight(+branch.GetChild(leftIndex).Weight);
-                            if (leftIndex >= branchIndex)
-                                break;
-                            newBranch.AddKey(branch.GetKey(leftIndex));
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                         }
-                        newBranch.AddKey(key);
-                        key = branch.GetKey(splitIndex);
+
+                        branch.Truncate(splitIndex);
+                        branch.AdjustWeight(-newBranch.Weight);
                     }
-
-                    newBranch.Add(newNode);
-
-                    while (leftIndex < branch.KeyCount)
-                    {
-                        newBranch.AddKey(branch.GetKey(leftIndex));
-                        ++leftIndex;
-                        newBranch.Add(branch.GetChild(leftIndex));
-                        newBranch.AdjustWeight(+branch.GetChild(leftIndex).Weight);
-                    }
-
-                    branch.Truncate(splitIndex);
-                    branch.AdjustWeight(-newBranch.Weight);
                 }
 
                 newNode = newBranch;
@@ -534,24 +633,28 @@ internal
                 Debug.Assert(Height > 0);
                 Pop();
 
-                var branch = (Branch)TopNode;
+                var branch = (Branch?)TopNode;
                 if (TopIndex == 0)
                 {
-                    if (branch.KeyCount == 0)
+                    if ((branch?.KeyCount??0) == 0)
                         // Cascade when rightmost branch is keyless.
                         continue;
 
                     // Rotate pivot for first key.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     var pivot = branch.Key0;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                     branch.RemoveKey(0);
                     branch.RemoveChild(0);
+#pragma warning disable CS8604 // Possible null reference argument.
                     SetPivot(pivot);
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
                 {
                     // Delete pivot.
-                    branch.RemoveKey(TopIndex - 1);
-                    branch.RemoveChild(TopIndex);
+                    branch?.RemoveKey(TopIndex - 1);
+                    branch?.RemoveChild(TopIndex);
                 }
 
                 var right = (Branch?)TraverseRight();
@@ -559,7 +662,7 @@ internal
                     // Must be an empty root.  Prune later.
                     return;
 
-                if (!BalanceBranch2(branch))
+                if (branch != null && !BalanceBranch2(branch))
                     return;
             }
         }
@@ -574,8 +677,10 @@ internal
 
         private bool BalanceBranch2(Branch left)
         {
-            var right = (Branch)TopNode;
+            var right = (Branch?)TopNode;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (left.KeyCount + right.KeyCount < tree.maxKeyCount)
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             {
                 // Coalesce left: move pivot and right sibling nodes.
                 left.AddKey(GetPivot());
@@ -605,7 +710,7 @@ internal
                 for (var ix2 = 0; ; ++ix2)
                 {
                     left.Add(right.GetChild(ix2));
-                    delta += right.GetChild(ix2).Weight;
+                    delta += right.GetChild(ix2)?.Weight ?? 0;
 
                     if (ix2 >= shifts)
                         break;
@@ -613,7 +718,9 @@ internal
                     left.AddKey(right.GetKey(ix2));
                 }
 
+#pragma warning disable CS8604 // Possible null reference argument.
                 SetPivot(right.GetKey(shifts));
+#pragma warning restore CS8604 // Possible null reference argument.
                 right.Remove(0, shifts + 1);
                 left.AdjustWeight(+delta);
                 right.AdjustWeight(-delta);
@@ -627,7 +734,7 @@ internal
         public void Balance()
         {
             BalanceLeaf();
-            tree.TrimRoot();
+            tree?.TrimRoot();
         }
 
         /// <summary>Balance tree and fixup pivot after removal.</summary>
@@ -636,58 +743,75 @@ internal
         /// </remarks>
         public void BalanceLeaf()
         {
-            var leaf1 = (Leaf)TopNode;
+            var leaf1 = (Leaf?)TopNode;
             var ix1 = TopIndex;
 
             if (ix1 == 0)
-                if (leaf1.KeyCount != 0)
+                if ((leaf1?.KeyCount??0) != 0)
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
                     SetPivot(leaf1.Key0);
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 else
                 {
-                    if (leaf1.rightLeaf != null)
+                    if (leaf1?.rightLeaf != null)
                     {
                         leaf1.rightLeaf.leftLeaf = leaf1.leftLeaf;
                         if (leaf1.leftLeaf != null)
                             leaf1.leftLeaf.rightLeaf = leaf1.rightLeaf;
                         else
-                            tree.leftmostLeaf = leaf1.rightLeaf;
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+                            tree?.leftmostLeaf = leaf1.rightLeaf;
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
                         Demote();
                     }
-                    else if (leaf1.leftLeaf != null)
+                    else if (leaf1?.leftLeaf != null)
                     {
                         leaf1.leftLeaf.rightLeaf = leaf1.rightLeaf;
-                        tree.rightmostLeaf = leaf1.leftLeaf;
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+                        tree?.rightmostLeaf = leaf1.leftLeaf;
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
                         Demote();
                     }
 
                     return;
                 }
 
-            if (tree.IsUnderflow(leaf1.KeyCount))
+            if (tree?.IsUnderflow(leaf1?.KeyCount ?? 0) ?? false)
             {
-                var leaf2 = leaf1.rightLeaf;
-                if (leaf2 != null)
-                    if (leaf1.KeyCount + leaf2.KeyCount > tree.maxKeyCount)
-                    {
-                        // Balance leaves by shifting pairs from right leaf.
-                        var shifts = (leaf1.KeyCount + leaf2.KeyCount + 1) / 2 - leaf1.KeyCount;
-                        leaf1.MoveLeft(shifts);
-                        TraverseRight();
-                        SetPivot(leaf2.Key0);
-                        TiltLeft(shifts);
-                    }
-                    else
-                    {
-                        leaf1.Coalesce();
-                        leaf1.rightLeaf = leaf2.rightLeaf;
-                        if (leaf2.rightLeaf == null)
-                            tree.rightmostLeaf = leaf1;
+                if (leaf1 != null)
+                {
+                    var leaf2 = leaf1.rightLeaf;
+                    if (leaf2 != null)
+                        if (leaf1.KeyCount + leaf2.KeyCount > tree.maxKeyCount)
+                        {
+                            // Balance leaves by shifting pairs from right leaf.
+                            var shifts = (leaf1.KeyCount + leaf2.KeyCount + 1) / 2 - leaf1.KeyCount;
+                            leaf1.MoveLeft(shifts);
+                            TraverseRight();
+                            if (leaf2.Key0 != null)
+                            {
+                                SetPivot(leaf2.Key0);
+                            }
+
+                            TiltLeft(shifts);
+                        }
                         else
-                            leaf2.rightLeaf.leftLeaf = leaf1;
-                        TraverseRight();
-                        TiltLeft(leaf2.KeyCount);
-                        Demote();
-                    }
+                        {
+                            leaf1.Coalesce();
+                            leaf1.rightLeaf = leaf2.rightLeaf;
+                            if (leaf2.rightLeaf == null)
+#pragma warning disable CS8619 // Nullability of reference types in value doesn't match target type.
+                                tree.rightmostLeaf = leaf1;
+#pragma warning restore CS8619 // Nullability of reference types in value doesn't match target type.
+                            else
+                                leaf2.rightLeaf.leftLeaf = leaf1;
+                            TraverseRight();
+                            TiltLeft(leaf2.KeyCount);
+                            Demote();
+                        }
+                }
             }
         }
 

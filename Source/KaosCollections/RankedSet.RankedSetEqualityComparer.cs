@@ -19,21 +19,21 @@ internal
 #endif
     partial class RankedSet<T> : IRankedSet<T>
 {
-    private class RankedSetEqualityComparer : IEqualityComparer<RankedSet<T>>
+    private class RankedSetEqualityComparer : IEqualityComparer<RankedSet<T?>>
     {
-        private readonly IComparer<T> comparer;
-        private readonly IEqualityComparer<T> equalityComparer;
+        private readonly IComparer<T?> comparer;
+        private readonly IEqualityComparer<T?> equalityComparer;
 
-        public RankedSetEqualityComparer(IEqualityComparer<T>? equalityComparer)
+        public RankedSetEqualityComparer(IEqualityComparer<T?>? equalityComparer)
         {
-            this.comparer = Comparer<T>.Default;
-            this.equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
+            this.comparer = Comparer<T?>.Default;
+            this.equalityComparer = equalityComparer ?? EqualityComparer<T?>.Default;
         }
 
-        public bool Equals(RankedSet<T>? s1, RankedSet<T>? s2)
+        public bool Equals(RankedSet<T?>? s1, RankedSet<T?>? s2)
             => RankedSet<T>.RankedSetEquals(s1, s2, comparer);
 
-        public int GetHashCode(RankedSet<T> set)
+        public int GetHashCode(RankedSet<T?> set)
         {
             var hashCode = 0;
             if (set != null)
