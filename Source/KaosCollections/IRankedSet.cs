@@ -1,5 +1,7 @@
 #nullable enable
 
+#pragma warning disable CS8645
+
 using System;
 using System.Collections;
 using System.Collections.Generic;

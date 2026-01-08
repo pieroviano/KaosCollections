@@ -14,6 +14,16 @@
         "Name": "Net4x.Kaos.Collections",
         "Project": "KaosCollections\\Collections\\Collections.csproj",
         "PackageReferences": null
+      },
+      {
+        "Name": "Net35.Collections\\Net35.Collections.csproj",
+        "Project": "Net35.Collections",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net35.CollectionsBridge",
+        "Project": "Net35.CollectionsBridge\\Net35.CollectionsBridge.csproj",
+        "PackageReferences": null
       }
     ]
   },
@@ -1257,6 +1267,16 @@
       {
         "Name": "Net4x.BaseTypes",
         "Project": "src\\Net4x.BaseTypes\\Net4x.BaseTypes.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.BaseExtensions",
+        "Project": "Net4x.BaseExtensions\\Net4x.BaseExtensions.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.BaseExtensions",
+        "Project": "src\\Net4x.BaseExtensions\\Net4x.BaseExtensions.csproj",
         "PackageReferences": null
       }
     ]
@@ -13345,6 +13365,265 @@
       {
         "Name": "Collections\\Collections.csproj",
         "Project": "Net4x.Kaos.Collections",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.Text.Json\\Net4x.Text.Json.sln",
+      "Version": "Net4xTextJsonVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "System.Text.Json",
+        "Project": "Net4x.Text.Json\\Net4x.Text.Json.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.Text.Json\\Net4x.Text.Json.csproj",
+        "Project": "Net4x.Text.Json",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.Collections.Immutable\\Net4x.Collections.Immutable.sln",
+      "Version": "Net4xCollectionsImmutableVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.Collections.Immutable",
+        "Project": "Net4x.Collections.Immutable\\Net4x.Collections.Immutable.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.Collections.Immutable\\Net4x.Collections.Immutable.csproj",
+        "Project": "Net4x.Net4x.Collections.Immutable",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\NuGetUtility\\net4x.basetypes\\net35.system.threading.tasks\\Net35.Threading.Tasks.sln",
+      "Version": "Net35ThreadingTasksVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net35.Threading.Tasks",
+        "Project": "Net35.Threading.Tasks\\Net35.Threading.Tasks.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.Kaos.Collections",
+        "Project": "..\\..\\..\\Net35.Threading.Tasks\\KaosCollections\\Collections\\Collections.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.AsyncBridgeExtensions\\Net4x.AsyncBridgeExtensions.slnx",
+      "Version": "Net4xAsyncBridgeExtensionsVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.AsyncBridgeExtensions",
+        "Project": "Net4x.AsyncBridgeExtensions/Net4x.AsyncBridgeExtensions.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Source/Net4x.Windows.ThreadsExtensions/Net4x.Windows.ThreadsExtensions.csproj",
+        "Project": "Net4x.Windows.ThreadsExtensions",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "C:\\temp\\cefsharp.library\\CefSharp.Library.sln",
+      "Version": "CefSharpLibraryVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.CefSharp.Library",
+        "Project": "CefSharp.Library\\CefSharp.Library.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.$(MSBuildProjectName)",
+        "Project": "JavascriptLibrary\\JavascriptLibrary.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.CefSharp.2012.Library.x86",
+        "Project": "CefSharp.2012.x86.Library\\CefSharp.2012.Library.x86.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.CefSharp.2012.Library.x64",
+        "Project": "CefSharp.2012.x64.Library\\CefSharp.2012.Library.x64.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "C:\\starb\\Starb.sln",
+      "Version": "StarbVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "PaccoFastbook",
+        "Project": "PaccoFastbook\\PaccoFastbook.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "CambiaModificaEditoreTitolo",
+        "Project": "ModificaModificaEditoreTitolo\\CambiaModificaEditoreTitolo.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Circolari",
+        "Project": "Circolari\\Circolari.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "PdfToExcel",
+        "Project": "PdfToExcel\\PdfToExcel.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "VbExplorer.CustomAction",
+        "Project": "VbExplorer\\VbExplorerCustomAction\\VbExplorerCustomAction.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "VbExplorer.Utility",
+        "Project": "VbExplorer\\VbExplorer.Utility\\VbExplorer.Utility.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Starb.Utility",
+        "Project": "VbExplorer\\Starb.Utility\\Starb.Utility.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "ImportaAIE",
+        "Project": "ImportaAIE\\ImportaAIE.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "DownloadAndInstallCertificates",
+        "Project": "DownloadAndInstallCertificates\\DownloadAndInstallCertificates\\DownloadAndInstallCertificates.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "AmazonLibrary",
+        "Project": "VbExplorer\\AmazonLibrary\\AmazonLibrary.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "FastbookLibrary",
+        "Project": "VbExplorer\\FastbookLibrary\\FastbookLibrary.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "VbExplorer",
+        "Project": "VbExplorer\\VbExplorer\\VbExplorer.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Starb.StarbModels",
+        "Project": "starbcommon\\StarbModels\\StarbModels.vbproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "C:\\starb\\starb.sln",
+      "Version": "starbVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "PaccoFastbook",
+        "Project": "PaccoFastbook\\PaccoFastbook.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "CambiaModificaEditoreTitolo",
+        "Project": "ModificaModificaEditoreTitolo\\CambiaModificaEditoreTitolo.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Circolari",
+        "Project": "Circolari\\Circolari.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "PdfToExcel",
+        "Project": "PdfToExcel\\PdfToExcel.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "VbExplorer.CustomAction",
+        "Project": "VbExplorer\\VbExplorerCustomAction\\VbExplorerCustomAction.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "VbExplorer.Utility",
+        "Project": "VbExplorer\\VbExplorer.Utility\\VbExplorer.Utility.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Starb.Utility",
+        "Project": "VbExplorer\\Starb.Utility\\Starb.Utility.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "ImportaAIE",
+        "Project": "ImportaAIE\\ImportaAIE.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "DownloadAndInstallCertificates",
+        "Project": "DownloadAndInstallCertificates\\DownloadAndInstallCertificates\\DownloadAndInstallCertificates.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "AmazonLibrary",
+        "Project": "VbExplorer\\AmazonLibrary\\AmazonLibrary.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "FastbookLibrary",
+        "Project": "VbExplorer\\FastbookLibrary\\FastbookLibrary.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "VbExplorer",
+        "Project": "VbExplorer\\VbExplorer\\VbExplorer.vbproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Starb.StarbModels",
+        "Project": "starbcommon\\StarbModels\\StarbModels.vbproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "C:\\temp\\ChromeLibrary\\ChromeLibrary.sln",
+      "Version": "ChromeLibraryVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.ChromeLibrary",
+        "Project": "ChromeLibrary\\ChromeLibrary.csproj",
         "PackageReferences": null
       }
     ]
