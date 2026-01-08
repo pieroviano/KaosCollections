@@ -12,9 +12,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-// ReSharper disable NotResolvedInText
 
+#if COLLECTIONS
+namespace System.Collections.Generic;
+#else
 namespace Kaos.Collections;
+#endif
 
 /// <summary>
 /// Represents a collection of nondistinct items that can be accessed in sort order or by index.
@@ -898,7 +901,7 @@ internal
             if (index >= leaf.KeyCount)
             { index = 0; leaf = leaf.rightLeaf; }
 
-            yield return leaf!.GetKey(index);
+            yield return leaf.GetKey(index);
             StageCheck(stageFreeze);
             ++index;
         }

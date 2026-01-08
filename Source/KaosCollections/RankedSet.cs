@@ -16,7 +16,11 @@ using System.Runtime.Serialization;
 // ReSharper disable NotResolvedInText
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
 
+#if COLLECTIONS
+namespace System.Collections.Generic;
+#else
 namespace Kaos.Collections;
+#endif
 
 /// <summary>
 /// Represents a collection of distinct items that can be accessed in sort order or by index.

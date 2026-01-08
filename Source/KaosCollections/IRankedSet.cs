@@ -7,7 +7,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+#if COLLECTIONS
+namespace System.Collections.Generic;
+#else
 namespace Kaos.Collections;
+#endif
 
 /// <summary>
 /// Defines a sorted set collection that maintains items in order according to a specified comparer and provides

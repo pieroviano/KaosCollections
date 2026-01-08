@@ -20,7 +20,11 @@ using System.Runtime.Serialization;
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
 
+#if COLLECTIONS
+namespace System.Collections.Generic;
+#else
 namespace Kaos.Collections;
+#endif
 
 /// <summary>
 /// Represents a collection of key/value pairs with distinct keys that can be accessed in sort order or by index.

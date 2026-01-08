@@ -16,7 +16,11 @@ using System.Threading;
 
 [assembly: CLSCompliant(true)]
 
+#if COLLECTIONS
+namespace System.Collections.Generic;
+#else
 namespace Kaos.Collections;
+#endif
 
 /// <summary>Provides base functionality for other classes in this library.</summary>
 /// <typeparam name="T">The type of the keys in the derived class.</typeparam>

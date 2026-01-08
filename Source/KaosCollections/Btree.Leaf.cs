@@ -7,7 +7,12 @@
 
 #nullable enable
 
+#if COLLECTIONS
+namespace System.Collections.Generic;
+#else
 namespace Kaos.Collections;
+#endif
+
 #if PUBLIC
     public
 #else
