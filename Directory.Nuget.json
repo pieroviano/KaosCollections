@@ -24,6 +24,16 @@
         "Name": "Net35.CollectionsBridge",
         "Project": "Net35.CollectionsBridge\\Net35.CollectionsBridge.csproj",
         "PackageReferences": null
+      },
+      {
+        "Name": "Net35.All.Threading.Tasks",
+        "Project": "Net35.All.Threading.Tasks\\Net35.All.Threading.Tasks.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net35.All.CollectionsBridge",
+        "Project": "Net35.All.CollectionsBridge\\Net35.All.CollectionsBridge.csproj",
+        "PackageReferences": null
       }
     ]
   },
@@ -1183,6 +1193,11 @@
         "Name": "Net30.LinqBridge",
         "Project": "src\\LinqBridge.csproj",
         "PackageReferences": null
+      },
+      {
+        "Name": "System.Core",
+        "Project": "Net30.Dynamic\\Net30.Dynamic.csproj",
+        "PackageReferences": null
       }
     ]
   },
@@ -1231,6 +1246,16 @@
       {
         "Name": "Net35.TypeInfo",
         "Project": "Net35.TypeInfo\\Net35.TypeInfo.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net35.All.TypeInfo\\Net35.All.TypeInfo.csproj",
+        "Project": "Net35.All.TypeInfo",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net20.All.TypeInfo",
+        "Project": "Net35.All.TypeInfo\\Net20.All.TypeInfo.csproj",
         "PackageReferences": null
       }
     ]
@@ -13624,6 +13649,503 @@
       {
         "Name": "Net4x.ChromeLibrary",
         "Project": "ChromeLibrary\\ChromeLibrary.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.xunit.assert\\xunit.assert.sln",
+      "Version": "xunitassertVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "xunit.assert",
+        "Project": "xunit.assert\\xunit.assert.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.assert\\Net4x.XUnit.Assert.csproj",
+        "Project": "Net4x.XUnit.Assert",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.runner.utility.net452",
+        "Project": "xunit.runner.utility.net452\\Net4x.XUnit.Runner.Utility.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "",
+        "Project": "xunit.core\\Net4x.XUnit.Core.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Tdnet",
+        "Project": "xunit.runner.tdnet\\Net4x.XUnit.Runner.Tdnet.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Utility",
+        "Project": "xunit.runner.utility.net452\\Net4x.XUnit.Runner.Utility.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.XUnit.Assert\\xunit.assert.sln",
+      "Version": "xunitassertVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.XUnit.Assert",
+        "Project": "xunit.assert\\Net4x.XUnit.Assert.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.runner.utility.net452",
+        "Project": "xunit.runner.utility.net452\\Net4x.XUnit.Runner.Utility.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.runner.tdnet",
+        "Project": "xunit.runner.tdnet\\Net4x.XUnit.Runner.Tdnet.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.core\\Net4x.XUnit.Core.csproj",
+        "Project": "xunit.core",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.xunit.assert\\Net4x.XUnit2.sln",
+      "Version": "Net4xXUnit2Version"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.XUnit.Assert",
+        "Project": "xunit.assert\\Net4x.XUnit.Assert.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Utility",
+        "Project": "xunit.runner.utility.net452\\Net4x.XUnit.Runner.Utility.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "",
+        "Project": "xunit.core\\Net4x.XUnit.Core.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Tdnet",
+        "Project": "xunit.runner.tdnet\\Net4x.XUnit.Runner.Tdnet.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.abstractions",
+        "Project": "xunit.abstractions\\Net4x.XUnit.Abstractions.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.XUnit2\\Net4x.XUnit2.sln",
+      "Version": "Net4xXUnit2Version"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.XUnit.Assert",
+        "Project": "xunit.assert\\Net4x.XUnit.Assert.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Utility",
+        "Project": "xunit.runner.utility.net452\\Net4x.XUnit.Runner.Utility.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "",
+        "Project": "xunit.core\\Net4x.XUnit.Core.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Tdnet",
+        "Project": "xunit.runner.tdnet\\Net4x.XUnit.Runner.Tdnet.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Abstractions",
+        "Project": "xunit.abstractions\\Net4x.XUnit.Abstractions.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.runner.reporters\\Net4x.XUnit.Runner.Reporters.csproj",
+        "Project": "xunit.runner.reporters.net452",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.runner.reporters\\Net4x.XUnit.Runner.Reporters.csproj",
+        "Project": "Net4x.XUnit.Runner.Reporters",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.runner.visualstudio.testadapter\\Net4x.XUnit.Runner.VisualStudio.TestAdapter.csproj",
+        "Project": "Net4x.XUnit.Runner.VisualStudio.TestAdapter",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.assert\\Net4x.XUnit.Assert.csproj",
+        "Project": "xunit.assert",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.runner.utility.net452\\Net4x.XUnit.Runner.Utility.csproj",
+        "Project": "xunit.runner.utility",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.runner.tdnet\\Net4x.XUnit.Runner.Tdnet.csproj",
+        "Project": "xunit.runner.tdnet",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.abstractions\\Net4x.XUnit.Abstractions.csproj",
+        "Project": "xunit.abstractions",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.runner.reporters\\Net4x.XUnit.Runner.Reporters.csproj",
+        "Project": "xunit.runner.reporters",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.$(ProjectName)",
+        "Project": "xunit.core\\Net4x.XUnit.Core.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.Net4x.XUnit.Core",
+        "Project": "xunit.core\\Net4x.XUnit.Core.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Core",
+        "Project": "xunit.core\\Net4x.XUnit.Core.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit",
+        "Project": "Net4x.XUnit\\Net4x.XUnit.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.Xml.Linq\\Net4x.Xml.Linq.sln",
+      "Version": "Net4xXmlLinqVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.Xml.Linq",
+        "Project": "System.Xml.Linq\\Net4x.Xml.Linq.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.Net.Http\\Net4x.Net.Http.slnx",
+      "Version": "Net4xNetHttpVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.Net.Http",
+        "Project": "Net4x.Net.Http/Net4x.Net.Http.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.XUnit2\\Net4x.XUnit.sln",
+      "Version": "Net4xXUnitVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.XUnit.Assert",
+        "Project": "xunit.assert\\Net4x.XUnit.Assert.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Utility",
+        "Project": "xunit.runner.utility.net452\\Net4x.XUnit.Runner.Utility.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Core",
+        "Project": "xunit.core\\Net4x.XUnit.Core.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Tdnet",
+        "Project": "xunit.runner.tdnet\\Net4x.XUnit.Runner.Tdnet.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Abstractions",
+        "Project": "xunit.abstractions\\Net4x.XUnit.Abstractions.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Reporters",
+        "Project": "xunit.runner.reporters\\Net4x.XUnit.Runner.Reporters.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.VisualStudio.TestAdapter",
+        "Project": "xunit.runner.visualstudio.testadapter\\Net4x.XUnit.Runner.VisualStudio.TestAdapter.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit",
+        "Project": "Net4x.XUnit\\Net4x.XUnit.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit\\Net4x.XUnit.Library.csproj",
+        "Project": "Net4x.XUnit.Library",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.XUnit\\Net4x.XUnit.sln",
+      "Version": "Net4xXUnitVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.XUnit.Assert",
+        "Project": "xunit.assert\\Net4x.XUnit.Assert.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Utility",
+        "Project": "xunit.runner.utility.net452\\Net4x.XUnit.Runner.Utility.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Core",
+        "Project": "xunit.core\\Net4x.XUnit.Core.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Tdnet",
+        "Project": "xunit.runner.tdnet\\Net4x.XUnit.Runner.Tdnet.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Abstractions",
+        "Project": "xunit.abstractions\\Net4x.XUnit.Abstractions.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Reporters",
+        "Project": "xunit.runner.reporters\\Net4x.XUnit.Runner.Reporters.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.VisualStudio.TestAdapter",
+        "Project": "xunit.runner.visualstudio.testadapter\\Net4x.XUnit.Runner.VisualStudio.TestAdapter.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Library",
+        "Project": "xunit\\Net4x.XUnit.Library.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.execution.desktop\\xunit.execution.desktop.csproj",
+        "Project": "xunit.execution.desktop",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.execution.desktop\\Net4x.XUnit.Execution.Desktop.csproj",
+        "Project": "xunit.execution.desktop",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit\\Net4x.XUnitBridge.csproj",
+        "Project": "Net4x.XUnitBridge",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.execution.desktop",
+        "Project": "xunit.execution.desktop\\Xunit.Sdk.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Xunit.Sdk",
+        "Project": "xunit.execution.desktop\\Xunit.Sdk.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.execution.desktop\\Net4x.XUnit.Execution.Desktop.csproj",
+        "Project": "Net4x.XUnit.Execution.Desktop",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.XUnitBridge\\Net4x.XUnitBridge.sln",
+      "Version": "Net4xXUnitBridgeVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.XUnit.Assert",
+        "Project": "xunit.assert\\Net4x.XUnit.Assert.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Utility",
+        "Project": "xunit.runner.utility.net452\\Net4x.XUnit.Runner.Utility.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Core",
+        "Project": "xunit.core\\Net4x.XUnit.Core.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Abstractions",
+        "Project": "xunit.abstractions\\Net4x.XUnit.Abstractions.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.VisualStudio.TestAdapter",
+        "Project": "xunit.runner.visualstudio.testadapter\\Net4x.XUnit.Runner.VisualStudio.TestAdapter.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnitBridge",
+        "Project": "xunit\\Net4x.XUnitBridge.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Runner.Tdnet",
+        "Project": "xunit.runner.tdnet\\Net4x.XUnit.Runner.Tdnet.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.XUnit.Execution.Desktop",
+        "Project": "xunit.execution.desktop\\Net4x.XUnit.Execution.Desktop.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "xunit.execution.desktop\\Xunit.Sdk.csproj",
+        "Project": "Xunit.Sdk",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.XUnitBridge\\Net4x.XUnitBridge.Tests.sln",
+      "Version": "Net4xXUnitBridgeTestsVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net4x.XUnitBridge.Tests",
+        "Project": "Net4x.XUnitBridge.Tests\\Net4x.XUnitBridge.Tests.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net4x.DynamicBridge\\Net4x.DynamicBridge.sln",
+      "Version": "Net4xDynamicBridgeVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Microsoft.CSharp",
+        "Project": "Net4x.DynamicBridge\\Net4x.DynamicBridge.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.DynamicBridge\\Net4x.DynamicBridge.csproj",
+        "Project": "Net4x.DynamicBridge",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.Dynamic\\Net4x.Dynamic.csproj",
+        "Project": "System.Dynamic",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net4x.Dynamic\\Net4x.Dynamic.csproj",
+        "Project": "Net4x.Dynamic",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net30.LinqBridge\\Net20.LinqBridge.sln",
+      "Version": "Net20LinqBridgeVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net20.LinqBridge",
+        "Project": "src\\Net30.LinqBridge\\Net20.LinqBridge.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net20.TypeInfo\\Net20.TypeInfo.sln",
+      "Version": "Net20TypeInfoVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net20.TypeInfo",
+        "Project": "Net20.TypeInfo\\Net20.TypeInfo.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net20.All.TypeInfo",
+        "Project": "Net20.All.TypeInfo\\Net20.All.TypeInfo.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net20.Runtime",
+        "Project": "Net20.Runtime\\Net20.Runtime.csproj",
+        "PackageReferences": null
+      }
+    ]
+  },
+  {
+    "Solution": {
+      "Path": "D:\\CommonLibrary\\Net20.Actions\\Net20.Actions.sln",
+      "Version": "Net20ActionsVersion"
+    },
+    "NuGetPackages": [
+      {
+        "Name": "Net35.Actions",
+        "Project": "Net20.Actions\\Net20.Actions.csproj",
+        "PackageReferences": null
+      },
+      {
+        "Name": "Net20.Actions",
+        "Project": "Net20.Actions\\Net20.Actions.csproj",
         "PackageReferences": null
       }
     ]
