@@ -1,5 +1,6 @@
 #nullable enable
 
+#pragma warning disable CS3027
 #pragma warning disable CS8645
 
 using System;
