@@ -5,7 +5,7 @@
     <NuGetPackageRoot Condition="'$(NuGetPackageRoot)'=='' and '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' != 'true'">~/.nuget/packages/</NuGetPackageRoot>
     <VersionBuildSuffix Condition="'$(Configuration)'!='Release'">*</VersionBuildSuffix>
     <VersionBuildSuffix Condition="'$(Configuration)'=='Release'">*</VersionBuildSuffix>
-    <NuGetUtilityVersion Condition="'$(NuGetUtilityVersion)' == ''">2.1.0</NuGetUtilityVersion>
+    <NuGetUtilityVersion Condition="'$(NuGetUtilityVersion)' == ''">1.0.8</NuGetUtilityVersion>
     <DirectoryNuGet>true</DirectoryNuGet>
     <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' == '' and '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">$(USERPROFILE)\.nuget\packages\</NuGetPackageRoot>
     <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' == '' and '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' != 'true'">~/.nuget/packages/</NuGetPackageRoot>
@@ -176,8 +176,8 @@
     <nugetoptimizerVersion>1.0.0</nugetoptimizerVersion>
     <NugetOptimizerVersion>1.0.0</NugetOptimizerVersion>
     <NuGetUploaderVersion>1.0.0</NuGetUploaderVersion>
-    <NuGetUtilityPocVersion>2.0.12</NuGetUtilityPocVersion>
-    <NuGetUtilityVersion>1.0.7</NuGetUtilityVersion>
+    <NuGetUtilityPocVersion>1.0.8</NuGetUtilityPocVersion>
+    <NuGetUtilityVersion>1.0.8</NuGetUtilityVersion>
     <NumberConverterLibVersion>1.2.0</NumberConverterLibVersion>
     <NUnitToXunitConverterVersion>1.0.0</NUnitToXunitConverterVersion>
     <ObfuscarVersion>2.2.37</ObfuscarVersion>
