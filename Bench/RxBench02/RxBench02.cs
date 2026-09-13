@@ -1,4 +1,4 @@
-﻿// Program: RxBench02.cs
+// Program: RxBench02.cs
 // Purpose:
 // • Demonstrate BCL curiosities.
 // • Reference the library assembly with a target of the lowest supported .NET Framework (4.6.1).
@@ -29,10 +29,10 @@ namespace BenchApp
             // The KaosCollections library emulates this seemingly wrong behavior.
 
             var ss = new SortedSet<int> { 3,4,5 };
-            SortedSet<int>.Enumerator ssEtor = ss.GetEnumerator();
-            bool ssNext1 = ssEtor.MoveNext();
+            var ssEtor = ss.GetEnumerator();
+            var ssNext1 = ssEtor.MoveNext();
             ssEtor.Dispose();
-            bool ssNext2 = ssEtor.MoveNext();
+            var ssNext2 = ssEtor.MoveNext();
 
             Console.WriteLine ("Dispose() then MoveNext() = " + ssNext2);
             Console.WriteLine ("Dispose() then Current = " + ssEtor.Current);
